@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.operatoroverloaded</groupId>
+	<artifactId>hotel</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>hotel</name>
+	<description>A project for Programming 2 Course</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+    <frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+        <dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+    <version>8.0.33</version>
+</dependency>
+        <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId> 
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+        </dependency>
+        <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>4.0.1</version>
+        <scope>provided</scope>
+    </dependency>
+	</dependencies>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<!-- <groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId> -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+			</plugin>
+			<plugin>
+    <groupId>com.github.eirslett</groupId>
+    <artifactId>frontend-maven-plugin</artifactId>
+    <version>1.15.1</version>
+    <configuration>
+        <workingDirectory>${frontend-src-dir}</workingDirectory>
+        <installDirectory>${project.basedir}</installDirectory>
+    </configuration>
+
+    <executions>
+        <!-- Install Node and npm -->
+        <execution>
+            <id>install node and npm</id>
+            <goals>
+                <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+                <nodeVersion>v20.18.0</nodeVersion>
+                <npmVersion>10.8.2</npmVersion>
+            </configuration>
+        </execution>
+
+        <!-- Run npm install -->
+        <execution>
+            <id>npm install</id>
+            <goals>
+                <goal>npm</goal>
+            </goals>
+            <configuration>
+                <arguments>install</arguments>
+                <!-- <workingDirectory>${frontend-src-dir}</workingDirectory> -->
+            </configuration>
+        </execution>
+
+        <!-- Build React application -->
+        <execution>
+            <id>npm run build</id>
+            <goals>
+                <goal>npm</goal>
+            </goals>
+            <configuration>
+                <arguments>run build</arguments>
+                <!-- <workingDirectory>${frontend-src-dir}</workingDirectory> -->
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+    <plugin>
+    <artifactId>maven-resources-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>copy-react-build</id>
+            <goals>
+                <goal>copy-resources</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+                <outputDirectory>${project.build.directory}/classes/static</outputDirectory>
+                <resources>
+                    <resource>
+                        <directory>${frontend-src-dir}/build</directory>
+                        <filtering>false</filtering>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+
+		</plugins>
+	</build>
+
+</project>

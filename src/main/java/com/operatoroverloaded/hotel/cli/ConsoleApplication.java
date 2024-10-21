@@ -1,0 +1,67 @@
+package com.operatoroverloaded.hotel.cli;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+
+import com.operatoroverloaded.hotel.stores.roomstore;
+
+@Component
+@ConditionalOnNotWebApplication // Only run when the application is NOT a web application
+public class ConsoleApplication implements CommandLineRunner {
+    private RoomStore roomStore;
+
+    public void setRoomStore(RoomStore roomStore) {
+        this.roomStore = roomStore;
+    }
+    
+    @Override
+    public void run(String... args) {
+        System.out.println("************************** CONSOLE APP *********************************");
+        handleInput();
+    }
+    private void handleInput() {
+        Scanner scanner = new Scanner(System.in);
+        boolean running = true;
+
+        while (running) {
+            System.out.println("Enter a command: ");
+            String input = scanner.nextLine();
+
+            switch (input.toLowerCase()) {
+                case "add room":
+                    addRoom();
+                    break;
+                case "view rooms":
+                    viewRooms();
+                    break;
+                case "exit":
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Unknown command, please try again.");
+            }
+        }
+    }
+
+    private void addRoom() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter room number: ");
+        int roomNumber = scanner.nextInt();
+        scanner.nextLine();  // Consume newline
+
+        System.out.println("Enter room type: ");
+        String roomType = scanner.nextLine();
+
+        Room room = new Room(roomNumber, roomType);
+        objectStore.addRoom(room); // Add to object store
+        System.out.println("Room added successfully.");
+    }
+
+    private void viewRooms() {
+        System.out.println("Listing all rooms:");
+        for (Room room : objectStore.getRooms()) {
+            System.out.println("Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType());
+        }
+    }
+}
