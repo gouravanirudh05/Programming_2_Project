@@ -1,20 +1,19 @@
 package com.operatoroverloaded.hotel;
-
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.WebApplicationType;
+import org.springframework.context.ConfigurableApplicationContext;
 
-
-// Import all stores. 
-import com.hotelmanagement.store.RoomStore;
+import com.operatoroverloaded.hotel.cli.ConsoleApplication;
+import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 
 @SpringBootApplication
 public class HotelApplication {
 
 	public static void main(String[] args) {
 		
-		SpringApplicationBuilder app = new SpringApplicationBuilder(Application.class);
+		SpringApplicationBuilder app = new SpringApplicationBuilder(HotelApplication.class);
 
 		if (args.length == 0) { // Switch based on condition, e.g., no arguments mean web application
             app.web(WebApplicationType.SERVLET); // Web-based with React/Spring Boot
@@ -23,7 +22,8 @@ public class HotelApplication {
         }
 
         app.run(args);
-		SpringApplication.run(HotelApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(HotelApplication.class, args);
+		// SpringApplication.run(HotelApplication.class, args);
 
         RoomStore roomStore = context.getBean(RoomStore.class);
         if (args.length > 0) {

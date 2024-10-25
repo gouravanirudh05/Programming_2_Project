@@ -1,0 +1,25 @@
+Use Linux based System.
+Install maven.
+
+To run build - please use the following command:
+mvn clean install
+To run build without compiling the frontend - please use the following command:
+mvn clean install -Dskip.npm    (DEFAULT)
+
+To run the application (with frontend) - please use the following command:
+java -jar target/hotel-0.0.1-SNAPSHOT.jar
+
+To run the application with in-memory database - please use the following command:
+java -jar target/hotel-0.0.1-SNAPSHOT.jar --spring.profiles.active=in-memory
+
+To run the application with SQL database - please use the following command:
+java -jar target/hotel-0.0.1-SNAPSHOT.jar --spring.profiles.active=sql
+
+To run the application with only commandline - please use the following command:
+java -jar target/hotel-0.0.1-SNAPSHOT.jar -cmd
+
+When you want to generate the header files for JNI, please use the following command:
+javac -h src/main/cpp/src -cp target/classes:$(NOPUSH/temp.txt) src/main/java/com/operatoroverloaded/hotel/<filepath>/*.java
+
+(Before running this command please build the project.)
+

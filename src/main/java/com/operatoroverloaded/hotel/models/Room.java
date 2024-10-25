@@ -1,7 +1,5 @@
-package com.operatoroverloaded.hotel.models.room;
+package com.operatoroverloaded.hotel.models;
 import java.io.Serializable;
-import com.operatoroverloaded.hotel.models.roomtype;
-import com.operatoroverloaded.hotel.models.datetime;
 
 public class Room implements Serializable{
     private int roomID;
@@ -10,6 +8,9 @@ public class Room implements Serializable{
     private String roomTypeName;
     private DateTime housekeepingLast;
 
+    public Room(){
+        
+    }
     public Room(int roomID, int capacity, RoomType roomType, String roomTypeName, DateTime housekeepingLast) {
         this.roomID = roomID;
         this.capacity = capacity;
@@ -20,7 +21,7 @@ public class Room implements Serializable{
     public int getRoomID() {
         return roomID;
     }
-
+    public int getId(){return getRoomID();}
     public void setRoomID(int roomID) {
         this.roomID = roomID;
     }
@@ -35,6 +36,7 @@ public class Room implements Serializable{
     }
     public void setRoomType(RoomType roomType){
         this.roomType = roomType;
+        this.roomTypeName = roomType.getRoomTypeName();
     }
     public String getRoomTypeName(){
         return roomTypeName;

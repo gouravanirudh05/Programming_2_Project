@@ -1,10 +1,12 @@
 package com.operatoroverloaded.hotel.cli;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import java.util.Scanner;
 
-import com.operatoroverloaded.hotel.stores.roomstore;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.stereotype.Component;
+
+import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
@@ -30,10 +32,10 @@ public class ConsoleApplication implements CommandLineRunner {
 
             switch (input.toLowerCase()) {
                 case "add room":
-                    addRoom();
+                    // addRoom();
                     break;
                 case "view rooms":
-                    viewRooms();
+                    // viewRooms();
                     break;
                 case "exit":
                     running = false;
@@ -44,24 +46,24 @@ public class ConsoleApplication implements CommandLineRunner {
         }
     }
 
-    private void addRoom() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter room number: ");
-        int roomNumber = scanner.nextInt();
-        scanner.nextLine();  // Consume newline
+    // private void addRoom() {
+    //     Scanner scanner = new Scanner(System.in);
+    //     System.out.println("Enter room number: ");
+    //     int roomNumber = scanner.nextInt();
+    //     scanner.nextLine();  // Consume newline
 
-        System.out.println("Enter room type: ");
-        String roomType = scanner.nextLine();
+    //     System.out.println("Enter room type: ");
+    //     String roomType = scanner.nextLine();
 
-        Room room = new Room(roomNumber, roomType);
-        objectStore.addRoom(room); // Add to object store
-        System.out.println("Room added successfully.");
-    }
+    //     Room room = new Room(roomNumber, roomType);
+    //     objectStore.addRoom(room); // Add to object store
+    //     System.out.println("Room added successfully.");
+    // }
 
-    private void viewRooms() {
-        System.out.println("Listing all rooms:");
-        for (Room room : objectStore.getRooms()) {
-            System.out.println("Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType());
-        }
-    }
+    // private void viewRooms() {
+    //     System.out.println("Listing all rooms:");
+    //     for (Room room : objectStore.getRooms()) {
+    //         System.out.println("Room Number: " + room.getRoomNumber() + ", Room Type: " + room.getRoomType());
+    //     }
+    // }
 }
