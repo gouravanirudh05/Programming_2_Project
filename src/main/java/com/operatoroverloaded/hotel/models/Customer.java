@@ -59,7 +59,7 @@ abstract public class Customer {
         this.customerId = -1;
         this.name = "";
         this.email = "";
-        this.phone = 0;
+        this.phone = "";
         this.address = "";
         this.bill_amt = 0;
         this.bill_left = 0;
