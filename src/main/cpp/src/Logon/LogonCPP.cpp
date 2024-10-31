@@ -1,20 +1,13 @@
 #include <jni.h>
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
 #include <map>
 #include <openssl/sha.h>
-#include <openssl/evp.h>
-#include <openssl/buffer.h>
-#include <openssl/bio.h>
-#include <openssl/hmac.h>
-// todo: include the header file for the InMemoryLogonStore class
-#include "LOGON_InMemoryLogonStore.h" 
 #include <iomanip>
-#include <string.h>
 #include <random>
+#include "LOGON_InMemoryLogonStore.h"
 
 using namespace std;
 const int SALT_SIZE = 16;
