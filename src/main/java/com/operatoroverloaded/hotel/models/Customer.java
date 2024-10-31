@@ -15,7 +15,7 @@ abstract public class Customer {
 
     //methods
     //Constructor
-    Customer(int id, String name, String email, String phone, String address){
+    public Customer(int id, String name, String email, String phone, String address){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -28,7 +28,7 @@ abstract public class Customer {
         reservedFrom = new DateTime();
         reservedTo = new DateTime();
     }
-    Customer(int id, String name, String email, String phone, String address, DateTime from, DateTime to){
+    public Customer(int id, String name, String email, String phone, String address, DateTime from, DateTime to){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -41,7 +41,7 @@ abstract public class Customer {
         reservedFrom = from;
         reservedTo = to;
     }
-    Customer(int id, String name, String email, String phone, String address, DateTime from){
+    public Customer(int id, String name, String email, String phone, String address, DateTime from){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -55,7 +55,7 @@ abstract public class Customer {
         reservedTo = new DateTime();
     }
 
-    Customer() {
+    public Customer() {
         this.customerId = -1;
         this.name = "";
         this.email = "";
@@ -70,26 +70,26 @@ abstract public class Customer {
     }
 
     //setter methods
-    void setCustomerId(int id){
+    public void setCustomerId(int id){
         this.customerId = id;
     }
-    void setName(String name){
+    public void setName(String name){
         this.name = name;
     }
-    void setEmail(String name){
+    public void setEmail(String name){
         this.email = name;
     }
-    void setPhone(String ph){
+    public void setPhone(String ph){
         this.phone = ph;
     }
-    void setAddress(String name){
+    public void setAddress(String name){
         this.address = name;
     }
-    void setBillLeft(float billleft){
+    public void setBillLeft(float billleft){
         this.bill_left = billleft;
         this.bill_payed = this.bill_amt - billleft;
     }
-    void setBillPayed(float billpayed){
+    public void setBillPayed(float billpayed){
         this.bill_payed = billpayed;
         this.bill_left = this.bill_amt - billpayed;
     }
@@ -97,20 +97,20 @@ abstract public class Customer {
         this.bill_amt = billamt;
         this.bill_left = billamt-this.bill_payed;
     }
-    void addBill(int billid){ //expects bill id
+    public void addBill(int billid){ //expects bill id
         for (int id : this.bills) if (id == billid) return; //if billid already exists simply return
         this.bills.add(billid);
         Bill bill = BillStore.getBill(billid);
         setBillAmount(bill_amt+bill.getAmount());
     }
 
-    void addBill(Bill bill){ //expects bill object
+    public void addBill(Bill bill){ //expects bill object
         for (int id : this.bills) if (id == bill.getBillId) return; //if bill already exists simply return
         bills.add(bill.getBillId);
         setBillAmount(this.bill_amt+bill.getAmount());
     }
 
-    void deleteBill(int billid){ //expects bill id
+    public void deleteBill(int billid){ //expects bill id
         Bill b = BillStore.getBill(billid);
         for (int id : bills) if (id == billid) {
             setBillAmount(bill_amt-b.getAmount());
@@ -118,46 +118,46 @@ abstract public class Customer {
         bills.remove(Integer.valueOf(billid));
     }
 
-    void setReservedFrom(DateTime from){
+    public void setReservedFrom(DateTime from){
         this.reservedFrom = from;
     }
     
-    void setReservedTo(DateTime to){
+    public void setReservedTo(DateTime to){
         this.reservedTo = to;
     }
 
     //getter methods
-    int getCustomerId(){
+    public int getCustomerId(){
         return this.customerId;
     }
-    String getName(){
+    public String getName(){
         return this.name;
     }
-    String getAddress(){
+    public String getAddress(){
         return this.address;
     }
-    String getEmail(){
+    public String getEmail(){
         return this.email;
     }
-    String getPhone(){
+    public String getPhone(){
         return this.phone;
     }
-    float getBillAmount(){
+    public float getBillAmount(){
         return this.bill_amt;
     }
-    float getBillPayed(){
+    public float getBillPayed(){
         return this.bill_payed;
     }
-    float getBillLeft(){
+    public float getBillLeft(){
         return this.bill_left;
     }
-    ArrayList<Integer> getBills(){ //Returns an ArrayList of all the Billid's
+    public ArrayList<Integer> getBills(){ //Returns an ArrayList of all the Billid's
         return this.bills;
     }
-    DateTime getReservedFrom(){
+    public DateTime getReservedFrom(){
         return this.reservedFrom;
     }
-    DateTime getReservedTo(){
+    public DateTime getReservedTo(){
         return this.reservedTo;
     }
 }
