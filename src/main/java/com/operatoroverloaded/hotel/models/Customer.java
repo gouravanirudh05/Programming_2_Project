@@ -16,7 +16,7 @@ abstract public class Customer {
     //methods
     //Constructor
     public Customer(int id, String name, String email, String phone, String address){
-        this.customerId = id; //Assuming that id will be changed in the database for storing..
+        this.customerId = id; 
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -29,7 +29,7 @@ abstract public class Customer {
         reservedTo = new DateTime();
     }
     public Customer(int id, String name, String email, String phone, String address, DateTime from, DateTime to){
-        this.customerId = id; //Assuming that id will be changed in the database for storing..
+        this.customerId = id; 
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -42,7 +42,7 @@ abstract public class Customer {
         reservedTo = to;
     }
     public Customer(int id, String name, String email, String phone, String address, DateTime from){
-        this.customerId = id; //Assuming that id will be changed in the database for storing..
+        this.customerId = id;
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -100,7 +100,7 @@ abstract public class Customer {
     public void addBill(int billid){ //expects bill id
         for (int id : this.bills) if (id == billid) return; //if billid already exists simply return
         this.bills.add(billid);
-        Bill bill = BillStore.getBill(billid);
+        Bill bill = BillStore.getBill(billid); //assuming that there is a database for bills called billStore that returns me the bill, if i pass a billId to it
         setBillAmount(bill_amt+bill.getAmount());
     }
 
