@@ -1,22 +1,21 @@
 import java.sql.Date;
 import java.util.ArrayList;
-
 abstract public class Customer {
     //Attributes
-    protected int customerId;
-    protected String name;
-    protected String email;
-    protected int phone;
-    protected String address;
-    protected float bill_amt;
-    protected float bill_payed;
-    protected float bill_left;
-    protected ArrayList<Integer> bills;
+    private int customerId;
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
+    private float bill_amt;
+    private float bill_payed;
+    private float bill_left;
+    private ArrayList<Integer> bills;
     DateTime reservedFrom, reservedTo;
 
     //methods
     //Constructor
-    Customer(int id, String name, String email, int phone, String address){
+    Customer(int id, String name, String email, String phone, String address){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -29,7 +28,7 @@ abstract public class Customer {
         reservedFrom = new DateTime();
         reservedTo = new DateTime();
     }
-    Customer(int id, String name, String email, int phone, String address, DateTime from, DateTime to){
+    Customer(int id, String name, String email, String phone, String address, DateTime from, DateTime to){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -42,7 +41,7 @@ abstract public class Customer {
         reservedFrom = from;
         reservedTo = to;
     }
-    Customer(int id, String name, String email, int phone, String address, DateTime from){
+    Customer(int id, String name, String email, String phone, String address, DateTime from){
         this.customerId = id; //Assuming that id will be changed in the database for storing..
         this.name = name;
         this.email = email;
@@ -80,7 +79,7 @@ abstract public class Customer {
     void setEmail(String name){
         this.email = name;
     }
-    void setPhone(int ph){
+    void setPhone(String ph){
         this.phone = ph;
     }
     void setAddress(String name){
@@ -140,7 +139,7 @@ abstract public class Customer {
     String getEmail(){
         return this.email;
     }
-    int getPhone(){
+    String getPhone(){
         return this.phone;
     }
     float getBillAmount(){
