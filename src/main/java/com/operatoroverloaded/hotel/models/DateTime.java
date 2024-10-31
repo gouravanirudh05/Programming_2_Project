@@ -47,6 +47,13 @@ public class DateTime {
         return month > 0 && month <= 12 && day > 0 && day <= daysInMonth();
     }
 
+    // Compares this DateTime to another DateTime
+    private int compareTo(DateTime other) {
+        LocalDateTime thisDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
+        LocalDateTime otherDateTime = LocalDateTime.of(other.year, other.month, other.day, other.hour, other.minute, other.second);
+        return thisDateTime.compareTo(otherDateTime);
+    }
+
     // Checks if the current date-time has passed
     public boolean hasPastCurrentTime() {
         DateTime now = getCurrentTime();
@@ -97,10 +104,14 @@ public class DateTime {
         return String.format("%04d-%02d-%02d", year, month, day);
     }
 
-    // Compares this DateTime to another DateTime
-    private int compareTo(DateTime other) {
-        LocalDateTime thisDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
-        LocalDateTime otherDateTime = LocalDateTime.of(other.year, other.month, other.day, other.hour, other.minute, other.second);
-        return thisDateTime.compareTo(otherDateTime);
+    // Returns a string representation of the date-time
+    public String toString(DateTime date) {
+        return String.format("%04d-%02d-%02d", date.year, date.month, date.day);
+    }
+
+    // Returns a DateTime object from a string
+    public static DateTime fromString(String date) {
+        String[] parts = date.split("-");
+        return new DateTime(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), 0, 0, 0);
     }
 }
