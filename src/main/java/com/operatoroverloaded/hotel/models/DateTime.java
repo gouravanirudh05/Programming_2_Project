@@ -48,7 +48,7 @@ public class DateTime {
     }
 
     // Compares this DateTime to another DateTime
-    private int compareTo(DateTime other) {
+    public int compareTo(DateTime other) {
         LocalDateTime thisDateTime = LocalDateTime.of(year, month, day, hour, minute, second);
         LocalDateTime otherDateTime = LocalDateTime.of(other.year, other.month, other.day, other.hour, other.minute, other.second);
         return thisDateTime.compareTo(otherDateTime);
