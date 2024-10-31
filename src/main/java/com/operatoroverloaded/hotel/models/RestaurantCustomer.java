@@ -15,13 +15,13 @@ public class RestaurantCustomer extends Customer{
         this.serverId = -1;
     }
 
-    public RestaurantCustomer(int id, String name, String email, int phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
+    public RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
         super(id, name, email, phone, address, reservedfrom, reservedto);
         this.tableId = tableid;
         this.serverId = serverid;
     }
 
-    public RestaurantCustomer(int id, String name, String email, int phone, String address, int tableid, int serverid, DateTime reservedfrom){
+    public RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom){
         super(id, name, email, phone, address, reservedfrom);
         this.tableId = tableid;
         this.serverId = serverid;
