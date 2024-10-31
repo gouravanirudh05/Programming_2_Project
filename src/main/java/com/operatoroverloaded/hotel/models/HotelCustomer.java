@@ -9,12 +9,12 @@ public class HotelCustomer extends Customer{
         super();
         this.reservations = new ArrayList<Integer>();
     }
-    public HotelCustomer(int id, String name, String email, int phone, String address, DateTime reservedfrom, DateTime reservedto){
+    public HotelCustomer(int id, String name, String email, String phone, String address, DateTime reservedfrom, DateTime reservedto){
         super(id, name, email, phone, address, reservedfrom, reservedto);
         this.reservations = new ArrayList<Integer>();
     }
 
-    public HotelCustomer(int id, String name, String email, int phone, String address, DateTime reservedfrom){
+    public HotelCustomer(int id, String name, String email, String phone, String address, DateTime reservedfrom){
         super(id, name, email, phone, address, reservedfrom);
         this.reservations = new ArrayList<Integer>();
     }
