@@ -110,8 +110,10 @@ public class DateTime {
     }
 
     // Returns a DateTime object from a string
-    public static DateTime fromString(String date) {
-        String[] parts = date.split("-");
-        return new DateTime(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), 0, 0, 0);
+    public static DateTime fromString(String date, String time) {
+        String[] dateParts = date.split("-");
+        String[] timeParts = time.split(":");
+        return new DateTime(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
+                Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[2]));
     }
 }
