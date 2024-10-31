@@ -2,17 +2,31 @@ package com.operatoroverloaded.hotel.stores.billstore;
 
 import java.util.ArrayList;
 import com.operatoroverloaded.hotel.models.Bill;
+import com.operatoroverloaded.hotel.models.DateTime;
 
 public class InMemoryBillStore implements BillStore {
-    private  ArrayList<Bill> billData;
+    private ArrayList<Bill> billData;
 
+    // Constructor which also loads the data from the native library
     public InMemoryBillStore(){
         this.billData = new ArrayList<Bill>();
         this.load();
     }
 
+    // Getter for the billData
     public ArrayList<Bill> getBillData(){
         return this.billData;
+    }
+
+    // Getter for the billData
+    @Override
+    public Bill getBill(int billId) {
+        for(Bill bill: this.billData){
+            if(billId == bill.getBillId()){
+                return bill;
+            }
+        }        
+        return null;
     }
 
     // Native method declaration
@@ -24,16 +38,19 @@ public class InMemoryBillStore implements BillStore {
         System.loadLibrary("BillCPP");
     }
 
+    @Override
     public void save(){
         this.saveBill();
     }
 
+    @Override
     public void load(){
         this.loadBill();        
     }
 
+    // add a new bill to the billData
     @Override
-    public void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, String generatedOn, String payedOn) {
+    public void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn) {
         // Check if the sizes of the lists are not the same and return if they are not
         if(purchased.size() != purchasedList.size() || purchasedList.size() != quantity.size()){
             return;
@@ -44,12 +61,12 @@ public class InMemoryBillStore implements BillStore {
             purchased, 
             purchasedList, 
             quantity, 
-            generatedOn, 
             payedOn
         );
         this.billData.add(bill);
     }
-
+    
+    // remove a bill from the billData based on the billId
     @Override
     public void removeBill(int billId) {
         for(Bill bill: billData){
@@ -60,8 +77,9 @@ public class InMemoryBillStore implements BillStore {
         }
     }
 
+    // update a bill in the billData based on the billId
     @Override
-    public void updateBill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, String payedOn) {
+    public void updateBill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn) {
         if(purchased.size() != purchasedList.size() || purchasedList.size() != quantity.size()){
             return;
         }

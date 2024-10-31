@@ -8,4 +8,3 @@ public interface LogonStore {
     public void load();
     public void save();
 }
-

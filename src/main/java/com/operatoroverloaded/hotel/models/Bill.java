@@ -1,5 +1,5 @@
 package com.operatoroverloaded.hotel.models;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Bill {
     private int billId;
@@ -7,8 +7,9 @@ public class Bill {
     private ArrayList<String> purchased;
     private ArrayList<Float> purchasedList;
     private ArrayList<Integer> quantity;
-    private String generatedOn, payedOn;
+    private DateTime generatedOn, payedOn;
 
+    // default constructor which initializes the values to garbage values
     public Bill(){
         billId = -1;
         amount = -1;
@@ -16,11 +17,12 @@ public class Bill {
         this.purchased = new ArrayList<String>();
         this.quantity = new ArrayList<Integer>();
         this.purchasedList = new ArrayList<Float>();
-        this.generatedOn = "";
-        this.payedOn = "";
+        this.generatedOn = new DateTime(0, 0, 0, 0, 0, 0);
+        this.payedOn = new DateTime(0, 0, 0, 0, 0, 0);
     }
 
-    public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, String generatedOn, String payedOn){
+    // parameterized constructor which should be used to create a new bill
+    public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn){
         this.billId = billId;
         this.amount = 0;
         for (int i = 0; i < purchasedList.size(); i++){
@@ -29,18 +31,20 @@ public class Bill {
         this.quantity = quantity;
         this.purchased = purchased;
         this.purchasedList = purchasedList;
-        this.generatedOn = generatedOn;
+        this.generatedOn = DateTime.getCurrentTime();
         this.payedOn = payedOn;
     }
 
-    public Bill(int billId, float amount, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, String generatedOn, String payedOn){
+    // parameterized constructor which is used to store the bill data in the database file (not to be used to create a new bill)
+    public Bill(int billId, float amount, ArrayList<String> purchased, ArrayList<Float> purchasedList, 
+                ArrayList<Integer> quantity, String genDate, String genTime, String payedDate, String payedTime){
         this.billId = billId;
         this.amount = amount;
         this.purchased = purchased;
         this.quantity = quantity;
         this.purchasedList = purchasedList;
-        this.generatedOn = generatedOn;
-        this.payedOn = payedOn;
+        this.generatedOn = DateTime.fromString(genDate.replace('/', '-'), genTime);
+        this.payedOn = DateTime.fromString(payedDate.replace('/', '-'), payedTime);
     }
 
     public int getBillId(){
@@ -64,11 +68,11 @@ public class Bill {
     }
 
     public String getGeneratedOn(){
-        return generatedOn;
+        return generatedOn.getDateString() + " " + generatedOn.getTimeString();
     }
 
     public String getPayedOn(){
-        return payedOn;
+        return payedOn.getDateString() + " " + payedOn.getTimeString();
     }
 
     public void setAmount(){
@@ -94,8 +98,17 @@ public class Bill {
     public void setQuantity(ArrayList<Integer> quantity){
         this.quantity = quantity;
     }
+    
+    public void setItems(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity){
+        if(purchased.size() != purchasedList.size() || purchased.size() != quantity.size()){
+            return;
+        }
+        setPurchased(purchased);
+        setPurchasedList(purchasedList);
+        setQuantity(quantity);
+    }
 
-    public void setPayedOn(String payedOn){
-        this.payedOn = payedOn == ""? this.payedOn: payedOn;
+    public void setPayedOn(DateTime payedOn){
+        this.payedOn = payedOn;
     }
 }

@@ -9,6 +9,15 @@ public class Logon implements Serializable {
     private String password;
     private String salt;
 
+    // default constructor which initializes the values to garbage values
+    public Logon(){
+        this.roleId = 0;
+        this.access = AccessLevel.None;
+        this.email = "";
+        this.password = "";
+    }
+
+    // parameterized constructor which can be used to create a new logon
     public Logon(int roleId, String email, String password){
         this.roleId = roleId;
         this.access = AccessLevel.None;
@@ -16,6 +25,7 @@ public class Logon implements Serializable {
         this.password = password;
     }
 
+    // parameterized constructor which can be used to create a new logon
     public Logon(int roleID, String access, String email, String password) {
         this.roleId = roleID;
         this.access = access.equalsIgnoreCase("Admin") ? AccessLevel.Admin : 
@@ -26,6 +36,7 @@ public class Logon implements Serializable {
         this.password = password;
     }
 
+    // parameterized constructor which is used to load the data from the database (not to be used to create a new logon)
     public Logon(int roleId, String access, String email, String password, String salt) {
         this.roleId = roleId;
         this.access = access.equalsIgnoreCase("Admin") ? AccessLevel.Admin : 
