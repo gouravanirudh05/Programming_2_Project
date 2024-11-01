@@ -18,8 +18,8 @@ public class InMemoryLogonStore implements LogonStore {
     }
     
     // Native method declaration
-    private native void saveLogin();
-    private native void loadLogin();
+    private native void saveLogon();
+    private native void loadLogon();
     private native String hashString(String pwd, String salt);
     private native String getRandomSalt();
 
@@ -101,7 +101,7 @@ public class InMemoryLogonStore implements LogonStore {
     }
 
     // try to login with the email and password
-    @Override public boolean tryLogin(String email, String password){
+    @Override public boolean tryLogon(String email, String password){
         String hashedPassword = "";
         for(int i = 0; i < this.logonData.size(); i++){
             if(this.logonData.get(i).getEmail().equals(email)){
@@ -145,11 +145,11 @@ public class InMemoryLogonStore implements LogonStore {
 
     // load the data from the native library
     @Override public void load(){
-        this.loadLogin();
+        this.loadLogon();
     }
 
     // save the data to the native library
     @Override public void save(){
-        this.saveLogin();
+        this.saveLogon();
     }
 }

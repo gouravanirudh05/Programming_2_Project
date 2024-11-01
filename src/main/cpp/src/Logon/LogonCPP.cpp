@@ -89,7 +89,7 @@ extern "C" {
     }
 
     // to load the login data from the file
-    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_loadLogin(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_loadLogon(JNIEnv *env, jobject obj) {
         // Read the contents of login.txt
         // TODO: change the path to the absolute path of the login.txt file as needed
         ifstream file("LOGON/login.txt");
@@ -174,7 +174,7 @@ extern "C" {
         env->DeleteLocalRef(outerArrayList);
     }
 
-    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_saveLogin(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_saveLogon(JNIEnv *env, jobject obj) {
         // Get the Logon class and the ArrayList field
         // TODO: change the path to the Logon class as needed
         jclass logonClass = env->FindClass("LOGON/Logon");
