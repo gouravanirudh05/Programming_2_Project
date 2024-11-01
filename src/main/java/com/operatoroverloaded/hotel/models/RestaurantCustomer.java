@@ -1,63 +1,86 @@
 import java.util.ArrayList;
 
 public class RestaurantCustomer extends Customer{
-    //Attributes
     private ArrayList<Integer> dishes;
     private int tableId;
     private int serverId;
 
-    //Methods
-    //Constructor
-    public RestaurantCustomer(){
+
+//-------------------------------------------------------------------Constructors--------------------------------------------------------------------------------------------------
+
+
+    RestaurantCustomer(){
         super();
         this.dishes = new ArrayList<Integer>();
         this.tableId = -1;
         this.serverId = -1;
     }
 
-    public RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
+    RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
         super(id, name, email, phone, address, reservedfrom, reservedto);
         this.tableId = tableid;
         this.serverId = serverid;
     }
 
-    public RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom){
+    RestaurantCustomer(String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
+        super(name, email, phone, address, reservedfrom, reservedto);
+        this.tableId = tableid;
+        this.serverId = serverid;
+    }
+
+    
+ //-------------------------------------------------------------------Setter Methods--------------------------------------------------------------------------------------------------
+
+
+    void addDish(int dishid){ //expects dish id
+        for (int id : this.dishes) if (id == dishid) return; //if dish already exists simply return
+        this.dishes.add(dishid);
+    }
+
+    void removeDish(int dishid){
+        this.dishes.remove(Integer.valueOf(dishid));
+    }
+
+    void setTableId(int id){
+        this.tableId = id;
+    }
+    void setserverId(int id){
+        this.serverId = id;
+    }
+
+
+//-------------------------------------------------------------------Getter Methods--------------------------------------------------------------------------------------------------
+
+
+    ArrayList<Integer> getDishes(){
+        return this.dishes;
+    }
+    int getTableId(){
+        return this.tableId;
+    }
+    int getServerId(){
+        return this.serverId;
+    }
+
+//-------------------------------------------------------------------Other constructors--------------------------------------------------------------------------------------------------
+
+
+    RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom){
         super(id, name, email, phone, address, reservedfrom);
         this.tableId = tableid;
         this.serverId = serverid;
     }
 
-    //setters
-    public void addDish(int dishid){ //expects dish id
-        for (int id : this.dishes) if (id == dishid) return; //if dish already exists simply return
-        this.dishes.add(dishid);
+    RestaurantCustomer(String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom){
+        super(name, email, phone, address, reservedfrom);
+        this.tableId = tableid;
+        this.serverId = serverid;
     }
 
-    public void removeDish(int dishid){
-        this.dishes.remove(Integer.valueOf(dishid));
+    RestaurantCustomer(String name, String email, String phone, String address, int tableid, int serverid){
+        super(name, email, phone, address);
+        this.tableId = tableid;
+        this.serverId = serverid;
     }
 
-    public void setTableId(int id){
-        this.tableId = id;
-    }
-    public void setserverId(int id){
-        this.serverId = id;
-    }
-    public void setReservedFrom(DateTime d){
-        this.reservedFrom = d;
-    }
-    public void setReservedTo(DateTime d){
-        this.reservedTo = d;
-    }
-
-    //getters
-    public ArrayList<Integer> getDishes(){
-        return this.dishes;
-    }
-    public int getTableId(){
-        return this.tableId;
-    }
-    public int getServerId(){
-        return this.serverId;
-    }
 }
