@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.models;
 import java.util.ArrayList;
 
 public class RestaurantCustomer extends Customer{

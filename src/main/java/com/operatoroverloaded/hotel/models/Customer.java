@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.models;
 import java.sql.Date;
 import java.util.ArrayList;
 abstract public class Customer {
