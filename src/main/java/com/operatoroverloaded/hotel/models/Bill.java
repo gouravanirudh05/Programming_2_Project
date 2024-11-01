@@ -106,6 +106,7 @@ public class Bill {
         setPurchased(purchased);
         setPurchasedList(purchasedList);
         setQuantity(quantity);
+        setAmount();
     }
 
     public void setPayedOn(DateTime payedOn){

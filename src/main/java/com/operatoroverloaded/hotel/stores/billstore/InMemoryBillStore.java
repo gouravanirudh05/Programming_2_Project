@@ -30,8 +30,8 @@ public class InMemoryBillStore implements BillStore {
     }
 
     // Native method declaration
-    public native void loadBill();
-    public native void saveBill();
+    private native void loadBill();
+    private native void saveBill();
 
     // Load the native library
     static {
@@ -86,10 +86,7 @@ public class InMemoryBillStore implements BillStore {
         for(Bill bill: billData){
             if(billId == bill.getBillId()){
                 bill.setPayedOn(payedOn);
-                bill.setPurchased(purchased);
-                bill.setPurchasedList(purchasedList);
-                bill.setQuantity(quantity);
-                bill.setAmount();
+                bill.setItems(purchased, purchasedList, quantity);
             }
         }
     }
