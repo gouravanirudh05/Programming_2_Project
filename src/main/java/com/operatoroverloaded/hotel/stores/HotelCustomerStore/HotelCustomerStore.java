@@ -1,6 +1,8 @@
 package com.operatoroverloaded.hotel.stores.HotelCustomerStore;
 import java.util.List;
 
+import com.operatoroverloaded.hotel.models.HotelCustomer;
+
 public interface HotelCustomerStore {
     void loadFromFile();
     void storeToFile();
