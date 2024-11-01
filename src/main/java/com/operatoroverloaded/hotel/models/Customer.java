@@ -1,7 +1,6 @@
 import java.sql.Date;
 import java.util.ArrayList;
 abstract public class Customer {
-    //Attributes
     private int customerId;
     private String name;
     private String email;
@@ -13,21 +12,8 @@ abstract public class Customer {
     private ArrayList<Integer> bills;
     DateTime reservedFrom, reservedTo;
 
-    //methods
-    //Constructor
-    public Customer(int id, String name, String email, String phone, String address){
-        this.customerId = id; 
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.bill_amt = 0;
-        this.bill_left = 0;
-        this.bill_payed = 0;
-        this.bills = new ArrayList<Integer>();
-        reservedFrom = new DateTime();
-        reservedTo = new DateTime();
-    }
+//------------------------------------------------------------------Constructors----------------------------------------------------------------------------------------------
+
     public Customer(int id, String name, String email, String phone, String address, DateTime from, DateTime to){
         this.customerId = id; 
         this.name = name;
@@ -41,8 +27,9 @@ abstract public class Customer {
         reservedFrom = from;
         reservedTo = to;
     }
-    public Customer(int id, String name, String email, String phone, String address, DateTime from){
-        this.customerId = id;
+
+    public Customer(String name, String email, String phone, String address, DateTime from, DateTime to){
+        this.customerId = -1; 
         this.name = name;
         this.email = email;
         this.phone = phone;
@@ -52,8 +39,10 @@ abstract public class Customer {
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
         reservedFrom = from;
-        reservedTo = new DateTime();
+        reservedTo = to;
     }
+
+
 
     public Customer() {
         this.customerId = -1;
@@ -69,7 +58,8 @@ abstract public class Customer {
         reservedTo = new DateTime();
     }
 
-    //setter methods
+//------------------------------------------------------------------Setter methods----------------------------------------------------------------------------------------------
+
     public void setCustomerId(int id){
         this.customerId = id;
     }
@@ -126,7 +116,8 @@ abstract public class Customer {
         this.reservedTo = to;
     }
 
-    //getter methods
+//------------------------------------------------------------------Getter methods----------------------------------------------------------------------------------------------
+
     public int getCustomerId(){
         return this.customerId;
     }
@@ -160,4 +151,63 @@ abstract public class Customer {
     public DateTime getReservedTo(){
         return this.reservedTo;
     }
+
+//-------------------------------------------------------------Other Constructors------------------------------------------------------------------------------------
+
+    public Customer(int id, String name, String email, String phone, String address){
+        this.customerId = id; 
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.bill_amt = 0;
+        this.bill_left = 0;
+        this.bill_payed = 0;
+        this.bills = new ArrayList<Integer>();
+        reservedFrom = new DateTime();
+        reservedTo = new DateTime();
+    }
+
+    public Customer(String name, String email, String phone, String address){
+        this.customerId = -1; 
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.bill_amt = 0;
+        this.bill_left = 0;
+        this.bill_payed = 0;
+        this.bills = new ArrayList<Integer>();
+        reservedFrom = new DateTime();
+        reservedTo = new DateTime();
+    }
+
+    public Customer(int id, String name, String email, String phone, String address, DateTime from){
+        this.customerId = id;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.bill_amt = 0;
+        this.bill_left = 0;
+        this.bill_payed = 0;
+        this.bills = new ArrayList<Integer>();
+        reservedFrom = from;
+        reservedTo = new DateTime();
+    }
+
+    public Customer(String name, String email, String phone, String address, DateTime from){
+        this.customerId = -1;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.bill_amt = 0;
+        this.bill_left = 0;
+        this.bill_payed = 0;
+        this.bills = new ArrayList<Integer>();
+        reservedFrom = from;
+        reservedTo = new DateTime();
+    }
+
 }
