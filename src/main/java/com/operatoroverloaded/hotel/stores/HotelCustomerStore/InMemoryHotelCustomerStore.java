@@ -1,5 +1,8 @@
+package com.operatoroverloaded.hotel.stores.HotelCustomerStore;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.operatoroverloaded.hotel.models.HotelCustomer;
 
 public class InMemoryHotelCustomerStore implements HotelCustomerStore {
 
