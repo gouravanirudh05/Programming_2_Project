@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.stores.HotelCustomerStore;
 import java.util.List;
 
 public interface HotelCustomerStore {
