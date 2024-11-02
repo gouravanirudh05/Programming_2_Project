@@ -41,4 +41,10 @@ public class Room implements Serializable{
     public String getRoomTypeName(){
         return roomTypeName;
     }
+    public DateTime getHousekeepingLast(){
+        return housekeepingLast;
+    }
+    public void setHousekeepingLast(DateTime housekeepingLast){
+        this.housekeepingLast = housekeepingLast;
+    }
 }
