@@ -1,6 +1,7 @@
 package com.operatoroverloaded.hotel.models;
 import java.sql.Date;
 import java.util.ArrayList;
+import com.operatoroverloaded.hotel.stores.billstore.*;
 abstract public class Customer {
     private int customerId;
     private String name;
@@ -55,8 +56,8 @@ abstract public class Customer {
         this.bill_left = 0;
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
-        reservedFrom = new DateTime();
-        reservedTo = new DateTime();
+        reservedFrom = new DateTime(0, 0, 0, 0, 0, 0);
+        reservedTo = new DateTime(0, 0, 0, 0, 0, 0);
     }
 
 //------------------------------------------------------------------Setter methods----------------------------------------------------------------------------------------------
@@ -96,8 +97,8 @@ abstract public class Customer {
     }
 
     public void addBill(Bill bill){ //expects bill object
-        for (int id : this.bills) if (id == bill.getBillId) return; //if bill already exists simply return
-        bills.add(bill.getBillId);
+        for (int id : this.bills) if (id == bill.getBillId()) return; //if bill already exists simply return
+        bills.add(bill.getBillId());
         setBillAmount(this.bill_amt+bill.getAmount());
     }
 
@@ -165,8 +166,8 @@ abstract public class Customer {
         this.bill_left = 0;
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
-        reservedFrom = new DateTime();
-        reservedTo = new DateTime();
+        reservedFrom = new DateTime(0,0,0,0,0,0);
+        reservedTo = new DateTime(0,0,0,0,0,0);
     }
 
     public Customer(String name, String email, String phone, String address){
@@ -179,8 +180,8 @@ abstract public class Customer {
         this.bill_left = 0;
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
-        reservedFrom = new DateTime();
-        reservedTo = new DateTime();
+        reservedFrom = new DateTime(0,0,0,0,0,0);
+        reservedTo = new DateTime(0,0,0,0,0,0);
     }
 
     public Customer(int id, String name, String email, String phone, String address, DateTime from){
@@ -194,7 +195,7 @@ abstract public class Customer {
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
         reservedFrom = from;
-        reservedTo = new DateTime();
+        reservedTo = new DateTime(0,0,0,0,0,0);
     }
 
     public Customer(String name, String email, String phone, String address, DateTime from){
@@ -208,7 +209,7 @@ abstract public class Customer {
         this.bill_payed = 0;
         this.bills = new ArrayList<Integer>();
         reservedFrom = from;
-        reservedTo = new DateTime();
+        reservedTo = new DateTime(0,0,0,0,0,0);
     }
 
 }

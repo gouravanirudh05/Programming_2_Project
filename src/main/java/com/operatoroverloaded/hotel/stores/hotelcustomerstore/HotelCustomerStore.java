@@ -1,4 +1,4 @@
-package com.operatoroverloaded.hotel.stores.HotelCustomerStore;
+package com.operatoroverloaded.hotel.stores.hotelcustomerstore;
 import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
