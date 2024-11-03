@@ -1,3 +1,4 @@
+//Preliminary code
 public class Table {
     private static int totalTables = 0; 
     private int tableNumber;
