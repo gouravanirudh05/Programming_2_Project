@@ -5,6 +5,12 @@ import com.operatoroverloaded.hotel.models.Bill;
 import com.operatoroverloaded.hotel.models.DateTime;
 
 public class InMemoryBillStore implements BillStore {
+    private static final InMemoryBillStore instance = new InMemoryBillStore();
+
+    // Getter for the instance
+    public static InMemoryBillStore getInstance(){
+        return instance;
+    }
     private ArrayList<Bill> billData;
 
     // Constructor which also loads the data from the native library

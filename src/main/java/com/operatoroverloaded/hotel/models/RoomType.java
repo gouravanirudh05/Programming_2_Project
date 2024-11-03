@@ -1,10 +1,11 @@
 package com.operatoroverloaded.hotel.models;
 
+import java.util.List;
 public class RoomType {
     private int roomTypeID;
     private String roomTypeName;
     private float tariff;
-    private <List> amenities;
+    private List<String> amenities;
     // boolean TO_BE_IMPLEMENTED = true;
 
 
@@ -45,8 +46,5 @@ public class RoomType {
 
     public void setAmenities(List<String> amenities) {
         this.amenities = amenities;
-    }
-    public static String getRoomTypeName(){
-        return "TO_BE_IMPLEMENTED";
     }
 }

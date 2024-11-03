@@ -5,7 +5,11 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 
 public class InMemoryRestaurantCustomerStore implements RestaurantCustomerStore {
+    private static final InMemoryRestaurantCustomerStore instance = new InMemoryRestaurantCustomerStore();
 
+    public static InMemoryRestaurantCustomerStore getInstance() {
+        return instance;
+    }
 // -----------------------------------------------------------------Attributes-------------------------------------------------------------------------------------------------------------
 
     private List<RestaurantCustomer> restaurantCustomers;
@@ -15,7 +19,7 @@ public class InMemoryRestaurantCustomerStore implements RestaurantCustomerStore 
 
 // -----------------------------------------------------------------Constructor-------------------------------------------------------------------------------------------------------------
 
-    InMemoryRestaurantCustomerStore() { // constructor (also calls the loadFromFile function)
+    public InMemoryRestaurantCustomerStore() { // constructor (also calls the loadFromFile function)
         if (InMemoryRestaurantCustomerStore.objectExists == true) {
             throw new IllegalStateException("Restaurant customer database already exists");
         }

@@ -11,7 +11,12 @@ import com.operatoroverloaded.hotel.models.Room;
 
 @Component
 @Profile("in-memory")
-public class InMemoryRoomStore implements RoomStore, Serializable {
+public class InMemoryRoomStore implements RoomStore {
+    private static final InMemoryRoomStore instance = new InMemoryRoomStore();
+
+    public static InMemoryRoomStore getInstance() {
+        return instance;
+    }
     private static final long serialVersionUID = 1L;
     private final List<Room> rooms = new ArrayList<>();
 

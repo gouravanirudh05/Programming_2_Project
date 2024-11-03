@@ -11,12 +11,7 @@ import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
 public class ConsoleApplication implements CommandLineRunner {
-    private RoomStore roomStore;
-
-    public void setRoomStore(RoomStore roomStore) {
-        this.roomStore = roomStore;
-    }
-    
+    private Hotel hotel = Hotel.getInstance();
     @Override
     public void run(String... args) {
         System.out.println("************************** CONSOLE APP *********************************");
@@ -32,10 +27,10 @@ public class ConsoleApplication implements CommandLineRunner {
 
             switch (input.toLowerCase()) {
                 case "add room":
-                    // addRoom();
+                // Eg function. hotel.roomStore.addRoom(new Room(1, "roomType"));
                     break;
                 case "view rooms":
-                    // viewRooms();
+                // Eg function. hotel.roomStore.getRooms();
                     break;
                 case "exit":
                     running = false;

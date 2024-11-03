@@ -6,6 +6,13 @@ import com.operatoroverloaded.hotel.models.Room;
 
 
 public interface RoomStore {
+    public static RoomStore roomStore = null;
+    public static RoomStore getInstance(){
+        return roomStore;
+    }
+    public static void setInstance(RoomStore roomStore){
+        roomStore = roomStore;
+    }
     void addRoom(Room room);
     List<Room> getRooms();
     Room deleteRoom(int roomNumber);

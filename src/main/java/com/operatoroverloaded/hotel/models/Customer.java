@@ -92,7 +92,7 @@ abstract public class Customer {
     public void addBill(int billid){ //expects bill id
         for (int id : this.bills) if (id == billid) return; //if billid already exists simply return
         this.bills.add(billid);
-        Bill bill = BillStore.getBill(billid); //assuming that there is a database for bills called billStore that returns me the bill, if i pass a billId to it
+        Bill bill = BillStore.getInstance().getBill(billid); //assuming that there is a database for bills called billStore that returns me the bill, if i pass a billId to it
         setBillAmount(bill_amt+bill.getAmount());
     }
 
@@ -103,7 +103,7 @@ abstract public class Customer {
     }
 
     public void deleteBill(int billid){ //expects bill id
-        Bill b = BillStore.getBill(billid);
+        Bill b = BillStore.getInstance().getBill(billid);
         for (int id : bills) if (id == billid) {
             setBillAmount(bill_amt-b.getAmount());
         } 

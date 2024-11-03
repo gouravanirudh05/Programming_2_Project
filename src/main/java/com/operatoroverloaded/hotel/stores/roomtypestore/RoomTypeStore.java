@@ -6,6 +6,13 @@ import com.operatoroverloaded.hotel.models.RoomType;
 import java.util.List;
 
 public interface RoomTypeStore {
+    public static RoomTypeStore roomTypeStore = null;
+    public static RoomTypeStore getInstance(){
+        return roomTypeStore;
+    }
+    public static void setInstance(RoomTypeStore roomTypeStore){
+        roomTypeStore = roomTypeStore;
+    }
     void addRoomType(RoomType roomType);
     List<RoomType> getRoomTypes();
     RoomType deleteRoomType(int roomTypeId);

@@ -8,21 +8,24 @@ package com.operatoroverloaded.hotel.models;
 
 public class Error extends Exception{
     private int code;
+    private String err_message;
 
-    public Error(String message) {
+    public Error(String message, int code) {
         super(message);
-        this.code = 0;
+        this.code = code;
+        this.err_message = message;
+
     }
 
     public String getMessage() {
-        return message;
+        return err_message;
     }
 
     public int getCode() {
         return code;
     }
 
-    public int getCodeText(){
+    public String getCodeText(){
         switch (code){
             case 1:
                 return "Segmentation Fault";

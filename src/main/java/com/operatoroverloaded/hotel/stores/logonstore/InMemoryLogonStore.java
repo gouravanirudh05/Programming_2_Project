@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import com.operatoroverloaded.hotel.models.Logon;
 
 public class InMemoryLogonStore implements LogonStore {
+    private static final InMemoryLogonStore instance = new InMemoryLogonStore();
+    public static InMemoryLogonStore getInstance(){
+        return instance;
+    }
     private ArrayList<Logon> logonData;
 
     // Constructor which also loads the data from the native library

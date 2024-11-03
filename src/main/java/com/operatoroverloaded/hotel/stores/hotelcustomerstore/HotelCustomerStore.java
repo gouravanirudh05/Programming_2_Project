@@ -4,6 +4,13 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
 public interface HotelCustomerStore {
+    public static HotelCustomerStore hotelCustomerStore = null;
+    public static HotelCustomerStore getInstance(){
+        return hotelCustomerStore;
+    }
+    public static void setInstance(HotelCustomerStore hotelCustomerStore){
+        hotelCustomerStore = hotelCustomerStore;
+    }
     void loadFromFile();
     void storeToFile();
     int addCustomer(HotelCustomer customer);
