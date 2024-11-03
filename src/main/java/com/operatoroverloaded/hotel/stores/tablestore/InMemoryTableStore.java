@@ -1,3 +1,5 @@
+//        !!!More changes need to be done!!!
+
 package com.operatoroverloaded.hotel.stores.tablestore;
 
 import java.util.ArrayList;
@@ -7,11 +9,13 @@ import com.operatoroverloaded.hotel.models.Table;
 
 public class InMemoryTableStore implements TableStore {
     private static final InMemoryTableStore instance = new InMemoryTableStore();
+    private final List<Table> tables = new ArrayList<>();
+
+    private InMemoryTableStore() {}
 
     public static InMemoryTableStore getInstance() {
         return instance;
     }
-    private final List<Table> tables = new ArrayList<>();
 
     @Override
     public void addTable(Table table) {
@@ -24,13 +28,40 @@ public class InMemoryTableStore implements TableStore {
     }
 
     @Override
-    public native Table deleteTable(int tableId);
+    public Table deleteTable(int tableId) {
+        for (Table table : tables) {
+            if (table.getTableNumber() == tableId) {
+                tables.remove(table);
+                return table;
+            }
+        }
+        return null; // Return null if not found
+    }
+
     @Override
-    public native void updateTable(int tableId, Table table);
+    public void updateTable(int tableId, Table updatedTable) {
+        for (int i = 0; i < tables.size(); i++) {
+            if (tables.get(i).getTableNumber() == tableId) {
+                tables.set(i, updatedTable);
+                return;
+            }
+        }
+    }
+
     @Override
-    public native Table findTable(int tableId);
+    public Table findTable(int tableId) {
+        for (Table table : tables) {
+            if (table.getTableNumber() == tableId) {
+                return table;
+            }
+        }
+        return null; // Return null if not found
+    }
+
+    // Native methods
     @Override
     public native void saveToFile();
+
     @Override    
     public native void loadFromFile();
-}           
+}
