@@ -72,10 +72,11 @@ public class InMemoryLogonStore implements LogonStore {
     }
 
     // Add a new user
-    @Override public void addNewUser(String access, String email, String password) {
+    @Override 
+    public Logon addNewUser(String access, String email, String password) {
         if(checkCredibilityOfEmail(email) || checkCredibilityOfPassword(password)){
             // System.out.println("Incorrect credentials");
-            return;
+            return null;
         }
 
         // get random salt and hash the password using native method 
@@ -91,10 +92,12 @@ public class InMemoryLogonStore implements LogonStore {
             salt
         );
         this.logonData.add(logon);
+        return logon;
     }
 
     // delete a user by id
-    @Override public void deleteUser(int id){
+    @Override 
+    public void deleteUser(int id){
         for(int i = 0; i < this.logonData.size(); i++){
             if(this.logonData.get(i).getRoleId() == id){
                 this.logonData.remove(i);
@@ -105,7 +108,8 @@ public class InMemoryLogonStore implements LogonStore {
     }
 
     // try to login with the email and password
-    @Override public boolean tryLogon(String email, String password){
+    @Override 
+    public Logon tryLogon(String email, String password){
         String hashedPassword = "";
         for(int i = 0; i < this.logonData.size(); i++){
             if(this.logonData.get(i).getEmail().equals(email)){
@@ -113,15 +117,15 @@ public class InMemoryLogonStore implements LogonStore {
                     hashedPassword = hashString(password, this.logonData.get(i).getSalt());
                 }
                 if(this.logonData.get(i).getPassword().equals(hashedPassword)){
-                    return true;
+                    return this.logonData.get(i);
                 }
             }
         }
-        return false;
+        return null;
     }
 
     // update the user data with the given id
-    @Override public void updateUser(int id, String access, String email, String password){
+    @Override public Logon updateUser(int id, String access, String email, String password){
         show();
         for(int i = 0; i < this.logonData.size(); i++){
             if(this.logonData.get(i).getRoleId() == id){
@@ -134,9 +138,10 @@ public class InMemoryLogonStore implements LogonStore {
                 if(password != "" && password != this.logonData.get(i).getPassword()){
                     updatePassword(i, password);
                 }
-                return;
+                return this.logonData.get(i);
             }
         }
+        return null;
         // System.out.println("User not found");
     }
 
