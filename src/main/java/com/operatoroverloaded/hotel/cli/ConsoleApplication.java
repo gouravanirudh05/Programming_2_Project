@@ -6,7 +6,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
-import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
+import com.operatoroverloaded.hotel.stores.*;
+import com.operatoroverloaded.hotel.stores.roomstore.*;
+import com.operatoroverloaded.hotel.stores.billstore.*;
+import com.operatoroverloaded.hotel.stores.dishstore.*;
+import com.operatoroverloaded.hotel.stores.hotelcustomerstore.*;
+import com.operatoroverloaded.hotel.stores.logonstore.*;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
+import com.operatoroverloaded.hotel.stores.roomtypestore.*;
+import com.operatoroverloaded.hotel.stores.tablestore.*;
 
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
@@ -32,21 +40,29 @@ public class ConsoleApplication implements CommandLineRunner {
             System.out.println("\nHotel Management System");
             System.out.println("Enter a command: ");
             System.out.println("1. Room Management");
-            System.out.println("2. Customer Management");
-            System.out.println("3. Restaurant Management");
-            System.out.println("4. Exit");
+            System.out.println("2. (Hotel)Customer Management");
+            System.out.println("3. (Restaurant)Customer Management");
+            System.out.println("4. Restaurant Management");
+            System.out.println("5. Staff Management");
+            System.out.println("6. Exit");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
                     roomManagement();
                     break;
                 case 2:
-                    customerManagement();
+                    hotelCustomerManagement();
                     break;
                 case 3:
-                    restaurantManagement();
+                    restaurantCustomerManagement();
                     break;
                 case 4:
+                    restaurantManagement();
+                    break;
+                case 5:
+                    staffManagement();
+                    break;
+                case 6:
                     System.out.println("Exiting...");
                     System.exit(0);
                 default:
@@ -88,14 +104,13 @@ public class ConsoleApplication implements CommandLineRunner {
 
     }
 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void customerManagement() {
+    // ----------HOTEL CUSTOMER
+    // MANAGMENT--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private void hotelCustomerManagement() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\nCustomer Management");
         System.out.println("1. Create Customer");
-        System.out.println("2. Add to Waiting List");
-        System.out.println("3. Serve Customer");
         System.out.println("4. Back");
 
         int choice = scanner.nextInt();
@@ -105,20 +120,16 @@ public class ConsoleApplication implements CommandLineRunner {
                 // createCustomer();
                 System.out.println("Creating Customer...");
                 break;
-            case 2:
-                // addToWaitingList();
-                System.out.println("Adding to Waiting List...");
-                break;
-            case 3:
-                // serveCustomer();
-                System.out.println("Serving Customer...");
-                break;
             case 4:
                 break;
             default:
                 System.out.println("Invalid choice!");
 
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private void restaurantCustomerManagement() {
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
