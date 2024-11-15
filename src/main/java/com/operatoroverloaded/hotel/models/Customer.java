@@ -211,4 +211,17 @@ abstract public class Customer {
         reservedTo = new DateTime(0,0,0,0,0,0);
     }
 
+//-------------------------------------------------------------display------------------------------------------------------------------------------------
+
+    public String toString(){
+        String str = "";
+        str = str + "Name: " + name + "\nEmail: " + email + "\nPhone number: " + phone + "\nAddress: " + address + "\nTotal Bill amount: " + bill_amt + "\nBill payed: " + bill_payed + "\nBill left: " + bill_left + "\nReserved from: " + reservedFrom.toString();
+        if (reservedTo.timeDifference(new DateTime(0,0,0,0,0,0)) != 0) str = str + "\nReserved to: " + reservedTo.toString();
+        return str;
+    }
+
+    public String viewCustomerDetails(){
+        return toString();
+    }
+
 }

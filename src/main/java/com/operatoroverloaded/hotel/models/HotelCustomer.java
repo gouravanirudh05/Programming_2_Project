@@ -3,8 +3,7 @@ import java.util.ArrayList;
 
 public class HotelCustomer extends Customer{
 
-    private ArrayList<Integer> reservations;
-    DateTime reservedFrom, reservedTo;
+    private ArrayList<Integer> reservations; //I will just store the id's here
 
 //-------------------------------------------------------------------Constructors--------------------------------------------------------------------------------------------------
 
@@ -44,7 +43,6 @@ public class HotelCustomer extends Customer{
     public ArrayList<Integer> getReservations(){
         return this.reservations;
     }
-
 
 //-------------------------------------------------------------------Other Constructors--------------------------------------------------------------------------------------------------
 
