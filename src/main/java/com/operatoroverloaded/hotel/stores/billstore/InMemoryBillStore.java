@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import com.operatoroverloaded.hotel.models.Bill;
 import com.operatoroverloaded.hotel.models.DateTime;
 
-public class InMemoryBillStore implements BillStore {
+public class InMemoryBillStore extends BillStore {
     private static final InMemoryBillStore instance = new InMemoryBillStore();
 
     // Getter for the instance
