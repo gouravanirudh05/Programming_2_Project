@@ -1,12 +1,18 @@
 package com.operatoroverloaded.hotel.cli;
 
 import java.util.Scanner;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
-
-import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
+import com.operatoroverloaded.hotel.stores.*;
+import com.operatoroverloaded.hotel.stores.roomstore.*;
+import com.operatoroverloaded.hotel.stores.billstore.*;
+import com.operatoroverloaded.hotel.stores.dishstore.*;
+import com.operatoroverloaded.hotel.stores.hotelcustomerstore.*;
+import com.operatoroverloaded.hotel.stores.logonstore.*;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
+import com.operatoroverloaded.hotel.stores.roomtypestore.*;
+import com.operatoroverloaded.hotel.stores.tablestore.*;
 
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
@@ -31,20 +37,20 @@ public class ConsoleApplication implements CommandLineRunner {
         while (running) {
             System.out.println("\nHotel Management System");
             System.out.println("Enter a command: ");
-            System.out.println("1. Room Management");
-            System.out.println("2. Customer Management");
-            System.out.println("3. Restaurant Management");
+            System.out.println("1. Hotel Management");
+            System.out.println("2. Restaurant Management");
+            System.out.println("3. Staff Management");
             System.out.println("4. Exit");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    roomManagement();
+                    hotelManagement();
                     break;
                 case 2:
-                    customerManagement();
+                    restaurantManagement();
                     break;
                 case 3:
-                    restaurantManagement();
+                    staffManagement();
                     break;
                 case 4:
                     System.out.println("Exiting...");
@@ -56,14 +62,17 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void roomManagement() {
+    private void hotelManagement() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nRoom Management");
-        System.out.println("1. Create Room");
+        System.out.println("\nHotel Management");
+        System.out.println("1. Add Room to Database");
         System.out.println("2. Book Room");
         System.out.println("3. Check Out Room");
-        System.out.println("4. Back");
+        System.out.println("4. View all (current) Customers");
+        System.out.println("5. Check Out Room");
+
+        System.out.println("6. Back");
 
         int choice = scanner.nextInt();
 
@@ -88,14 +97,13 @@ public class ConsoleApplication implements CommandLineRunner {
 
     }
 
-    // ----------CUSTOMER MANAGMENT--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void customerManagement() {
+    // ----------HOTEL CUSTOMER
+    // MANAGMENT--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private void hotelCustomerManagement() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\nCustomer Management");
         System.out.println("1. Create Customer");
-        System.out.println("2. Add to Waiting List");
-        System.out.println("3. Serve Customer");
         System.out.println("4. Back");
 
         int choice = scanner.nextInt();
@@ -105,20 +113,16 @@ public class ConsoleApplication implements CommandLineRunner {
                 // createCustomer();
                 System.out.println("Creating Customer...");
                 break;
-            case 2:
-                // addToWaitingList();
-                System.out.println("Adding to Waiting List...");
-                break;
-            case 3:
-                // serveCustomer();
-                System.out.println("Serving Customer...");
-                break;
             case 4:
                 break;
             default:
                 System.out.println("Invalid choice!");
 
         }
+    }
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    private void restaurantCustomerManagement() {
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

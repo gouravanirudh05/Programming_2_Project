@@ -16,6 +16,7 @@ public class Hotel {
     public static Hotel getInstance() {
         return instance;
     }
+
     private String name;
     private String description;
     private String location;
@@ -33,7 +34,8 @@ public class Hotel {
     public static RestaurantCustomerStore restaurantCustomerStore = RestaurantCustomerStore.getInstance();
     public static LogonStore logonStore = LogonStore.getInstance();
 
-    public Hotel(String name, String description, String location, String city, String state, String country, int rating, String phone) {
+    public Hotel(String name, String description, String location, String city, String state, String country,
+            int rating, String phone) {
         this.name = name;
         this.description = description;
         this.location = location;
@@ -44,7 +46,8 @@ public class Hotel {
         this.phone = phone;
         restaurant = new Restaurant();
     }
-    public static void reConfigure(){
+
+    public static void reConfigure() {
         roomStore = RoomStore.getInstance();
         roomTypeStore = RoomTypeStore.getInstance();
         billStore = BillStore.getInstance();
