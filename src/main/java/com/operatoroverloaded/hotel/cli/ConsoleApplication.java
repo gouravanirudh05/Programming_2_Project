@@ -1,21 +1,27 @@
 package com.operatoroverloaded.hotel.cli;
 
 import java.util.Scanner;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
-// import com.operatoroverloaded.hotel.stores.*;
-import com.operatoroverloaded.hotel.models.*;
-import com.operatoroverloaded.hotel.stores.roomstore.*;
-import com.operatoroverloaded.hotel.stores.billstore.*;
-import com.operatoroverloaded.hotel.stores.dishstore.*;
-import com.operatoroverloaded.hotel.stores.hotelcustomerstore.*;
-import com.operatoroverloaded.hotel.stores.logonstore.*;
-import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
-import com.operatoroverloaded.hotel.stores.roomtypestore.*;
-import com.operatoroverloaded.hotel.stores.staffstore.*;
-import com.operatoroverloaded.hotel.stores.tablestore.*;
+import com.operatoroverloaded.hotel.models.Logon;
+import com.operatoroverloaded.hotel.stores.billstore.BillStore;
+import com.operatoroverloaded.hotel.stores.dishstore.DishStore;
+import com.operatoroverloaded.hotel.stores.dishstore.InMemoryDishStore;
+import com.operatoroverloaded.hotel.stores.hotelcustomerstore.HotelCustomerStore;
+import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.InMemoryRestaurantCustomerStore;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.RestaurantCustomerStore;
+import com.operatoroverloaded.hotel.stores.roomstore.InMemoryRoomStore;
+import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
+import com.operatoroverloaded.hotel.stores.roomtypestore.InMemoryRoomTypeStore;
+import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
+import com.operatoroverloaded.hotel.stores.staffstore.InMemoryStaffStore;
+import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
+import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
+import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
@@ -39,13 +45,14 @@ public class ConsoleApplication implements CommandLineRunner {
     public void run(String... args) {
         System.out.println("************************** CONSOLE APP *********************************");
         System.out.println("\n\nLOGIN PAGE");
+        Logon user = null;
         for (int i = 4; i >= 0; i--) {
             System.out.println("Please enter your login details to continue...");
             System.out.println("Email ID: ");
             String email = scanner.next();
             System.out.println("Password: ");
             String psw = scanner.next();
-            Logon user = logonStore.tryLogon(email, psw);
+            user = logonStore.tryLogon(email, psw);
             if (user != null)
                 break;
             else {
@@ -66,7 +73,7 @@ public class ConsoleApplication implements CommandLineRunner {
             roomsAccess = true;
             restaurantAccess = false;
         } else
-            throw Exception("INCORRECT USER ACCESS TYPE");
+            // throw Error("INCORRECT USER ACCESS TYPE");
 
         System.out.println("LogIn Successful!!");
         System.out.println("\n\n" + "-".repeat(100) + "\n\n");
@@ -93,13 +100,13 @@ public class ConsoleApplication implements CommandLineRunner {
                     restaurantManagement();
                     break;
                 case 3:
-                    staffManagement();
+                    // staffManagement();
                     break;
                 case 4:
                     restaurantManagement();
                     break;
                 case 5:
-                    staffManagement();
+                    // staffManagement();
                     break;
                 case 6:
                     System.out.println("Exiting...");
