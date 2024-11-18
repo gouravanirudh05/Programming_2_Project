@@ -1,6 +1,8 @@
 package com.operatoroverloaded.hotel.stores.logonstore;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+
 import com.operatoroverloaded.hotel.models.Logon;
 
 public class InMemoryLogonStore implements LogonStore {
@@ -35,12 +37,14 @@ public class InMemoryLogonStore implements LogonStore {
     }
 
     // Check the credibility of the email
-    private boolean checkCredibilityOfEmail(String email){
-        if(email.length() < 5) return true;
-        if(!email.contains("@") || email.contains(" ")) return true;
-        if(email.charAt(0) == '@' || email.charAt(email.length() - 1) == '@') return true;
-        for(int i = 0; i < this.logonData.size(); i++){
-            if(this.logonData.get(i).getEmail().equals(email)){
+    private boolean validateEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        if (email == null || !pattern.matcher(email).matches()) {
+            return true;
+        }
+        for (int i = 0; i < this.logonData.size(); i++) {
+            if (this.logonData.get(i).getEmail().equals(email)) {
                 return true;
             }
         }
@@ -48,9 +52,22 @@ public class InMemoryLogonStore implements LogonStore {
     }
 
     // Check the credibility of the password
-    private boolean checkCredibilityOfPassword(String password){
-        if(password.length() < 8) return true;
-        if(password.charAt(0) == ' ' || password.charAt(password.length() - 1) == ' ') return true;
+    private boolean validatePassword(String password) {
+        if (password == null) return true;
+        
+        // Regex to check if the password has at least one digit, one uppercase letter, one lowercase letter, and is at least 8 characters long
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
+        Pattern pattern = Pattern.compile(passwordRegex);
+        
+        if (!pattern.matcher(password).matches()) {
+            return true;
+        }
+        
+        // Check if the password starts or ends with a space
+        if (password.charAt(0) == ' ' || password.charAt(password.length() - 1) == ' ') {
+            return true;
+        }
+        
         return false;
     }
 
@@ -61,20 +78,20 @@ public class InMemoryLogonStore implements LogonStore {
 
     // Update the email of the user
     private void updateEmail(int index, String email){
-        checkCredibilityOfEmail(email);
+        validateEmail(email);
         this.logonData.get(index).setEmail(email.trim().toLowerCase());
     }
 
     // Update the password of the user
     private void updatePassword(int index, String password){
-        checkCredibilityOfPassword(password);
+        validatePassword(password);
         this.logonData.get(index).setPassword(hashString(password, this.logonData.get(index).getSalt()));
     }
 
     // Add a new user
     @Override 
     public Logon addNewUser(String access, String email, String password) {
-        if(checkCredibilityOfEmail(email) || checkCredibilityOfPassword(password)){
+        if(validateEmail(email) || validatePassword(password)){
             // System.out.println("Incorrect credentials");
             return null;
         }

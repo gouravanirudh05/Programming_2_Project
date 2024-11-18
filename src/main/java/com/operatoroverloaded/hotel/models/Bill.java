@@ -112,4 +112,15 @@ public class Bill {
     public void setPayedOn(DateTime payedOn){
         this.payedOn = payedOn;
     }
+
+    @Override
+    public String toString() {
+        String str = "Bill ID: " + billId + "\nAmount: " + amount + "\nItems:\n";
+        for(int i = 0; i < purchased.size(); i++){
+            str += purchased.get(i) + " " + purchasedList.get(i) + " " + quantity.get(i) + "\n";
+        }
+        str += "Generated on: " + generatedOn.getDateString() + " " + generatedOn.getTimeString() + "\n";
+        str += "Payed on: " + payedOn.getDateString() + " " + payedOn.getTimeString() + "\n";
+        return str;
+    }
 }
