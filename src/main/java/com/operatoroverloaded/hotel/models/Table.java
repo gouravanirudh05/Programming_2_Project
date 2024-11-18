@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.models;
 //Preliminary code
 public class Table {
     private static int totalTables = 0; 

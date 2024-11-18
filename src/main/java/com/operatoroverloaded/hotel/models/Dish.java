@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.models;
 //Basic structural code,changes can be made according to future requirements
 public class Dish {
     public enum DishType {

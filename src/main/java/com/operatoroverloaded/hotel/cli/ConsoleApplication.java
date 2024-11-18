@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
-import com.operatoroverloaded.hotel.stores.*;
+// import com.operatoroverloaded.hotel.stores.*;
 import com.operatoroverloaded.hotel.stores.roomstore.*;
 import com.operatoroverloaded.hotel.stores.billstore.*;
 import com.operatoroverloaded.hotel.stores.dishstore.*;
