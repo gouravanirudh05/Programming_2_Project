@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryStaffStore implements StaffStore {
+    private static final InMemoryStaffStore instance = new InMemoryStaffStore();
+
+    public static InMemoryStaffStore getInstance() {
+        return instance;
+    }
+
     private List<Staff> staffList;
 
     public InMemoryStaffStore() {
@@ -50,4 +56,10 @@ public class InMemoryStaffStore implements StaffStore {
     public List<Staff> getAllStaff() {
         return new ArrayList<>(staffList);
     }
+
+    @Override
+    public native void saveToFile();
+
+    @Override
+    public native void loadFromFile();
 }
