@@ -1,12 +1,12 @@
 package com.operatoroverloaded.hotel.cli;
 
 import java.util.Scanner;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
 import org.springframework.stereotype.Component;
 
 // import com.operatoroverloaded.hotel.stores.*;
+import com.operatoroverloaded.hotel.models.*;
 import com.operatoroverloaded.hotel.stores.roomstore.*;
 import com.operatoroverloaded.hotel.stores.billstore.*;
 import com.operatoroverloaded.hotel.stores.dishstore.*;
@@ -14,21 +14,62 @@ import com.operatoroverloaded.hotel.stores.hotelcustomerstore.*;
 import com.operatoroverloaded.hotel.stores.logonstore.*;
 import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
 import com.operatoroverloaded.hotel.stores.roomtypestore.*;
+import com.operatoroverloaded.hotel.stores.staffstore.*;
 import com.operatoroverloaded.hotel.stores.tablestore.*;
 
 @Component
 @ConditionalOnNotWebApplication // Only run when the application is NOT a web application
 public class ConsoleApplication implements CommandLineRunner {
-    private RoomStore roomStore;
 
-    public void setRoomStore(RoomStore roomStore) {
-        this.roomStore = roomStore;
-    }
+    private static Scanner scanner = new Scanner(System.in);
+
+    private static BillStore billStore = BillStore.getInstance();
+    private static DishStore dishStore = InMemoryDishStore.getInstance();
+    private static HotelCustomerStore hotelCustomerStore = HotelCustomerStore.getInstance();
+    private static LogonStore logonStore = LogonStore.getInstance();
+    private static RestaurantCustomerStore restaurantCustomerStore = InMemoryRestaurantCustomerStore.getInstance();
+    private static RoomStore roomStore = InMemoryRoomStore.getInstance();
+    private static RoomTypeStore roomTypeStore = InMemoryRoomTypeStore.getInstance();
+    private static StaffStore staffStore = InMemoryStaffStore.getInstance();
+    private static TableStore tableStore = InMemoryTableStore.getInstance();
+
+    static boolean roomsAccess = false, restaurantAccess = false;
 
     @Override
     public void run(String... args) {
         System.out.println("************************** CONSOLE APP *********************************");
-        handleInput();
+        System.out.println("\n\nLOGIN PAGE");
+        for (int i = 4; i >= 0; i--) {
+            System.out.println("Please enter your login details to continue...");
+            System.out.println("Email ID: ");
+            String email = scanner.next();
+            System.out.println("Password: ");
+            String psw = scanner.next();
+            Logon user = logonStore.tryLogon(email, psw);
+            if (user != null)
+                break;
+            else {
+                if (i == 0) {
+                    System.out.println("Login attempts exhausted.. Please restart the application.");
+                    return;
+                }
+                System.out.println("Login failed (" + i + " attempts left).. \nPlease try again.");
+            }
+        }
+        if (user.getAccess().equals("Admin")) {
+            roomsAccess = true;
+            restaurantAccess = true;
+        } else if (user.getAccess().equals("Restaurant")) {
+            roomsAccess = false;
+            restaurantAccess = true;
+        } else if (user.getAccess().equals("Room")) {
+            roomsAccess = true;
+            restaurantAccess = false;
+        } else
+            throw Exception("INCORRECT USER ACCESS TYPE");
+
+        System.out.println("LogIn Successful!!");
+        System.out.println("\n\n" + "-".repeat(100) + "\n\n");
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -39,22 +80,20 @@ public class ConsoleApplication implements CommandLineRunner {
         while (running) {
             System.out.println("\nHotel Management System");
             System.out.println("Enter a command: ");
-            System.out.println("1. Room Management");
-            System.out.println("2. (Hotel)Customer Management");
-            System.out.println("3. (Restaurant)Customer Management");
-            System.out.println("4. Restaurant Management");
-            System.out.println("5. Staff Management");
-            System.out.println("6. Exit");
+            System.out.println("1. Hotel Management");
+            System.out.println("2. Restaurant Management");
+            System.out.println("3. Staff Management");
+            System.out.println("4. Exit");
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    roomManagement();
+                    hotelManagement();
                     break;
                 case 2:
-                    hotelCustomerManagement();
+                    restaurantManagement();
                     break;
                 case 3:
-                    restaurantCustomerManagement();
+                    staffManagement();
                     break;
                 case 4:
                     restaurantManagement();
@@ -72,14 +111,17 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private void roomManagement() {
+    private void hotelManagement() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\nRoom Management");
-        System.out.println("1. Create Room");
+        System.out.println("\nHotel Management");
+        System.out.println("1. Add Room to Database");
         System.out.println("2. Book Room");
         System.out.println("3. Check Out Room");
-        System.out.println("4. Back");
+        System.out.println("4. View all (current) Customers");
+        System.out.println("5. Check Out Room");
+
+        System.out.println("6. Back");
 
         int choice = scanner.nextInt();
 
