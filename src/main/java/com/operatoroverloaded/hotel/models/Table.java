@@ -48,6 +48,9 @@ public class Table {
     public static int getTotalTables() {
         return totalTables;
     }
+   public int getTableNumber(){
+       return tableNumber;
+   }
 
 
     public void displayTableInfo() {
