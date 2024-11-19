@@ -3,7 +3,8 @@ package com.operatoroverloaded.hotel.cli;
 import java.util.Scanner;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.operatoroverloaded.hotel.models.Logon;
@@ -24,7 +25,8 @@ import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
 import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 
 @Component
-@ConditionalOnNotWebApplication // Only run when the application is NOT a web application
+@Lazy
+@Profile("cli") // Only run when the application is NOT a web application
 public class ConsoleApplication implements CommandLineRunner {
 
     private static Scanner scanner = new Scanner(System.in);

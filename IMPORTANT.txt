@@ -5,7 +5,33 @@ To run build - please use the following command:
 mvn clean install
 To run build without compiling the frontend - please use the following command:
 mvn clean install -Dskip.npm    (DEFAULT)
+-------- UPDATE
+To RUN THE Program
+java -jar hotel-0.0.1-SNAPSHOT.jar -Djava.library.path=classes\lib
+FOR GUI
+java -jar hotel-0.0.1-SNAPSHOT.jar -Djava.library.path=classes\lib gui
+-----------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+OLD
 To run the application (with frontend) - please use the following command:
 java -jar target/hotel-0.0.1-SNAPSHOT.jar
 

@@ -91,11 +91,23 @@
     </dependencies>
 
     <build>
+        <resources>
+        <resource>
+            <directory>src/main/resources/libs</directory>
+            <targetPath>lib</targetPath>
+            <includes>
+                <include>**/*.so</include>
+            </includes>
+        </resource>
+        </resources>
         <plugins>
             <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <jvmArguments>-Djava.library.path=target/lib</jvmArguments>
+                </configuration>
             </plugin>
 
             <!-- Frontend Plugin Configuration for React -->

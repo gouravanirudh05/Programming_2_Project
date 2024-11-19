@@ -1,5 +1,8 @@
 package com.operatoroverloaded.hotel.controller;
 
+import java.util.Map;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,9 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
 import com.operatoroverloaded.hotel.utils.JwtUtil;
 
-import java.util.Map;
-
 @RestController
+@Profile("gui")
 public class AuthController {
 
     // Public route to simulate login and generate a token
