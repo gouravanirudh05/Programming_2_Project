@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.RoomType;
 
-public class InMemoryRoomTypeStore implements RoomTypeStore {
+public class InMemoryRoomTypeStore extends RoomTypeStore {
     private static final InMemoryRoomTypeStore instance = new InMemoryRoomTypeStore();
 
     public static InMemoryRoomTypeStore getInstance() {

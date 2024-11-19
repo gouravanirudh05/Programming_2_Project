@@ -5,20 +5,20 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 
-public interface RestaurantCustomerStore {
+public abstract class RestaurantCustomerStore {
     public static RestaurantCustomerStore restaurantCustomerStore = null;
     public static RestaurantCustomerStore getInstance(){
         return restaurantCustomerStore;
     }
     public static void setInstance(RestaurantCustomerStore restaurantCustomerStore){
-        restaurantCustomerStore = restaurantCustomerStore;
+        RestaurantCustomerStore.restaurantCustomerStore = restaurantCustomerStore;
     }
-    void loadFromFile();
-    void storeToFile();
-    int addCustomer(RestaurantCustomer customer);
-    void deleteCustomer(int id);
-    List<RestaurantCustomer> getCustomers();
-    RestaurantCustomer getCustomer(int id);
-    int getCustomerId(RestaurantCustomer customer);
-    void updateCustomer(int id, RestaurantCustomer customer);
+    abstract void loadFromFile();
+    abstract void storeToFile();
+    abstract int addCustomer(RestaurantCustomer customer);
+    abstract void deleteCustomer(int id);
+    abstract List<RestaurantCustomer> getCustomers();
+    abstract RestaurantCustomer getCustomer(int id);
+    abstract int getCustomerId(RestaurantCustomer customer);
+    abstract void updateCustomer(int id, RestaurantCustomer customer);
 }

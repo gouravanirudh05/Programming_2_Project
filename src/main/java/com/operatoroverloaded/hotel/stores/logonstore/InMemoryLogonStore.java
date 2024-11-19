@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import com.operatoroverloaded.hotel.models.Logon;
 
-public class InMemoryLogonStore implements LogonStore {
+public class InMemoryLogonStore extends LogonStore {
     private static final InMemoryLogonStore instance = new InMemoryLogonStore();
     public static InMemoryLogonStore getInstance(){
         return instance;
@@ -33,7 +33,7 @@ public class InMemoryLogonStore implements LogonStore {
     // Load the native library
     static {
         // TODO: change the path to the library
-        // System.loadLibrary("LogonCPP");
+        System.loadLibrary("LogonCPP");
     }
 
     // Check the credibility of the email

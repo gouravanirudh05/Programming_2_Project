@@ -3,20 +3,20 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
-public interface HotelCustomerStore {
+public abstract class HotelCustomerStore {
     public static HotelCustomerStore hotelCustomerStore = null;
     public static HotelCustomerStore getInstance(){
         return hotelCustomerStore;
     }
     public static void setInstance(HotelCustomerStore hotelCustomerStore){
-        hotelCustomerStore = hotelCustomerStore;
+        HotelCustomerStore.hotelCustomerStore = hotelCustomerStore;
     }
-    void loadFromFile();
-    void storeToFile();
-    int addCustomer(HotelCustomer customer);
-    void deleteCustomer(int id);
-    List<HotelCustomer> getCustomers();
-    HotelCustomer getCustomer(int id);
-    int getCustomerId(HotelCustomer customer);
-    void updateCustomer(int id, HotelCustomer customer);
+    abstract void loadFromFile();
+    abstract void storeToFile();
+    abstract int addCustomer(HotelCustomer customer);
+    abstract void deleteCustomer(int id);
+    abstract List<HotelCustomer> getCustomers();
+    abstract HotelCustomer getCustomer(int id);
+    abstract int getCustomerId(HotelCustomer customer);
+    abstract void updateCustomer(int id, HotelCustomer customer);
 } 

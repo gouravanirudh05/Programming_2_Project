@@ -4,7 +4,7 @@ import com.operatoroverloaded.hotel.models.Staff;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InMemoryStaffStore implements StaffStore {
+public class InMemoryStaffStore extends StaffStore {
     private static final InMemoryStaffStore instance = new InMemoryStaffStore();
 
     public static InMemoryStaffStore getInstance() {
