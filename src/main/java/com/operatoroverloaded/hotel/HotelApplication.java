@@ -1,6 +1,8 @@
 package com.operatoroverloaded.hotel;
 import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import com.operatoroverloaded.hotel.models.Hotel;
@@ -21,6 +23,9 @@ import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
 import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
 import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = { 
+    SecurityAutoConfiguration.class 
+})
 public class HotelApplication {
 
 	public static void main(String[] args) {
@@ -32,10 +37,11 @@ public class HotelApplication {
 
         // RoomStore roomStore = context.getBean(RoomStore.class);
         String storeType = "in-memory";
-        String interfaceType = "cli";
+        String interfaceType = "gui";
+        System.err.println(System.getProperty("java.library.path"));
         // Override defaults with arguments if provided
         System.err.println("HELLO-TEST");
-        System.err.println(args[0]+args[1]);
+        // System.err.println(args[0]+args[1]);
         if (args.length > 0) {
             storeType = args[0];
         }

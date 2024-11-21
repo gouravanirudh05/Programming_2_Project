@@ -1,36 +1,45 @@
-package com.operatoroverloaded.hotel.controller;
+// package com.operatoroverloaded.hotel.controller;
 
-import java.util.Map;
+// import org.springframework.http.ResponseEntity;
+// import org.springframework.security.crypto.password.PasswordEncoder;
+// import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.RequestMapping;
+// import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+// import com.operatoroverloaded.hotel.models.Logon;
+// // import com.operatoroverloaded.hotel.security.JwtService;
+// import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
 
-import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
-import com.operatoroverloaded.hotel.utils.JwtUtil;
+// @RestController
+// @RequestMapping("/api/auth")
+// public class AuthController {
 
-@RestController
-@Profile("gui")
-public class AuthController {
+//     // private final PasswordEncoder passwordEncoder;
+//     // private final JwtService jwtService;
 
-    // Public route to simulate login and generate a token
-    @PostMapping("/public/login")
-    public String login(@RequestBody Map<String, String> request) {
-        String userId = request.get("userId");
-        String password = request.get("password");
+//     // public AuthController(PasswordEncoder passwordEncoder, JwtService jwtService) {
+//     //     this.passwordEncoder = passwordEncoder;
+//     //     this.jwtService = jwtService;
+//     // }
 
-        // Simulate authentication (replace with actual user verification logic)
-        if (LogonStore.getInstance().tryLogon(userId, password) != null) {
-            return JwtUtil.generateToken(userId);
-        }
-        return "Invalid credentials";
-    }
+//     @PostMapping("/login")
+//     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+//         LogonStore logonStore = LogonStore.getInstance();
+//         Logon user = logonStore.tryLogon(email, password);
 
-    // Protected route to demonstrate authentication
-    @GetMapping("/secure/profile")
-    public String profile() {
-        return "Secure user profile data";
-    }
-}
+//         if (user == null) {
+//             return ResponseEntity.status(401).body("Invalid credentials");
+//         }
+
+//         String jwt = jwtService.generateToken(user.getEmail());
+//         return ResponseEntity.ok().body(jwt);
+//     }
+
+//     @PostMapping("/register")
+//     public ResponseEntity<?> register(@RequestParam String email, @RequestParam String password, @RequestParam String access) {
+//         LogonStore logonStore = LogonStore.getInstance();
+//         Logon user = logonStore.addNewUser(access, email, passwordEncoder.encode(password));
+//         return ResponseEntity.ok(user);
+//     }
+// }
