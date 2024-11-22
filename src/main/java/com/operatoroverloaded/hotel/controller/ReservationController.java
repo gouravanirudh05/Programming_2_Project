@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.Reservation;
 import com.operatoroverloaded.hotel.models.DateTime;
-import com.operatoroverloaded.hotel.models.Room;
-import com.operatoroverloaded.hotel.models.Bill;
 import com.operatoroverloaded.hotel.stores.reservationstore.ReservationStore;
 
 @RestController
@@ -38,20 +36,19 @@ public class ReservationController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addReservation(@RequestBody JsonNode json) {
-        String roomId = json.get("roomId").asString();
-        Room room = new Room(roomId); // Assuming Room constructor takes roomId, modify as needed
+        String roomId = json.get("roomId").asText();
         String guestName = json.get("guestName").asText();
         DateTime startDateTime = DateTime.fromISOString(json.get("startDateTime").asText());
         DateTime endDateTime = DateTime.fromISOString(json.get("endDateTime").asText());
-        Bill bill = new Bill(json.get("billId").asInt()); // Assuming Bill constructor takes billId, modify as needed
+        int billId = json.get("billId").asInt();
 
         Reservation reservation = new Reservation(
             reservationStore.getAllReservations().size() + 1, // Generate new reservation ID
-            room,
+            roomId,  // Room id directly as string
             guestName,
             startDateTime,
             endDateTime,
-            bill
+            billId
         );
         reservationStore.addReservation(reservation);
         return ResponseEntity.ok().body("Reservation added successfully");
@@ -65,20 +62,19 @@ public class ReservationController {
 
     @PostMapping("/update/{reservationId}")
     public ResponseEntity<?> updateReservation(@PathVariable int reservationId, @RequestBody JsonNode json) {
-        int roomId = json.get("roomId").asInt();
-        Room room = new Room(roomId); // Assuming Room constructor takes roomId, modify as needed
+        String roomId = json.get("roomId").asText();
         String guestName = json.get("guestName").asText();
         DateTime startDateTime = DateTime.fromISOString(json.get("startDateTime").asText());
         DateTime endDateTime = DateTime.fromISOString(json.get("endDateTime").asText());
-        Bill bill = new Bill(json.get("billId").asInt()); // Assuming Bill constructor takes billId, modify as needed
+        int billId = json.get("billId").asInt();
 
         Reservation updatedReservation = new Reservation(
             reservationId,
-            room,
+            roomId, // Room id directly as string
             guestName,
             startDateTime,
             endDateTime,
-            bill
+            billId
         );
         reservationStore.updateReservation(reservationId, updatedReservation);
         return ResponseEntity.ok().body("Reservation updated successfully");
