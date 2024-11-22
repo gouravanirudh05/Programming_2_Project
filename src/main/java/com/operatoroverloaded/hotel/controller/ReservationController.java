@@ -42,16 +42,21 @@ public class ReservationController {
         DateTime endDateTime = DateTime.fromISOString(json.get("endDateTime").asText());
         int billId = json.get("billId").asInt();
 
-        Reservation reservation = new Reservation(
+        // Attempt to create a reservation only if no overlap exists
+        Reservation newReservation = reservationStore.createReservationIfNoOverlap(
             reservationStore.getAllReservations().size() + 1, // Generate new reservation ID
-            roomId,  // Room id directly as string
+            roomId,
             guestName,
             startDateTime,
             endDateTime,
             billId
         );
-        reservationStore.addReservation(reservation);
-        return ResponseEntity.ok().body("Reservation added successfully");
+
+        if (newReservation == null) {
+            return ResponseEntity.status(409).body("Time conflict detected. Reservation could not be created.");
+        }
+
+        return ResponseEntity.ok().body("Reservation added successfully: " + newReservation);
     }
 
     @PostMapping("/remove/{reservationId}")
