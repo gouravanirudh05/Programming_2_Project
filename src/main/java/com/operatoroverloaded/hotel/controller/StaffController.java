@@ -78,8 +78,9 @@ public class StaffController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Staff>> getAllStaff() {
-        return ResponseEntity.ok(staffStore.getAllStaff());
+    public ResponseEntity<?> getAllStaff() {
+        List<Staff> staffList = staffStore.getAllStaff();
+        return ResponseEntity.ok().body(staffList);
     }
 
     @PostMapping("/save")
