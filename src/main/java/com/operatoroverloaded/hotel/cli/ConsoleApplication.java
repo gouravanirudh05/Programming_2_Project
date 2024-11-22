@@ -138,10 +138,13 @@ public class ConsoleApplication implements CommandLineRunner {
             String options = """
                         \nHotel Management
                         1. Add Room to Database
-                        2. View all (current) Customers
+                        2. View all Rooms
                         3. Book Room
                         4. Check Out Room
-                        5. Back
+                        5. Search Customer by name/customerID/email/phone
+                        6. View all 
+                        7. View all Customers
+                        8. Back
                     """;
             System.out.println(options);
             int choice = Integer.parseInt(scanner.nextLine().trim());
@@ -158,7 +161,7 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 4:
                     checkOutRoom();
                     break;
-                case 5:
+                case 8:
                     return;
                 default:
                     System.out.println("Invalid choice!");
