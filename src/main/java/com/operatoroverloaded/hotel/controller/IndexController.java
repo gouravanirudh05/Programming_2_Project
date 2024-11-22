@@ -1,10 +1,11 @@
-package com.operatoroverloaded.hotel.indexcontroller;
+package com.operatoroverloaded.hotel.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class IndexController {
 
     // @GetMapping("")
@@ -12,9 +13,16 @@ public class IndexController {
     //     ModelAndView mav=new ModelAndView("index");
     //     return mav;
     // }
-    @GetMapping({"/", "/**"})
-    public String home() {
-        return "forward:/index.html";
+    
+
+    @GetMapping("/ping")
+    public String ping() {
+        return "PINGED Server";
+    }
+    
+    @GetMapping("/api/**")
+    public String _home() {
+        return "API";
     }
 
 }

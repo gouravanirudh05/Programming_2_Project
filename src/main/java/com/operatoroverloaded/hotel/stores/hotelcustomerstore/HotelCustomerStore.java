@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
-public interface HotelCustomerStore {
+public abstract class HotelCustomerStore {
     public static HotelCustomerStore hotelCustomerStore = null;
 
     public static HotelCustomerStore getInstance() {
@@ -12,22 +12,22 @@ public interface HotelCustomerStore {
     }
 
     public static void setInstance(HotelCustomerStore hotelCustomerStore) {
-        hotelCustomerStore = hotelCustomerStore;
+        HotelCustomerStore.hotelCustomerStore = hotelCustomerStore;
     }
 
-    void loadFromFile();
+    abstract void loadFromFile();
 
-    void storeToFile();
+    abstract void storeToFile();
 
-    int addCustomer(HotelCustomer customer);
+    abstract int addCustomer(HotelCustomer customer);
 
-    void deleteCustomer(int id);
+    abstract void deleteCustomer(int id);
 
-    List<HotelCustomer> getCustomers();
+    abstract List<HotelCustomer> getCustomers();
 
-    HotelCustomer getCustomer(int id);
+    abstract HotelCustomer getCustomer(int id);
 
-    int getCustomerId(HotelCustomer customer);
+    abstract int getCustomerId(HotelCustomer customer);
 
-    void updateCustomer(int id, HotelCustomer customer);
+    abstract void updateCustomer(int id, HotelCustomer customer);
 }

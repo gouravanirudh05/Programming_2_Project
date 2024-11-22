@@ -2,6 +2,7 @@ package com.operatoroverloaded.hotel.models;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
 
 public class DateTime {
     private int year;
@@ -19,6 +20,25 @@ public class DateTime {
         this.hour = hour;
         this.minute = minute;
         this.second = second;
+    }
+
+    // Parses an ISO 8601 string into a DateTime object
+    public static DateTime fromISOString(String isoString) {
+        // Parse the ISO string into a LocalDateTime object
+        LocalDateTime parsedDateTime = LocalDateTime.parse(
+                isoString.replace("Z", ""), // Remove 'Z' for UTC (if present)
+                DateTimeFormatter.ISO_DATE_TIME
+        );
+
+        // Create and return a new DateTime object
+        return new DateTime(
+                parsedDateTime.getYear(),
+                parsedDateTime.getMonthValue(),
+                parsedDateTime.getDayOfMonth(),
+                parsedDateTime.getHour(),
+                parsedDateTime.getMinute(),
+                parsedDateTime.getSecond()
+        );
     }
 
     // Gets the current time

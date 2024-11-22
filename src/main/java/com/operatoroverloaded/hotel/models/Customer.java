@@ -1,5 +1,4 @@
 package com.operatoroverloaded.hotel.models;
-import java.sql.Date;
 import java.util.ArrayList;
 import com.operatoroverloaded.hotel.stores.billstore.*;
 abstract public class Customer {

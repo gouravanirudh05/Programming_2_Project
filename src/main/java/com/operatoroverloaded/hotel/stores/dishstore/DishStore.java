@@ -4,20 +4,20 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.Dish;
 
-public interface DishStore {
+public abstract class DishStore {
     public static DishStore dishStore = null;
     public static DishStore getInstance(){
         return dishStore;
     }
     public static void setInstance(DishStore dishStore){
-        dishStore = dishStore;
+        DishStore.dishStore = dishStore;
     }
-    void addDish(Dish dish);
-    List<Dish> getDishes();
-    Dish deleteDish(int dishId);
+    abstract void addDish(Dish dish);
+    abstract List<Dish> getDishes();
+    abstract Dish deleteDish(int dishId);
     // void saveAll(); // To save to .tmp files for the in-memory version
-    void saveToFile();
-    void updateDish(int dishId, Dish dish);
-    Dish findDish(int dishId);
-    void loadFromFile();
+    abstract void saveToFile();
+    abstract void updateDish(int dishId, Dish dish);
+    abstract Dish findDish(int dishId);
+    abstract void loadFromFile();
 }

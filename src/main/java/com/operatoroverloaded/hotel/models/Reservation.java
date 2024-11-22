@@ -1,5 +1,5 @@
+package com.operatoroverloaded.hotel.models;
 import java.time.LocalDateTime;
-import com.operatoroverloaded.hotel.models.Room;
 
 public abstract class Reservation {
     protected Room room;

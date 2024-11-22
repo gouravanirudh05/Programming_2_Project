@@ -10,7 +10,7 @@ import com.operatoroverloaded.hotel.models.Room;
 
 @Component
 @Profile("sql")
-public class SQLRoomStore implements RoomStore {
+public class SQLRoomStore extends RoomStore {
     private static final SQLRoomStore instance = new SQLRoomStore(new JdbcTemplate());
 
     public static SQLRoomStore getInstance() {

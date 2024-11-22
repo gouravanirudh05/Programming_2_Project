@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
-public class InMemoryHotelCustomerStore implements HotelCustomerStore {
+public class InMemoryHotelCustomerStore extends HotelCustomerStore {
     private static final InMemoryHotelCustomerStore instance = new InMemoryHotelCustomerStore();
 
     public static InMemoryHotelCustomerStore getInstance() {

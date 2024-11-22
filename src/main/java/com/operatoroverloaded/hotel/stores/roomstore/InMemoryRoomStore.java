@@ -1,6 +1,5 @@
 package com.operatoroverloaded.hotel.stores.roomstore;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import com.operatoroverloaded.hotel.models.Room;
 
 @Component
 @Profile("in-memory")
-public class InMemoryRoomStore implements RoomStore {
+public class InMemoryRoomStore extends RoomStore {
     private static final InMemoryRoomStore instance = new InMemoryRoomStore();
 
     public static InMemoryRoomStore getInstance() {

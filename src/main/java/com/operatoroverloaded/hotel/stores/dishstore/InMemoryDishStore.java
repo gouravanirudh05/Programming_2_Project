@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.operatoroverloaded.hotel.models.Dish;
 
-public class InMemoryDishStore implements DishStore {
+public class InMemoryDishStore extends DishStore {
 
     private static final InMemoryDishStore instance = new InMemoryDishStore();
     private final List<Dish> dishes = new ArrayList<>();

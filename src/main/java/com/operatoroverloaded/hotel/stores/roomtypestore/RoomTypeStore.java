@@ -5,20 +5,20 @@ import com.operatoroverloaded.hotel.models.RoomType;
 
 import java.util.List;
 
-public interface RoomTypeStore {
+public abstract class RoomTypeStore {
     public static RoomTypeStore roomTypeStore = null;
     public static RoomTypeStore getInstance(){
         return roomTypeStore;
     }
     public static void setInstance(RoomTypeStore roomTypeStore){
-        roomTypeStore = roomTypeStore;
+        RoomTypeStore.roomTypeStore = roomTypeStore;
     }
-    void addRoomType(RoomType roomType);
-    List<RoomType> getRoomTypes();
-    RoomType deleteRoomType(int roomTypeId);
+    abstract void addRoomType(RoomType roomType);
+    abstract List<RoomType> getRoomTypes();
+    abstract RoomType deleteRoomType(int roomTypeId);
     // void saveAll(); // To save to .tmp files for the in-memory version
-    void saveToFile();
-    void updateRoomType(int roomTypeId, RoomType roomType);
-    RoomType findRoomType(int roomTypeId);
-    void loadFromFile();
+    abstract void saveToFile();
+    abstract void updateRoomType(int roomTypeId, RoomType roomType);
+    abstract RoomType findRoomType(int roomTypeId);
+    abstract void loadFromFile();
 }

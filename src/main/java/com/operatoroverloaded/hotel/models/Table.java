@@ -1,3 +1,4 @@
+package com.operatoroverloaded.hotel.models;
 //Preliminary code
 public class Table {
     private static int totalTables = 0; 
@@ -47,6 +48,9 @@ public class Table {
     public static int getTotalTables() {
         return totalTables;
     }
+   public int getTableNumber(){
+       return tableNumber;
+   }
 
 
     public void displayTableInfo() {

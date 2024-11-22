@@ -1,13 +1,11 @@
 package com.operatoroverloaded.hotel.models;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.operatoroverloaded.hotel.stores.billstore.*;
-import com.operatoroverloaded.hotel.stores.hotelcustomerstore.*;
-import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
-import com.operatoroverloaded.hotel.stores.logonstore.*;
-import com.operatoroverloaded.hotel.stores.roomstore.*;
-import com.operatoroverloaded.hotel.stores.roomtypestore.*;
+import com.operatoroverloaded.hotel.stores.billstore.BillStore;
+import com.operatoroverloaded.hotel.stores.hotelcustomerstore.HotelCustomerStore;
+import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.RestaurantCustomerStore;
+import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
+import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
 // import com.operatoroverloaded.hotel.models.re
 
 public class Hotel {
@@ -15,6 +13,18 @@ public class Hotel {
 
     public static Hotel getInstance() {
         return instance;
+    }
+
+    Hotel() {
+        this.name = "Hotel";
+        this.description = "Hotel description";
+        this.location = "Hotel location";
+        this.city = "Hotel city";
+        this.state = "Hotel state";
+        this.country = "Hotel country";
+        this.rating = 5;
+        this.phone = "Hotel phone";
+        restaurant = new Restaurant();
     }
 
     private String name;
@@ -28,7 +38,7 @@ public class Hotel {
 
     public Restaurant restaurant;
     public static RoomStore roomStore = RoomStore.getInstance();
-    public static RoomType roomTypeStore = RoomTypeStore.getInstance();
+    public static RoomTypeStore roomTypeStore = RoomTypeStore.getInstance();
     public static BillStore billStore = BillStore.getInstance();
     public static HotelCustomerStore hotelCustomerStore = HotelCustomerStore.getInstance();
     public static RestaurantCustomerStore restaurantCustomerStore = RestaurantCustomerStore.getInstance();
