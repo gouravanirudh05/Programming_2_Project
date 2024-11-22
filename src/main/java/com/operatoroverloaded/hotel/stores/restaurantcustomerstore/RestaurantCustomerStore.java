@@ -7,10 +7,12 @@ import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 
 public abstract class RestaurantCustomerStore {
     public static RestaurantCustomerStore restaurantCustomerStore = null;
-    public static RestaurantCustomerStore getInstance(){
+
+    public static RestaurantCustomerStore getInstance() {
         return restaurantCustomerStore;
     }
-    public static void setInstance(RestaurantCustomerStore restaurantCustomerStore){
+
+    public static void setInstance(RestaurantCustomerStore restaurantCustomerStore) {
         RestaurantCustomerStore.restaurantCustomerStore = restaurantCustomerStore;
     }
     public abstract void loadFromFile();

@@ -1,14 +1,17 @@
 package com.operatoroverloaded.hotel.stores.hotelcustomerstore;
+
 import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
 public abstract class HotelCustomerStore {
     public static HotelCustomerStore hotelCustomerStore = null;
-    public static HotelCustomerStore getInstance(){
+
+    public static HotelCustomerStore getInstance() {
         return hotelCustomerStore;
     }
-    public static void setInstance(HotelCustomerStore hotelCustomerStore){
+
+    public static void setInstance(HotelCustomerStore hotelCustomerStore) {
         HotelCustomerStore.hotelCustomerStore = hotelCustomerStore;
     }
     public abstract void loadFromFile();
