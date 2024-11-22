@@ -7,18 +7,20 @@ import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 
 public abstract class RestaurantCustomerStore {
     public static RestaurantCustomerStore restaurantCustomerStore = null;
-    public static RestaurantCustomerStore getInstance(){
+
+    public static RestaurantCustomerStore getInstance() {
         return restaurantCustomerStore;
     }
-    public static void setInstance(RestaurantCustomerStore restaurantCustomerStore){
+
+    public static void setInstance(RestaurantCustomerStore restaurantCustomerStore) {
         RestaurantCustomerStore.restaurantCustomerStore = restaurantCustomerStore;
     }
-    abstract void loadFromFile();
-    abstract void storeToFile();
-    abstract int addCustomer(RestaurantCustomer customer);
-    abstract void deleteCustomer(int id);
-    abstract List<RestaurantCustomer> getCustomers();
-    abstract RestaurantCustomer getCustomer(int id);
-    abstract int getCustomerId(RestaurantCustomer customer);
-    abstract void updateCustomer(int id, RestaurantCustomer customer);
+    public abstract void loadFromFile();
+    public abstract void storeToFile();
+    public abstract int addCustomer(RestaurantCustomer customer);
+    public abstract void deleteCustomer(int id);
+    public abstract List<RestaurantCustomer> getCustomers();
+    public abstract RestaurantCustomer getCustomer(int id);
+    public abstract int getCustomerId(RestaurantCustomer customer);
+    public abstract void updateCustomer(int id, RestaurantCustomer customer);
 }
