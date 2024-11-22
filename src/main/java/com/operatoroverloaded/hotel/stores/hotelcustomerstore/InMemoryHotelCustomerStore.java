@@ -76,12 +76,11 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
 // -----------------------------------------------------------------Incomplete methods-------------------------------------------------------------------------------------------------------------
 
-    public void loadFromFile() {
+    public native void loadFromFile() ;
         // from the file load the hotelCustomers and the id
         // modify the id and hotel customers
-    }
 
-    public void storeToFile() {
+    public native void storeToFile() ;
         // store the id in first line and hotel customers afterwards
-    }
+    
 }
