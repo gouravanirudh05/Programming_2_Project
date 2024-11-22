@@ -47,6 +47,15 @@ public class DateTime {
         return new DateTime(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), now.getHour(), now.getMinute(), now.getSecond());
     }
 
+    //parse the date and time
+    public static DateTime parse(String date) {
+        String[] parts = date.split(" ");
+        String[] dateParts = parts[0].split("-");
+        String[] timeParts = parts[1].split(":");
+        return new DateTime(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
+                Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[2]));
+    }
+
     // Checks if the year is a leap year
     public boolean isLeap() {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);

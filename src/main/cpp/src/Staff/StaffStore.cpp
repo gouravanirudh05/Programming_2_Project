@@ -144,8 +144,8 @@ extern "C" {
         jfieldID phoneField = env->GetFieldID(staffClass, "phone", "I");
         jfieldID addressField = env->GetFieldID(staffClass, "address", "Ljava/lang/String;");
         jfieldID roleField = env->GetFieldID(staffClass, "role", "Ljava/lang/String;");
-        jfieldID workingFromField = env->GetFieldID(staffClass, "workingFrom", "Ljava/lang/String;");
-        jfieldID retiredOnField = env->GetFieldID(staffClass, "retiredOn", "Ljava/lang/String;");
+        jfieldID workingFromField = env->GetFieldID(staffClass, "workingFrom", "Lcom/operatoroverloaded/hotel/models/DateTime;");
+        jfieldID retiredOnField = env->GetFieldID(staffClass, "retiredOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
         jfieldID assignedToField = env->GetFieldID(staffClass, "assignedTo", "Ljava/lang/String;");
 
         // Iterate over each `Staff` object in the ArrayList
