@@ -7,8 +7,9 @@
 #include <openssl/sha.h>
 #include <iomanip>
 #include <random>
-
+#include "com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore.h"
 using namespace std;
+
 const int SALT_SIZE = 16;
 
 // Hash the password with the salt
@@ -74,12 +75,12 @@ string generateRandomString(size_t length) {
 
 extern "C" {
     // to generate a random salt
-    JNIEXPORT jstring JNICALL Java_LOGON_InMemoryLogonStore_getRandomSalt(JNIEnv *env, jobject obj) {
+    JNIEXPORT jstring JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_getRandomSalt(JNIEnv *env, jobject obj) {
         return env->NewStringUTF(generateRandomString(SALT_SIZE).c_str());
     }   
 
     // to hash the password
-    JNIEXPORT jstring JNICALL Java_LOGON_InMemoryLogonStore_hashString(JNIEnv *env, jobject obj, jstring password, jstring salt) {
+    JNIEXPORT jstring JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_hashString(JNIEnv *env, jobject obj, jstring password, jstring salt) {
         const char *nativePwd = env->GetStringUTFChars(password, 0);
         const char *nativeSalt = env->GetStringUTFChars(salt, 0);
         string hashedPassword = hashPassword(string(nativePwd), string(nativeSalt));
@@ -89,10 +90,10 @@ extern "C" {
     }
 
     // to load the login data from the file
-    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_loadLogon(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_loadLogon(JNIEnv *env, jobject obj) {
         // Read the contents of login.txt
         // TODO: change the path to the absolute path of the login.txt file as needed
-        ifstream file("LOGON/login.txt");
+        ifstream file("login.txt");
         if (!file.is_open()) {
             return;
         }
@@ -130,7 +131,7 @@ extern "C" {
 
         // Get the Logon class 
         // TODO: change the path to the Logon class as needed
-        jclass logonClass = env->FindClass("LOGON/Logon");
+        jclass logonClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon");
         if (logonClass == nullptr) {
             return;
         }
@@ -174,10 +175,10 @@ extern "C" {
         env->DeleteLocalRef(outerArrayList);
     }
 
-    JNIEXPORT void JNICALL Java_LOGON_InMemoryLogonStore_saveLogon(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_saveLogon(JNIEnv *env, jobject obj) {
         // Get the Logon class and the ArrayList field
         // TODO: change the path to the Logon class as needed
-        jclass logonClass = env->FindClass("LOGON/Logon");
+        jclass logonClass = env->FindClass("Logon");
         jclass InMemoryLogonStoreClass = env->GetObjectClass(obj);
         jfieldID logonArrayField = env->GetFieldID(InMemoryLogonStoreClass, "logonData", "Ljava/util/ArrayList;");
         jobject logonArray = env->GetObjectField(obj, logonArrayField);
@@ -190,18 +191,18 @@ extern "C" {
 
         // Get the Logon fields
         jfieldID roleIdField = env->GetFieldID(logonClass, "roleId", "I");
-        jfieldID accessField = env->GetFieldID(logonClass, "access", "LLOGON/Logon$AccessLevel;");  // Fix for enum
+        jfieldID accessField = env->GetFieldID(logonClass, "access", "Lcom/operatoroverloaded/hotel/models/Logon$AccessLevel;");  // Fix for enum
         jfieldID emailField = env->GetFieldID(logonClass, "email", "Ljava/lang/String;");
         jfieldID passwordField = env->GetFieldID(logonClass, "password", "Ljava/lang/String;");
         jfieldID saltField = env->GetFieldID(logonClass, "salt", "Ljava/lang/String;");
 
         // Get the AccessLevel enum and the toString method
         // TODO: change the path to the AccessLevel enum as needed
-        jclass accessLevelClass = env->FindClass("LOGON/Logon$AccessLevel");
+        jclass accessLevelClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon$AccessLevel");
         jmethodID toStringMethod = env->GetMethodID(accessLevelClass, "toString", "()Ljava/lang/String;");
 
         // TODO: change the path to the login.txt file as needed
-        ofstream file("LOGON/login.txt");
+        ofstream file("login.txt");
         if(!file.is_open()){
             return;
         }

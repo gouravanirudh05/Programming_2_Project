@@ -1,18 +1,18 @@
 #include <fstream>
 #include <jni.h>
-#include "BILL_InMemoryBillStore.h"
+#include "com_operatoroverloaded_hotel_stores_billstore_InMemoryBillStore.h"
 #include <string>
-using namespace std;
 #include <algorithm>
+using namespace std;
 
 // id-amt - yy/mm/dd - hh:mm:ss - yy/mm/dd - hh:mm:ss - dish1:dish2:...:dishn-p1:p2:p3:...:pn-q1:q2:...:qn\
 
 
 extern "C"{
     // function to load the bill data from the file and store it in a list
-    JNIEXPORT void JNICALL Java_BILL_InMemoryBillStore_loadBill(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_billstore_InMemoryBillStore_loadBill(JNIEnv *env, jobject obj) {
         // TODO: change the path to the file as neccessary
-        ifstream fin("BILL/bill.txt");
+        ifstream fin("bill.txt");
         if (!fin.is_open()) {
             return;
         }
@@ -21,7 +21,7 @@ extern "C"{
 
         // Get the class and field ids
         // TODO: change the path to the class as necessary
-        jclass billClass = env->FindClass("BILL/Bill"); 
+        jclass billClass = env->FindClass("com/operatoroverloaded/hotel/models/Bill"); 
         jclass InMemoryBillStoreClass = env->GetObjectClass(obj);
         jfieldID billArrayField = env->GetFieldID(InMemoryBillStoreClass, "billData", "Ljava/util/ArrayList;");
         jobject billArray = env->GetObjectField(obj, billArrayField);
@@ -129,10 +129,10 @@ extern "C"{
         }
     }
 
-    JNIEXPORT void JNICALL Java_BILL_InMemoryBillStore_saveBill(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_billstore_InMemoryBillStore_saveBill(JNIEnv *env, jobject obj) {
         // Get the class and field ids
         // TODO: change the path to the class as necessary
-        jclass billClass = env->FindClass("BILL/Bill");
+        jclass billClass = env->FindClass("com/operatoroverloaded/hotel/models/Bill");
         jclass InMemoryBillStoreClass = env->GetObjectClass(obj);
         jfieldID billArrayField = env->GetFieldID(InMemoryBillStoreClass, "billData", "Ljava/util/ArrayList;");
         jobject billArray = env->GetObjectField(obj, billArrayField);
@@ -149,18 +149,18 @@ extern "C"{
         jfieldID purchasedField = env->GetFieldID(billClass, "purchased", "Ljava/util/ArrayList;");
         jfieldID purchasedListField = env->GetFieldID(billClass, "purchasedList", "Ljava/util/ArrayList;");
         jfieldID quantityField = env->GetFieldID(billClass, "quantity", "Ljava/util/ArrayList;");
-        jfieldID generatedOnField = env->GetFieldID(billClass, "generatedOn", "LBILL/DateTime;");
-        jfieldID payedOnField = env->GetFieldID(billClass, "payedOn", "LBILL/DateTime;");
+        jfieldID generatedOnField = env->GetFieldID(billClass, "generatedOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
+        jfieldID payedOnField = env->GetFieldID(billClass, "payedOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
 
         // TODO: change the path to the file as necessary
-        ofstream file("BILL/bill.txt");
+        ofstream file("bill.txt");
         if (!file.is_open()) {
             return;
         }
          
         // Get the class and method ids for DateTime
         // TODO: change the path to the class as necessary
-        jclass dateTimeClass = env->FindClass("BILL/DateTime");
+        jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
         jmethodID getDateString = env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;");
         jmethodID getTimeString = env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;");
 
