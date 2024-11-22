@@ -16,7 +16,7 @@ public class HTMLController {
     // public String error() {
     //     return "forward:/404.html";
     // }
-    @RequestMapping("/home/")
+    @RequestMapping("/")
     public String home() {
         System.err.println("test");
         return "forward:/index.html"; // Thymeleaf resolves this to src/main/resources/templates/index.html
