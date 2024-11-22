@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InMemoryStaffStore extends StaffStore {
+    static{
+        System.loadLibrary("StaffStore");
+    }
     private static final InMemoryStaffStore instance = new InMemoryStaffStore();
 
     public static InMemoryStaffStore getInstance() {
@@ -15,6 +18,7 @@ public class InMemoryStaffStore extends StaffStore {
 
     public InMemoryStaffStore() {
         this.staffList = new ArrayList<>();
+        this.loadFromFile();
     }
 
     @Override
