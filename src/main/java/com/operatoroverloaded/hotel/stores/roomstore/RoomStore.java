@@ -13,12 +13,12 @@ public abstract class RoomStore {
     public static void setInstance(RoomStore roomStore){
         RoomStore.roomStore = roomStore;
     }
-    abstract void addRoom(Room room);
-    abstract List<Room> getRooms();
-    abstract Room deleteRoom(int roomNumber);
+    public abstract void addRoom(Room room);
+    public abstract List<Room> getRooms();
+    public abstract Room deleteRoom(int roomNumber);
     // void saveAll(); // To save to .tmp files for the in-memory version
-    abstract void saveToFile();
-    abstract void updateRoom(int roomId, Room room);
-    abstract Room findRoom(int roomId);
-    abstract void loadFromFile();
+    public abstract void saveToFile();
+    public abstract void updateRoom(int roomId, Room room);
+    public abstract Room findRoom(int roomId);
+    public abstract void loadFromFile();
 }
