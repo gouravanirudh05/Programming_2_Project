@@ -30,4 +30,27 @@ public abstract class ReservationStore {
     public abstract void save();
 
     public abstract void load();
+
+    // New abstract method to create a reservation if no overlap exists
+    public abstract Reservation createReservationIfNoOverlap(
+            int reservationId, String roomID, String guestName,
+            DateTime startDateTime, DateTime endDateTime, int billId
+    );
+
+    // Implementation of `addReservation` to ensure no overlaps
+    public void addReservationIfNoOverlap(Reservation reservation) {
+        Reservation existing = createReservationIfNoOverlap(
+                reservation.getReservationId(),
+                reservation.getRoomID(),
+                reservation.getGuestName(),
+                reservation.getStartDateTime(),
+                reservation.getEndDateTime(),
+                reservation.getBillId()
+        );
+        if (existing != null) {
+            addReservation(existing);
+        } else {
+            System.out.println("Cannot add reservation: Time conflict detected.");
+        }
+    }
 }
