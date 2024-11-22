@@ -67,7 +67,7 @@ public class StaffController {
         return ResponseEntity.ok().body("Staff updated successfully");
     }
 
-    @DeleteMapping("/remove/{staffID}")
+    @PostMapping("/remove/{staffID}")
     public ResponseEntity<?> removeStaff(@PathVariable int staffID) {
         Staff staff = staffStore.getStaffById(staffID);
         if (staff == null) {
