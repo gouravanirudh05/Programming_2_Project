@@ -1,40 +1,80 @@
 package com.operatoroverloaded.hotel.stores.roomstore;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 import com.operatoroverloaded.hotel.models.Room;
 
-@Component
-@Profile("in-memory")
+// import org.springframework.context.annotation.Profile;
+// import org.springframework.stereotype.Component;
+// import com.operatoroverloaded.hotel.models.Room;
+
+// @Component
+// @Profile("in-memory")
 public class InMemoryRoomStore extends RoomStore {
+    private  ArrayList<Room> rooms = new ArrayList<>();
+    private static final long serialVersionUId = 1L;
     private static final InMemoryRoomStore instance = new InMemoryRoomStore();
 
     public static InMemoryRoomStore getInstance() {
         return instance;
     }
-    private static final long serialVersionUID = 1L;
-    private final List<Room> rooms = new ArrayList<>();
+
+    static {
+        System.loadLibrary("RoomCPP");
+    }
 
     @Override
     public void addRoom(Room room) {
         rooms.add(room);
     }
-    @Override
-    public List<Room> getRooms() {
+    
+    public ArrayList<Room> getRooms() {
         return rooms;
     }
+
     @Override
-    public native Room deleteRoom(int roomId);
+    public Room deleteRoom(String roomId){
+        Room room = null;
+        for(Room r: rooms){
+            if(r.getRoomId() == roomId){
+                room = r;
+                rooms.remove(r);
+                break;
+            }
+        }
+        return room;
+    }
+
     @Override
-    public native void updateRoom(int roomId, Room room);
+    public void updateRoom(String roomId, Room room){
+        for(Room r: rooms){
+            if(r.getRoomId() == roomId){
+                r.setCapacity(room.getCapacity());
+                r.setHousekeepingLast(room.getHousekeepingLast());
+                r.setRoomTypeId(room.getRoomTypeId());
+                break;
+            }
+        }
+    }
+
     @Override
-    public native Room findRoom(int roomId);
-    @Override
+    public Room findRoom(String roomId){
+        for(Room r: rooms){
+            if(r.getRoomId() == roomId){
+                return r;
+            }
+        }
+        return null;
+    }
+
+    public void save(){
+        saveToFile();
+    }
+
+    public void load(){
+        loadFromFile();
+    }
+    
     public native void saveToFile();
-    @Override
     public native void loadFromFile();
 }

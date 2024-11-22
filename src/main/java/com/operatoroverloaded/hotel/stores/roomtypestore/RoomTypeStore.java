@@ -1,9 +1,8 @@
 package com.operatoroverloaded.hotel.stores.roomtypestore;
 
-import com.operatoroverloaded.hotel.models.RoomType;
-// import com.operatoroverloaded.hotel.stores.Store;
+import java.util.ArrayList;
 
-import java.util.List;
+import com.operatoroverloaded.hotel.models.RoomType;
 
 public abstract class RoomTypeStore {
     public static RoomTypeStore roomTypeStore = null;
@@ -14,11 +13,10 @@ public abstract class RoomTypeStore {
         RoomTypeStore.roomTypeStore = roomTypeStore;
     }
     abstract void addRoomType(RoomType roomType);
-    abstract List<RoomType> getRoomTypes();
-    abstract RoomType deleteRoomType(int roomTypeId);
-    // void saveAll(); // To save to .tmp files for the in-memory version
-    abstract void saveToFile();
-    abstract void updateRoomType(int roomTypeId, RoomType roomType);
-    abstract RoomType findRoomType(int roomTypeId);
-    abstract void loadFromFile();
+    abstract ArrayList<RoomType> getRoomTypes();
+    abstract RoomType deleteRoomType(String roomTypeId);
+    abstract void save();
+    abstract void updateRoomType(String roomTypeId, RoomType roomType);
+    abstract RoomType findRoomType(String roomTypeId);
+    abstract void load();
 }
