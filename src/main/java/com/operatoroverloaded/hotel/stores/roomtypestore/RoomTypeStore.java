@@ -12,11 +12,11 @@ public abstract class RoomTypeStore {
     public static void setInstance(RoomTypeStore roomTypeStore){
         RoomTypeStore.roomTypeStore = roomTypeStore;
     }
-    abstract void addRoomType(RoomType roomType);
-    abstract ArrayList<RoomType> getRoomTypes();
-    abstract RoomType deleteRoomType(String roomTypeId);
-    abstract void save();
-    abstract void updateRoomType(String roomTypeId, RoomType roomType);
-    abstract RoomType findRoomType(String roomTypeId);
-    abstract void load();
+    public abstract void addRoomType(RoomType roomType);
+    public abstract ArrayList<RoomType> getRoomTypes();
+    public abstract RoomType deleteRoomType(String roomTypeId);
+    public abstract void save();
+    public abstract void updateRoomType(String roomTypeId, RoomType roomType);
+    public abstract RoomType findRoomType(String roomTypeId);
+    public abstract void load();
 }

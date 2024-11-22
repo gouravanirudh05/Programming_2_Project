@@ -1,14 +1,19 @@
 package com.operatoroverloaded.hotel.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.Dish;
 import com.operatoroverloaded.hotel.models.Dish.DishType;
 import com.operatoroverloaded.hotel.stores.dishstore.InMemoryDishStore;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/dish")
@@ -68,7 +73,7 @@ public class DishController {
 
         String name = json.get("name").asText(existingDish.getName());
         float price = (float) json.get("price").asDouble(existingDish.getPrice());
-        DishType dishType = DishType.valueOf(json.get("dishType").asText().toUpperCase(existingDish.getDishType().toString()));
+        DishType dishType = DishType.valueOf(json.get("dishType").asText().toUpperCase());
         int calories = json.get("calories").asInt(existingDish.getCalories());
         int preparationTime = json.get("preparationTime").asInt(existingDish.getPreparationTime());
         boolean isAvailable = json.get("isAvailable").asBoolean(existingDish.isAvailable());

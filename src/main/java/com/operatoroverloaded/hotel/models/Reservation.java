@@ -1,10 +1,5 @@
 package com.operatoroverloaded.hotel.models;
-import com.operatoroverloaded.hotel.models.Room;
-import com.operatoroverloaded.hotel.models.DateTime;
-import com.operatoroverloaded.hotel.models.Bill;
-
-import java.util.*;
-public abstract class Reservation {
+public class Reservation {
     protected int reservationId; // Unique identifier for the reservation
     protected Room room;
     protected DateTime startDateTime;
