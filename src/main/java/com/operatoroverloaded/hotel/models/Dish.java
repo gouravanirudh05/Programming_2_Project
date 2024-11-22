@@ -1,11 +1,12 @@
 package com.operatoroverloaded.hotel.models;
 
+// Basic structural code, changes can be made according to future requirements
 public class Dish {
 
     private int dishID;
     private String name;
     private float price;
-    private String dishType; 
+    private String dishType; // Changed from enum to String
     private int calories;
     private int preparationTime;
     private boolean isAvailable;
@@ -14,7 +15,7 @@ public class Dish {
         this.dishID = dishID;
         this.name = name;
         this.price = price;
-        this.dishType = dishType;
+        setDishType(dishType); // Validate and set dishType here
         this.calories = calories;
         this.preparationTime = preparationTime;
         this.isAvailable = isAvailable;
@@ -48,8 +49,16 @@ public class Dish {
         return dishType;
     }
 
+    // Validate and set the dishType
     public void setDishType(String dishType) {
-        this.dishType = dishType;
+        if (dishType.equalsIgnoreCase("APPETIZER") || 
+            dishType.equalsIgnoreCase("MAIN_COURSE") || 
+            dishType.equalsIgnoreCase("DESSERT") || 
+            dishType.equalsIgnoreCase("BEVERAGE")) {
+            this.dishType = dishType.toUpperCase(); // Normalize to uppercase
+        } else {
+            throw new IllegalArgumentException("Invalid dish type. Must be one of: APPETIZER, MAIN_COURSE, DESSERT, BEVERAGE.");
+        }
     }
 
     public int getCalories() {
