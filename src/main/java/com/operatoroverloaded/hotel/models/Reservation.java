@@ -2,18 +2,18 @@ package com.operatoroverloaded.hotel.models;
 import java.util.*;
 
 public class Reservation {
-    private int reservationId; // Unique identifier for the reservation
-    private int roomNumber;   // Room number instead of Room object
-    private DateTime startDateTime; // Start date and time of reservation
-    private DateTime endDateTime;   // End date and time of reservation
-    private double totalAmount;     // Total amount based on Bill
-    private String guestName;       // Name of the guest
-    private int billId;             // Bill ID instead of Bill object
+    private int reservationId; 
+    private String roomID;   
+    private DateTime startDateTime; 
+    private DateTime endDateTime;   
+    private double totalAmount;     
+    private String guestName;       
+    private int billId;             
 
-    // Default constructor
+    
     public Reservation() {
         this.reservationId = -1;
-        this.roomNumber = 0;
+        this.roomID = "";
         this.startDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.endDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.totalAmount = 0.0;
@@ -21,18 +21,18 @@ public class Reservation {
         this.billId = -1;
     }
 
-    // Parameterized constructor
-    public Reservation(int reservationId, int roomNumber, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
+    
+    public Reservation(int reservationId, String roomID, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
         this.reservationId = reservationId;
-        this.roomNumber = roomNumber;
+        this.roomID = roomID;
         this.guestName = guestName;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.billId = billId;
-        this.totalAmount = 0.0; // This can be updated later when the bill information is available
+        this.totalAmount = 0.0; 
     }
 
-    // Getters and Setters
+    
     public int getReservationId() {
         return reservationId;
     }
@@ -41,12 +41,12 @@ public class Reservation {
         this.reservationId = reservationId;
     }
 
-    public int getRoomNumber() {
-        return roomNumber;
+    public String getRoomID() {
+        return roomID;
     }
 
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
     }
 
     public DateTime getStartDateTime() {
@@ -93,7 +93,7 @@ public class Reservation {
     public String toString() {
         return "Reservation{" +
                 "reservationId=" + reservationId +
-                ", roomNumber=" + roomNumber +
+                ", roomID='" + roomID + '\'' +
                 ", startDateTime=" + startDateTime.getDateString() + " " + startDateTime.getTimeString() +
                 ", endDateTime=" + endDateTime.getDateString() + " " + endDateTime.getTimeString() +
                 ", totalAmount=" + totalAmount +
