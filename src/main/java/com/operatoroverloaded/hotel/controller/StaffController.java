@@ -9,16 +9,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.Staff;
 import com.operatoroverloaded.hotel.models.DateTime;
 import com.operatoroverloaded.hotel.models.Staff.AssignedTo;
-import com.operatoroverloaded.hotel.stores.staffstore.InMemoryStaffStore;
+import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
 
 @RestController
 @RequestMapping("/api/staff")
 public class StaffController {
 
-    private final InMemoryStaffStore staffStore;
+    private final StaffStore staffStore;
 
     public StaffController() {
-        this.staffStore = InMemoryStaffStore.getInstance();
+        this.staffStore = StaffStore.getInstance();
     }
 
     @GetMapping("/{staffID}")
