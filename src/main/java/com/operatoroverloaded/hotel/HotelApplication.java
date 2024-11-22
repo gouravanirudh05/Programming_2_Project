@@ -39,6 +39,7 @@ public class HotelApplication {
         String storeType = "in-memory";
         String interfaceType = "gui";
         System.err.println(System.getProperty("java.library.path"));
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         // Override defaults with arguments if provided
         System.err.println("HELLO-TEST");
         // System.err.println(args[0]+args[1]);

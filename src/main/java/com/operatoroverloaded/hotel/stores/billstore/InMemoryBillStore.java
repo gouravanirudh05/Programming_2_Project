@@ -5,6 +5,9 @@ import com.operatoroverloaded.hotel.models.Bill;
 import com.operatoroverloaded.hotel.models.DateTime;
 
 public class InMemoryBillStore extends BillStore {
+    static {
+        System.loadLibrary("BillCPP");
+    }
     private static final InMemoryBillStore instance = new InMemoryBillStore();
 
     // Getter for the instance
@@ -41,9 +44,6 @@ public class InMemoryBillStore extends BillStore {
     // private native void saveBill();
 
     // Load the native library
-    // static {
-    //     System.loadLibrary("BillCPP");
-    // }
 
     @Override
     public void save(){

@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 import com.operatoroverloaded.hotel.models.Logon;
 
 public class InMemoryLogonStore extends LogonStore {
+    // Load the native library
+    static {
+        // TODO: change the path to the library
+        System.loadLibrary("LogonCPP");
+    }
     private static final InMemoryLogonStore instance = new InMemoryLogonStore();
     public static InMemoryLogonStore getInstance(){
         return instance;
@@ -15,7 +20,7 @@ public class InMemoryLogonStore extends LogonStore {
     // Constructor which also loads the data from the native library
     public InMemoryLogonStore() {
         this.logonData = new ArrayList<Logon>();
-        this.load();
+        // this.load();
     }
 
     // Getter for the logonData
@@ -28,13 +33,6 @@ public class InMemoryLogonStore extends LogonStore {
     private native void loadLogon();
     private native String hashString(String pwd, String salt);
     private native String getRandomSalt();
-
-
-    // Load the native library
-    static {
-        // TODO: change the path to the library
-        System.loadLibrary("LogonCPP");
-    }
 
     // Check the credibility of the email
     private boolean validateEmail(String email) {
@@ -92,7 +90,7 @@ public class InMemoryLogonStore extends LogonStore {
     @Override 
     public Logon addNewUser(String access, String email, String password) {
         if(validateEmail(email) || validatePassword(password)){
-            // System.out.println("Incorrect credentials");
+            System.out.println("Incorrect credentials - email/password");
             return null;
         }
 
@@ -109,6 +107,7 @@ public class InMemoryLogonStore extends LogonStore {
             salt
         );
         this.logonData.add(logon);
+        System.out.println("Added new user" + logon);
         return logon;
     }
 
