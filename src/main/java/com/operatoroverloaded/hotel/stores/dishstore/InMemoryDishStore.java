@@ -22,12 +22,17 @@ public class InMemoryDishStore extends DishStore {
 
     @Override
     public void addDish(String name, float price) {
-        dishes.add(new Dish(dishes.size(), name, price, Dish.DishType.MAIN_COURSE, 0, 0, true));
+        // Default dishType to MAIN_COURSE, calories and preparationTime to 0, and availability to true
+        try {
+            dishes.add(new Dish(dishes.size(), name, price, "MAIN_COURSE", 0, 0, true));
+        } catch (IllegalArgumentException e) {
+            System.err.println("Failed to add dish: " + e.getMessage());
+        }
     }
 
     @Override
     public List<Dish> getDishes() {
-        return new ArrayList<>(dishes);
+        return new ArrayList<>(dishes); // Return a copy of the list to prevent external modifications
     }
 
     @Override
@@ -38,14 +43,20 @@ public class InMemoryDishStore extends DishStore {
                 return dish;
             }
         }
-        return null;
+        return null; // Return null if no matching dish is found
     }
 
     @Override
     public void updateDish(int dishId, Dish updatedDish) {
         for (int i = 0; i < dishes.size(); i++) {
             if (dishes.get(i).getDishID() == dishId) {
-                dishes.set(i, updatedDish);
+                try {
+                    // Validate updatedDish's dishType before updating
+                    updatedDish.setDishType(updatedDish.getDishType());
+                    dishes.set(i, updatedDish);
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Failed to update dish: " + e.getMessage());
+                }
                 return;
             }
         }
@@ -58,9 +69,8 @@ public class InMemoryDishStore extends DishStore {
                 return dish;
             }
         }
-        return null;
+        return null; // Return null if no matching dish is found
     }
-
 
     @Override
     public native void saveToFile();
