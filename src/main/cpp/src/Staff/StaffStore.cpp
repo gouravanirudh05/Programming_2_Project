@@ -61,6 +61,34 @@ public:
         }
         return nullptr;
     }
+
+    void storeToFile(const std::string& fileName) {
+        std::ofstream file(fileName, std::ios::trunc);
+        if (file.is_open()) {
+            for (const auto& staff : staffList) {
+                file << staff.serialize() << std::endl;
+            }
+            file.close();
+        } else {
+            std::cerr << "Error: Unable to open file for writing: " << fileName << std::endl;
+        }
+    }
+
+    void loadFromFile(const std::string& fileName) {
+        std::ifstream file(fileName);
+        if (file.is_open()) {
+            std::string line;
+            staffList.clear();
+            while (std::getline(file, line)) {
+                if (!line.empty()) {
+                    staffList.push_back(Staff::deserialize(line));
+                }
+            }
+            file.close();
+        } else {
+            std::cerr << "Error: Unable to open file for reading: " << fileName << std::endl;
+        }
+    }
 };
 
 // Singleton instance of InMemoryStaffStore
@@ -100,6 +128,20 @@ JNIEXPORT jobject JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_In
         return env->NewObject(staffClass, constructor, staff->getStaffID(), name);
     }
     return nullptr; // Return null if staff not found
+}
+
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_storeToFile
+(JNIEnv* env, jobject obj, jstring fileName) {
+    const char* cFileName = env->GetStringUTFChars(fileName, NULL);
+    staffStore.storeToFile(std::string(cFileName));
+    env->ReleaseStringUTFChars(fileName, cFileName);
+}
+
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_loadFromFile
+(JNIEnv* env, jobject obj, jstring fileName) {
+    const char* cFileName = env->GetStringUTFChars(fileName, NULL);
+    staffStore.loadFromFile(std::string(cFileName));
+    env->ReleaseStringUTFChars(fileName, cFileName);
 }
 
 }
