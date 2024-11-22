@@ -21,6 +21,7 @@ public class InMemoryBillStore extends BillStore {
     public InMemoryBillStore(){
         this.billData = new ArrayList<Bill>();
         this.load();
+        System.err.println("Bill store loaded");
     }
 
     // Getter for the billData
@@ -44,6 +45,9 @@ public class InMemoryBillStore extends BillStore {
     // private native void saveBill();
 
     // Load the native library
+    // static {
+    //     System.loadLibrary("BillCPP");
+    // }
 
     @Override
     public void save(){

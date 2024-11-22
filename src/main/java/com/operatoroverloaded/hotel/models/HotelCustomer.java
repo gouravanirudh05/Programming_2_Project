@@ -3,8 +3,7 @@ import java.util.ArrayList;
 
 public class HotelCustomer extends Customer{
 
-    private ArrayList<Integer> reservations;
-    DateTime reservedFrom, reservedTo;
+    private ArrayList<Integer> reservations; //I will just store the id's here
 
 //-------------------------------------------------------------------Constructors--------------------------------------------------------------------------------------------------
 
@@ -45,7 +44,6 @@ public class HotelCustomer extends Customer{
         return this.reservations;
     }
 
-
 //-------------------------------------------------------------------Other Constructors--------------------------------------------------------------------------------------------------
 
 
@@ -62,6 +60,11 @@ public class HotelCustomer extends Customer{
     public HotelCustomer(String name, String email, String phone, String address){
         super(name, email, phone, address);
         this.reservations = new ArrayList<Integer>();
+    }
+
+    public HotelCustomer(String name, String email, String phone, String address, double bill_amt, double bill_payed, double bill_left, ArrayList<Integer> bills, DateTime reservedFrom, DateTime reservedTo, ArrayList<Integer> reservations){
+        super(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo);
+        this.reservations = reservations;
     }
 
 }

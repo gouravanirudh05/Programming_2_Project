@@ -12,12 +12,13 @@ public abstract class DishStore {
     public static void setInstance(DishStore dishStore){
         DishStore.dishStore = dishStore;
     }
-    abstract void addDish(Dish dish);
-    abstract List<Dish> getDishes();
-    abstract Dish deleteDish(int dishId);
+    public abstract void addDish(Dish dish);
+    public abstract List<Dish> getDishes();
+    public abstract Dish deleteDish(int dishId);
     // void saveAll(); // To save to .tmp files for the in-memory version
-    abstract void saveToFile();
-    abstract void updateDish(int dishId, Dish dish);
-    abstract Dish findDish(int dishId);
-    abstract void loadFromFile();
+    public abstract void saveToFile();
+    public abstract void updateDish(int dishId, Dish dish);
+    public abstract Dish findDish(int dishId);
+    public abstract void loadFromFile();
+    public abstract void addDish(String name, float price);
 }

@@ -1,15 +1,16 @@
 package com.operatoroverloaded.hotel.cli;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Arrays;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import com.operatoroverloaded.hotel.models.Bill;
-import com.operatoroverloaded.hotel.models.DateTime;
+
+import com.operatoroverloaded.hotel.models.Dish;
 import com.operatoroverloaded.hotel.models.Logon;
 import com.operatoroverloaded.hotel.models.Room;
 import com.operatoroverloaded.hotel.models.RoomType;
@@ -172,7 +173,7 @@ public class ConsoleApplication implements CommandLineRunner {
 
     private void addRoom() {
         System.out.println("Enter room ID: ");
-        int roomID = Integer.parseInt(scanner.nextLine().trim());
+        String roomID = scanner.nextLine().trim();
 
         System.out.println("Enter room capacity: ");
         int capacity = Integer.parseInt(scanner.nextLine().trim());
@@ -185,13 +186,13 @@ public class ConsoleApplication implements CommandLineRunner {
 
         System.out.println("Enter amenities (comma-separated): ");
         String[] amenitiesArray = scanner.nextLine().trim().split(",");
-        List<String> amenities = Arrays.asList(amenitiesArray);
+        ArrayList<String> amenities = new ArrayList<>(Arrays.asList(amenitiesArray));
 
         // Create RoomType instance
         RoomType roomType = new RoomType(roomID, roomTypeName, tariff, amenities);
 
         // Create Room instance
-        Room room = new Room(roomID, capacity, roomType, roomTypeName, null); // Assuming housekeepingLast is set later
+        Room room = new Room(roomID, capacity, roomType.getRoomTypeId(), roomTypeName, null); // Assuming housekeepingLast is set later
 
         // Store the room
         roomStore.addRoom(room);
@@ -211,11 +212,11 @@ public class ConsoleApplication implements CommandLineRunner {
 
         for (Room room : rooms) {
             System.out.println(
-                    "Room ID: " + room.getRoomID() +
+                    "Room ID: " + room.getRoomId() +
                             ", Capacity: " + room.getCapacity() +
-                            ", Room Type: " + room.getRoomTypeName() +
-                            ", Tariff: " + room.getRoomType().getTariff() +
-                            ", Amenities: " + String.join(", ", room.getRoomType().getAmenities()));
+                            ", Room Type: " + RoomTypeStore.getInstance().findRoomType(room.getRoomTypeId()).getRoomTypeName() +
+                            ", Tariff: " + RoomTypeStore.getInstance().findRoomType(room.getRoomTypeId()).getTariff() +
+                            ", Amenities: " + String.join(", ", RoomTypeStore.getInstance().findRoomType(room.getRoomTypeId()).getAmenities()));
         }
     }
 
@@ -227,7 +228,7 @@ public class ConsoleApplication implements CommandLineRunner {
         int roomID = Integer.parseInt(scanner.nextLine().trim());
 
         // Attempt to book the room
-        boolean success = roomStore.bookRoom(customerId, roomID);
+        boolean success = false;// roomStore.bookRoom(customerId, roomID);
 
         if (success) {
             System.out.println("Room booked successfully!");
@@ -237,30 +238,39 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     private void checkOutRoom() {
-        System.out.println("Enter room number to check out: ");
-        int roomNumber = scanner.nextInt();
+        // System.out.println("Enter room number to check out: ");
+        // int roomNumber = scanner.nextInt();
 
+<<<<<<< HEAD
         // Check if the room exists and is currently booked
         Room room = roomStore.findRoom(roomNumber);
         if (room == null) {
             System.out.println("Room not found.");
             return;
         }
+=======
+        // // Check if the room exists and is currently booked
+        // Room room = roomStore.getRoomByNumber(roomNumber);
+        // if (room == null) {
+        //     System.out.println("Room not found.");
+        //     return;
+        // }
+>>>>>>> 8cf0443b46c08dd8dfb4a52e2ce11d270ce03269
 
-        // Check if the room is already booked or occupied
-        if (roomStore.isRoomBooked(roomNumber)) {
-            // Perform checkout logic: free the room
-            boolean success = roomStore.checkOutRoom(roomNumber);
-            if (success) {
-                System.out.println("Room " + roomNumber + " has been checked out successfully!");
-                // Optionally, update housekeeping status or perform any other actions
-                room.setHousekeepingLast(new DateTime()); // Example, update last housekeeping date
-            } else {
-                System.out.println("Unable to check out room. Please try again.");
-            }
-        } else {
-            System.out.println("Room " + roomNumber + " is not currently occupied.");
-        }
+        // // Check if the room is already booked or occupied
+        // if (roomStore.isRoomBooked(roomNumber)) {
+        //     // Perform checkout logic: free the room
+        //     boolean success = roomStore.checkOutRoom(roomNumber);
+        //     if (success) {
+        //         System.out.println("Room " + roomNumber + " has been checked out successfully!");
+        //         // Optionally, update housekeeping status or perform any other actions
+        //         room.setHousekeepingLast(new DateTime()); // Example, update last housekeeping date
+        //     } else {
+        //         System.out.println("Unable to check out room. Please try again.");
+        //     }
+        // } else {
+        //     System.out.println("Room " + roomNumber + " is not currently occupied.");
+        // }
     }
 
     // ----------HOTEL CUSTOMER
@@ -323,17 +333,16 @@ public class ConsoleApplication implements CommandLineRunner {
 
         System.out.println("Enter dish price: ");
         double price = scanner.nextDouble();
-
-        dishStore.addDish(name, price);
+        dishStore.addDish(name, (float) price);
         System.out.println("Dish added successfully.");
     }
 
     private void removeDishFromMenu() {
-        System.out.println("Enter dish name to remove: ");
-        String name = scanner.nextLine();
+        System.out.println("Enter dish ID to remove: ");
+        int dishId = Integer.parseInt(scanner.nextLine());
 
-        boolean success = dishStore.removeDish(name);
-        if (success) {
+        Dish dish = dishStore.deleteDish(dishId);
+        if (dish!=null) {
             System.out.println("Dish removed successfully.");
         } else {
             System.out.println("Dish not found.");
@@ -341,16 +350,16 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     private void generateBill() {
-        System.out.println("Enter customer ID: ");
-        String customerId = scanner.next();
+        // System.out.println("Enter customer ID: ");
+        // String customerId = scanner.next();
 
-        Bill bill = billStore.generateBill(customerId);
-        if (bill != null) {
-            System.out.println("Bill generated successfully:");
-            System.out.println("Customer ID: " + bill.getCustomerId());
-            System.out.println("Total Amount: " + bill.getTotalAmount());
-        } else {
-            System.out.println("No bill found for the given customer ID.");
-        }
+        // Bill bill = billStore.generateBill(customerId);
+        // if (bill != null) {
+        //     System.out.println("Bill generated successfully:");
+        //     System.out.println("Customer ID: " + bill.getCustomerId());
+        //     System.out.println("Total Amount: " + bill.getTotalAmount());
+        // } else {
+        //     System.out.println("No bill found for the given customer ID.");
+        // }
     }
 }

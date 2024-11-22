@@ -38,7 +38,7 @@ public class ReservationController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addReservation(@RequestBody JsonNode json) {
-        int roomId = json.get("roomId").asInt();
+        String roomId = json.get("roomId").asString();
         Room room = new Room(roomId); // Assuming Room constructor takes roomId, modify as needed
         String guestName = json.get("guestName").asText();
         DateTime startDateTime = DateTime.fromISOString(json.get("startDateTime").asText());

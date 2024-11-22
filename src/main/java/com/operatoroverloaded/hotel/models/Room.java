@@ -1,49 +1,55 @@
 package com.operatoroverloaded.hotel.models;
 import java.io.Serializable;
 
+
 public class Room implements Serializable{
-    private int roomID;
+    private String roomId;
     private int capacity;
-    private RoomType roomType;
-    private String roomTypeName;
+    private String roomTypeId;
     private DateTime housekeepingLast;
 
-    public Room(){
+    public Room(String roomId, int capacity, String roomTypeId, String date, String time){
+        this.roomId = roomId;
+        this.capacity = capacity;
+        this.roomTypeId = roomTypeId;
+        this.housekeepingLast = DateTime.fromString(date.replace('/', '-'), time);
         
     }
-    public Room(int roomID, int capacity, RoomType roomType, String roomTypeName, DateTime housekeepingLast) {
-        this.roomID = roomID;
+    public Room(String roomId, int capacity, String roomType, DateTime housekeepingLast) {
+        this.roomId = roomId;
         this.capacity = capacity;
-        this.roomType = roomType;
-        this.roomTypeName = roomTypeName;
+        this.roomTypeId = roomType;
         this.housekeepingLast = housekeepingLast;
     }
-    public int getRoomID() {
-        return roomID;
+
+    public String getRoomId() {
+        return roomId;
     }
-    public int getId(){return getRoomID();}
-    public void setRoomID(int roomID) {
-        this.roomID = roomID;
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
+    
     public int getCapacity(){
         return capacity;
     }
+    
     public void setCapacity(int capacity){
         this.capacity = capacity;
     }
-    public RoomType getRoomType(){
-        return roomType;
+    
+    public String getRoomTypeId(){
+        return roomTypeId;
     }
-    public void setRoomType(RoomType roomType){
-        this.roomType = roomType;
-        this.roomTypeName = roomType.getRoomTypeName();
+    
+    public void setRoomTypeId(String roomType){
+        this.roomTypeId = roomType;
     }
-    public String getRoomTypeName(){
-        return roomTypeName;
-    }
+    
     public DateTime getHousekeepingLast(){
         return housekeepingLast;
     }
+    
     public void setHousekeepingLast(DateTime housekeepingLast){
         this.housekeepingLast = housekeepingLast;
     }
