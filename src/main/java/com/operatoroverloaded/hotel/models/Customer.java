@@ -7,9 +7,9 @@ abstract public class Customer {
     private String email;
     private String phone;
     private String address;
-    private float bill_amt;
-    private float bill_payed;
-    private float bill_left;
+    private double bill_amt;
+    private double bill_payed;
+    private double bill_left;
     private ArrayList<Integer> bills;
     DateTime reservedFrom, reservedTo;
 
@@ -76,15 +76,15 @@ abstract public class Customer {
     public void setAddress(String name){
         this.address = name;
     }
-    public void setBillLeft(float billleft){
+    public void setBillLeft(double billleft){
         this.bill_left = billleft;
         this.bill_payed = this.bill_amt - billleft;
     }
-    public void setBillPayed(float billpayed){
+    public void setBillPayed(double billpayed){
         this.bill_payed = billpayed;
         this.bill_left = this.bill_amt - billpayed;
     }
-    private void setBillAmount(float billamt){ //when you add bill, it automatically sets the bill amount thats why it is a private method
+    private void setBillAmount(double billamt){ //when you add bill, it automatically sets the bill amount thats why it is a private method
         this.bill_amt = billamt;
         this.bill_left = billamt-this.bill_payed;
     }
@@ -134,13 +134,13 @@ abstract public class Customer {
     public String getPhone(){
         return this.phone;
     }
-    public float getBillAmount(){
+    public double getBillAmount(){
         return this.bill_amt;
     }
-    public float getBillPayed(){
+    public double getBillPayed(){
         return this.bill_payed;
     }
-    public float getBillLeft(){
+    public double getBillLeft(){
         return this.bill_left;
     }
     public ArrayList<Integer> getBills(){ //Returns an ArrayList of all the Billid's
@@ -209,6 +209,19 @@ abstract public class Customer {
         this.bills = new ArrayList<Integer>();
         reservedFrom = from;
         reservedTo = new DateTime(0,0,0,0,0,0);
+    }
+
+    public Customer(String name, String email, String phone, String address, double bill_amt, double bill_payed, double bill_left, ArrayList<Integer> bills, DateTime reservedFrom, DateTime reservedTo){
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.bill_amt = bill_amt;
+        this.bill_left = bill_left;
+        this.bill_payed = bill_payed;
+        this.bills = bills;
+        this.reservedFrom = reservedFrom;
+        this.reservedTo = reservedTo;
     }
 
 //-------------------------------------------------------------display------------------------------------------------------------------------------------

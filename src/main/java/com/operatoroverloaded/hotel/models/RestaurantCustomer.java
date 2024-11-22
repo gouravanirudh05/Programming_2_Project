@@ -84,4 +84,11 @@ public class RestaurantCustomer extends Customer{
         this.serverId = serverid;
     }
 
+    public RestaurantCustomer(String name, String email, String phone, String address, double bill_amt, double bill_payed, double bill_left, ArrayList<Integer> bills, DateTime reservedFrom, DateTime reservedTo, ArrayList<Integer> dishes, int tableId, int serverId){
+        super(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo);
+        this.dishes = dishes;
+        this.tableId = tableId;
+        this.serverId = serverId;
+    }
+
 }

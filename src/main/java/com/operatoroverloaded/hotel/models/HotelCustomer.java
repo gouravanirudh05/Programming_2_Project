@@ -62,4 +62,9 @@ public class HotelCustomer extends Customer{
         this.reservations = new ArrayList<Integer>();
     }
 
+    public HotelCustomer(String name, String email, String phone, String address, double bill_amt, double bill_payed, double bill_left, ArrayList<Integer> bills, DateTime reservedFrom, DateTime reservedTo, ArrayList<Integer> reservations){
+        super(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo);
+        this.reservations = reservations;
+    }
+
 }
