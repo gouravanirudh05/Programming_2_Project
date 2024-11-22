@@ -1,34 +1,37 @@
 package com.operatoroverloaded.hotel.models;
+import java.util.*;
+
 public class Reservation {
-    protected int reservationId; // Unique identifier for the reservation
-    protected Room room;
-    protected DateTime startDateTime;
-    protected DateTime endDateTime;
-    protected double totalAmount; // Updated to align with Bill's amount type
-    protected String guestName; // Name of the guest
-    protected Bill bill; // Associated Bill object
+    private int reservationId; // Unique identifier for the reservation
+    private int roomNumber;   // Room number instead of Room object
+    private DateTime startDateTime; // Start date and time of reservation
+    private DateTime endDateTime;   // End date and time of reservation
+    private double totalAmount;     // Total amount based on Bill
+    private String guestName;       // Name of the guest
+    private int billId;             // Bill ID instead of Bill object
 
     // Default constructor
     public Reservation() {
         this.reservationId = -1;
-        this.room = null;
+        this.roomNumber = 0;
         this.startDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.endDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.totalAmount = 0.0;
         this.guestName = "";
-        this.bill = null;
+        this.billId = -1;
     }
 
     // Parameterized constructor
-    public Reservation(int reservationId, Room room, String guestName, DateTime startDateTime, DateTime endDateTime, Bill bill) {
+    public Reservation(int reservationId, int roomNumber, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
         this.reservationId = reservationId;
-        this.room = room;
+        this.roomNumber = roomNumber;
         this.guestName = guestName;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        this.totalAmount = bill != null ? bill.getAmount() : 0.0;
-        this.bill = bill;
+        this.billId = billId;
+        this.totalAmount = 0.0; // This can be updated later when the bill information is available
     }
+
     // Getters and Setters
     public int getReservationId() {
         return reservationId;
@@ -38,12 +41,12 @@ public class Reservation {
         this.reservationId = reservationId;
     }
 
-    public Room getRoom() {
-        return room;
+    public int getRoomNumber() {
+        return roomNumber;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoomNumber(int roomNumber) {
+        this.roomNumber = roomNumber;
     }
 
     public DateTime getStartDateTime() {
@@ -78,27 +81,24 @@ public class Reservation {
         this.guestName = guestName;
     }
 
-    public Bill getBill() {
-        return bill;
+    public int getBillId() {
+        return billId;
     }
 
-    public void setBill(Bill bill) {
-        this.bill = bill;
-        if (bill != null) {
-            this.totalAmount = bill.getAmount();
-        }
+    public void setBillId(int billId) {
+        this.billId = billId;
     }
 
     @Override
     public String toString() {
         return "Reservation{" +
                 "reservationId=" + reservationId +
-                ", room=" + room +
+                ", roomNumber=" + roomNumber +
                 ", startDateTime=" + startDateTime.getDateString() + " " + startDateTime.getTimeString() +
                 ", endDateTime=" + endDateTime.getDateString() + " " + endDateTime.getTimeString() +
                 ", totalAmount=" + totalAmount +
                 ", guestName='" + guestName + '\'' +
-                ", bill=" + (bill != null ? bill.toString() : "No Bill") +
+                ", billId=" + (billId != -1 ? billId : "No Bill") +
                 '}';
     }
 }
