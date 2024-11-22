@@ -238,7 +238,7 @@ public class ConsoleApplication implements CommandLineRunner {
         int roomNumber = scanner.nextInt();
 
         // Check if the room exists and is currently booked
-        Room room = roomStore.getRoomByNumber(roomNumber);
+        Room room = roomStore.findRoom(roomNumber);
         if (room == null) {
             System.out.println("Room not found.");
             return;
