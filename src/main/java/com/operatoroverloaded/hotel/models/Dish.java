@@ -1,19 +1,16 @@
 package com.operatoroverloaded.hotel.models;
-//Basic structural code,changes can be made according to future requirements
+
 public class Dish {
-    public enum DishType {
-        APPETIZER, MAIN_COURSE, DESSERT, BEVERAGE
-    }
 
     private int dishID;
     private String name;
     private float price;
-    private DishType dishType;
+    private String dishType; 
     private int calories;
     private int preparationTime;
     private boolean isAvailable;
 
-    public Dish(int dishID, String name, float price, DishType dishType, int calories, int preparationTime, boolean isAvailable) {
+    public Dish(int dishID, String name, float price, String dishType, int calories, int preparationTime, boolean isAvailable) {
         this.dishID = dishID;
         this.name = name;
         this.price = price;
@@ -47,11 +44,11 @@ public class Dish {
         this.price = price;
     }
 
-    public DishType getDishType() {
+    public String getDishType() {
         return dishType;
     }
 
-    public void setDishType(DishType dishType) {
+    public void setDishType(String dishType) {
         this.dishType = dishType;
     }
 
@@ -89,4 +86,3 @@ public class Dish {
         System.out.println("Available: " + (isAvailable ? "Yes" : "No"));
     }
 }
-
