@@ -21,6 +21,11 @@ public class InMemoryDishStore extends DishStore {
     }
 
     @Override
+    public void addDish(String name, float price) {
+        dishes.add(new Dish(dishes.size(), name, price, Dish.DishType.MAIN_COURSE, 0, 0, true));
+    }
+
+    @Override
     public List<Dish> getDishes() {
         return new ArrayList<>(dishes);
     }

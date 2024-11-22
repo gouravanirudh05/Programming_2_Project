@@ -1,50 +1,70 @@
 package com.operatoroverloaded.hotel.models;
 
-import java.util.List;
+import java.util.ArrayList;
+
 public class RoomType {
-    private int roomTypeID;
+    private String roomTypeId;
     private String roomTypeName;
     private float tariff;
-    private List<String> amenities;
-    // boolean TO_BE_IMPLEMENTED = true;
+    private ArrayList<String> amenities;
 
-
-    public RoomType(int roomTypeID, String roomTypeName, float tariff, List<String> amenities) {
-        this.roomTypeID = roomTypeID;
+    public RoomType(String roomTypeId, String roomTypeName, float tariff, ArrayList<String> amenities) {
+        this.roomTypeId = roomTypeId;
         this.roomTypeName = roomTypeName;
         this.tariff = tariff;
         this.amenities = amenities;
     }
 
-    public int getRoomTypeID() {
-        return roomTypeID;
+    public RoomType(String roomTypeId, String roomTypeName, float tariff) {
+        this.roomTypeId = roomTypeId;
+        this.roomTypeName = roomTypeName;
+        this.tariff = tariff;
+        this.amenities = new ArrayList<>();
     }
 
-    public void setRoomTypeID(int roomTypeID) {
-        this.roomTypeID = roomTypeID;
+    public String getRoomTypeId() {
+        return roomTypeId;
     }
 
     public String getRoomTypeName() {
         return roomTypeName;
     }
 
-    public void setRoomTypeName(String roomTypeName) {
-        this.roomTypeName = roomTypeName;
-    }
-
     public float getTariff() {
         return tariff;
+    }
+
+    public ArrayList<String> getAmenities() {
+        return amenities;
+    }
+
+    public void setRoomTypeId(String roomTypeId) {
+        this.roomTypeId = roomTypeId;
+    }
+
+    public void setRoomTypeName(String roomTypeName) {
+        this.roomTypeName = roomTypeName;
     }
 
     public void setTariff(float tariff) {
         this.tariff = tariff;
     }
 
-    public List<String> getAmenities() {
-        return amenities;
+    public void setAmenities(ArrayList<String> amenities) {
+        this.amenities = amenities;
     }
 
-    public void setAmenities(List<String> amenities) {
-        this.amenities = amenities;
+    public void addAmenity(String amenity) {
+        amenities.add(amenity);
+    }
+
+    @Override
+    public String toString(){
+        String result = "";
+        result += roomTypeId + ' ' + roomTypeName + " " + tariff;
+        for(String amenity: amenities){
+            result += " " + amenity;
+        }
+        return result + "\n";
     }
 }

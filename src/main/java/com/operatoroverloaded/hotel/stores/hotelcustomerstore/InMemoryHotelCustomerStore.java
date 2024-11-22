@@ -21,7 +21,7 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
     public InMemoryHotelCustomerStore() { // constructor (also calls the loadFromFile function)
         if (InMemoryHotelCustomerStore.objectExists == true) {
-            throw new IllegalStateException("Hotel customer database already exists");
+            throw new Error("Hotel customer database already exists");
         }
         hotelCustomers = new ArrayList<>();
         id = 0;

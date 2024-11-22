@@ -1,35 +1,82 @@
 package com.operatoroverloaded.hotel.stores.roomtypestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.operatoroverloaded.hotel.models.RoomType;
 
+// import com.operatoroverloaded.hotel.models.RoomType;
+
 public class InMemoryRoomTypeStore extends RoomTypeStore {
-    private static final InMemoryRoomTypeStore instance = new InMemoryRoomTypeStore();
+    private ArrayList<RoomType> roomTypes = new ArrayList<>();
+    private static InMemoryRoomTypeStore instance = new InMemoryRoomTypeStore();
+
+    static {
+        System.loadLibrary("RoomTypeCPP");
+    }
 
     public static InMemoryRoomTypeStore getInstance() {
         return instance;
     }
-    private final List<RoomType> roomTypes = new ArrayList<>();
-
-    @Override
+    
     public void addRoomType(RoomType roomType) {
         roomTypes.add(roomType);
     }
 
-    @Override
-    public List<RoomType> getRoomTypes() {
+    public ArrayList<RoomType> getRoomTypes() {
         return new ArrayList<>(roomTypes);
     }
-    @Override
-    public native RoomType deleteRoomType(int roomTypeId);
-    @Override
-    public native void updateRoomType(int roomTypeId, RoomType roomType);
-    @Override
-    public native RoomType findRoomType(int roomTypeId);
-    @Override
+    
+    public  RoomType deleteRoomType(String roomTypeId){
+        RoomType roomType = null;
+        for(RoomType r: roomTypes){
+            if(r.getRoomTypeId() == roomTypeId){
+                roomType = r;
+                roomTypes.remove(r);
+                break;
+            }
+        }
+        return roomType;
+    }
+    
+    public  void updateRoomType(String roomTypeId, RoomType roomType){
+        for(RoomType r: roomTypes){
+            if(r.getRoomTypeId() == roomTypeId){
+                r.setRoomTypeName(roomType.getRoomTypeName());
+                r.setTariff(roomType.getTariff());
+                r.setAmenities(roomType.getAmenities());
+                break;
+            }
+        }
+    }
+    
+    public  RoomType findRoomType(String roomTypeId){
+        for(RoomType r: roomTypes){
+            if(r.getRoomTypeId() == roomTypeId){
+                return r;
+            }
+        }
+        return null;
+    }
+    
     public native void saveToFile();
-    @Override    
     public native void loadFromFile();
+
+    @Override
+    public void save() {
+        saveToFile();
+    }
+
+    @Override
+    public void load() {
+        loadFromFile();
+    }
+
+    @Override
+    public String toString(){
+        String result = "";
+        for(RoomType type: roomTypes){
+            result += type;
+        }
+        return result;
+    }
 }

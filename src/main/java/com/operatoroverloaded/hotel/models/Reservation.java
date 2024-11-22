@@ -1,54 +1,104 @@
 package com.operatoroverloaded.hotel.models;
-import java.time.LocalDateTime;
+import java.util.*;
 
-public abstract class Reservation {
-    protected Room room;
-    protected LocalDateTime startDateTime;
-    protected LocalDateTime endDateTime;
-    protected double bill;
+public class Reservation {
+    private int reservationId; 
+    private String roomID;   
+    private DateTime startDateTime; 
+    private DateTime endDateTime;   
+    private double totalAmount;     
+    private String guestName;       
+    private int billId;             
 
-    // Constructor
-    public Reservation(Room room, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        this.room = room;
+    
+    public Reservation() {
+        this.reservationId = -1;
+        this.roomID = "";
+        this.startDateTime = new DateTime(0, 0, 0, 0, 0, 0);
+        this.endDateTime = new DateTime(0, 0, 0, 0, 0, 0);
+        this.totalAmount = 0.0;
+        this.guestName = "";
+        this.billId = -1;
+    }
+
+    
+    public Reservation(int reservationId, String roomID, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
+        this.reservationId = reservationId;
+        this.roomID = roomID;
+        this.guestName = guestName;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
-        this.bill = 0.0;
+        this.billId = billId;
+        this.totalAmount = 0.0; 
     }
 
-    // Abstract methods
-    public abstract void calculateBill();
-    public abstract void displayReservationDetails();
-
-    // Getters and Setters
-    public Room getRoom() {
-        return room;
+    
+    public int getReservationId() {
+        return reservationId;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setReservationId(int reservationId) {
+        this.reservationId = reservationId;
     }
 
-    public LocalDateTime getStartDateTime() {
+    public String getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
+    }
+
+    public DateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
+    public void setStartDateTime(DateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public LocalDateTime getEndDateTime() {
+    public DateTime getEndDateTime() {
         return endDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
+    public void setEndDateTime(DateTime endDateTime) {
         this.endDateTime = endDateTime;
     }
 
-    public double getBill() {
-        return bill;
+    public double getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setBill(double bill) {
-        this.bill = bill;
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public void setGuestName(String guestName) {
+        this.guestName = guestName;
+    }
+
+    public int getBillId() {
+        return billId;
+    }
+
+    public void setBillId(int billId) {
+        this.billId = billId;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "reservationId=" + reservationId +
+                ", roomID='" + roomID + '\'' +
+                ", startDateTime=" + startDateTime.getDateString() + " " + startDateTime.getTimeString() +
+                ", endDateTime=" + endDateTime.getDateString() + " " + endDateTime.getTimeString() +
+                ", totalAmount=" + totalAmount +
+                ", guestName='" + guestName + '\'' +
+                ", billId=" + (billId != -1 ? billId : "No Bill") +
+                '}';
     }
 }
