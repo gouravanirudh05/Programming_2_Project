@@ -1,6 +1,6 @@
 package com.operatoroverloaded.hotel.models;
 
-import java.util.*;
+import java.util.List;
 
 public class Reservation {
     private int reservationId; 
@@ -108,8 +108,8 @@ public class Reservation {
         // Check for overlaps with existing reservations
         for (Reservation reservation : reservations) {
             if (reservation.getRoomID().equals(roomID) && 
-                startDateTime.isBefore(reservation.getEndDateTime()) &&
-                endDateTime.isAfter(reservation.getStartDateTime())) {
+                (startDateTime.compareTo(reservation.getEndDateTime())<0) &&
+                (endDateTime.compareTo(reservation.getStartDateTime()))>0) {
                 return null; // Overlap found, return null
             }
         }

@@ -1,8 +1,8 @@
 package com.operatoroverloaded.hotel.models;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class DateTime {
     private int year;
@@ -95,7 +95,7 @@ public class DateTime {
         LocalDateTime otherDate = LocalDateTime.of(other.year, other.month, other.day, 0, 0);
         return (int) ChronoUnit.DAYS.between(thisDate, otherDate);
     }
-
+    
     // Calculates the time difference in seconds
     public int timeDifference(DateTime other) {
         LocalDateTime thisTime = LocalDateTime.of(year, month, day, hour, minute, second);

@@ -4,6 +4,13 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.Table;
 
 public abstract class TableStore {
+    public static TableStore tableStore = null;
+    public static TableStore getInstance(){
+        return tableStore;
+    }
+    public static void setInstance(TableStore tableStore){
+        TableStore.tableStore = tableStore;
+    }
 
     // Abstract methods for basic operations
     public abstract void addTable(Table table);

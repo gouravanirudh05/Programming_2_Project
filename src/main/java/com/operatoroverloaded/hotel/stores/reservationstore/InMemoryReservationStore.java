@@ -1,8 +1,9 @@
 package com.operatoroverloaded.hotel.stores.reservationstore;
 
-import com.operatoroverloaded.hotel.models.Reservation;
-
 import java.util.ArrayList;
+
+import com.operatoroverloaded.hotel.models.DateTime;
+import com.operatoroverloaded.hotel.models.Reservation;
 
 public class InMemoryReservationStore extends ReservationStore {
     private static final InMemoryReservationStore instance = new InMemoryReservationStore();
@@ -102,8 +103,8 @@ public class InMemoryReservationStore extends ReservationStore {
         // Check for overlaps with existing reservations
         for (Reservation reservation : reservationData) {
             if (reservation.getRoomID().equals(roomID) &&
-                    startDateTime.isBefore(reservation.getEndDateTime()) &&
-                    endDateTime.isAfter(reservation.getStartDateTime())) {
+                    (startDateTime.compareTo(reservation.getEndDateTime())<0) &&
+                    (endDateTime.compareTo(reservation.getStartDateTime()))>0) {
                 return null; // Overlap detected
             }
         }

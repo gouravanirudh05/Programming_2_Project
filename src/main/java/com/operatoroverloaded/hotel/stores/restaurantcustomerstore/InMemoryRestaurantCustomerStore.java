@@ -26,7 +26,7 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
         restaurantCustomers = new ArrayList<>();
         id = 0;
         objectExists = true;
-        loadFromFile();
+        // loadFromFile();
     }
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------

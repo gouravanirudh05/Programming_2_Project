@@ -26,7 +26,7 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
         hotelCustomers = new ArrayList<>();
         id = 0;
         objectExists = true;
-        loadFromFile();
+        // loadFromFile();
     }
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
