@@ -1,209 +1,179 @@
 #include<bits/stdc++.h>
 #include<fstream>
 #include<sstream>
+#include "com_operatoroverloaded_hotel_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore.h"
+#include<jni.h>
 using namespace std;
 
 // format of storing:
-// id name email phone address bill_amt bill_payed bill_left number_of_bills <all_bill_ids> <year month day hour min sec> <year month day hour min sec> no_of_dishs <all_dish_ids> tableId serverId
+// id name email phone address bill_amt bill_payed bill_left number_of_bills <all_bill_ids> <year month day hour min sec> <year month day hour min sec> no_of_reservations <all_reservation_ids>
 
-class DateTime {
-public:
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int second;
+jstring stdStringToJString(JNIEnv* env, const string& cppString) {
+    return env->NewStringUTF(cppString.c_str());
+}
 
-    // Constructor
-    DateTime(int yr, int mo, int d, int h, int min, int sec)
-        : year(yr), month(mo), day(d), hour(h), minute(min), second(sec) {}
-
-    // Default Constructor
-    DateTime() : year(0), month(0), day(0), hour(0), minute(0), second(0) {}
-};
-
-class Customer {
-protected:
-    int customerId;
-    string name;
-    string email;
-    string phone;
-    string address;
-    double bill_amt;
-    double bill_payed;
-    double bill_left;
-    vector<int> bills; 
-    DateTime reservedFrom;
-    DateTime reservedTo;
-
-public:
-    // Constructors
-    Customer() : customerId(0), bill_amt(0), bill_payed(0), bill_left(0) {}
-
-    Customer(int id, string name, string email, string phone, string address, double billAmt, double billPayed, double billLeft, DateTime reservedFrom, DateTime reservedTo)
-        : customerId(id), name(name), email(email), phone(phone), address(address), bill_amt(billAmt), bill_payed(billPayed), bill_left(billLeft), reservedFrom(reservedFrom), reservedTo(reservedTo) {}
-
-    Customer(int id, string name, string email, string phone, string address, double billAmt, double billPayed, double billLeft, DateTime reservedFrom, DateTime reservedTo, vector<int> bills)
-        : customerId(id), name(name), email(email), phone(phone), address(address), bill_amt(billAmt), bill_payed(billPayed), bill_left(billLeft), reservedFrom(reservedFrom), reservedTo(reservedTo), bills(bills) {}
-
-
-    // Getters
-    int getCustomerId() const { return customerId; }
-    string getName() const { return name; }
-    string getEmail() const { return email; }
-    string getPhone() const { return phone; }
-    string getAddress() const { return address; }
-    double getBillAmt() const { return bill_amt; }
-    double getBillPayed() const { return bill_payed; }
-    double getBillLeft() const { return bill_left; }
-    vector<int> getBills() const { return bills; }
-    DateTime getReservedFrom() const { return reservedFrom; }
-    DateTime getReservedTo() const { return reservedTo; }
-
-    // Setters
-    void setCustomerId(int id) { customerId = id; }
-    void setName(string name) { this->name = name; }
-    void setEmail(string email) { this->email = email; }
-    void setPhone(string phone) { this->phone = phone; }
-    void setAddress(string address) { this->address = address; }
-    void setBillAmt(double amount) { bill_amt = amount; }
-    void setBillPayed(double payed) { bill_payed = payed; }
-    void setBillLeft(double left) { bill_left = left; }
-    void setReservedFrom(DateTime from) { reservedFrom = from; }
-    void setReservedTo(DateTime to) { reservedTo = to; }
-
-    void display() const {
-    cout << "Customer Details:" << endl;
-    cout << "ID: " << customerId << ", Name: " << name << ", Email: " << email << endl;
-    cout << "Phone: " << phone << ", Address: " << address << endl;
-    cout << "Bill Amount: $" << bill_amt << ", Paid: $" << bill_payed << ", Left: $" << bill_left << endl;
+string jStringToStdString(JNIEnv* env, jstring javaString) {
+    if (javaString == nullptr) {
+        return ""; // Handle null jstring
     }
-};
 
-// Derived RestaurantCustomer Class
-class RestaurantCustomer : public Customer {
-private:
-    vector<int> dishes;
-    int tableId;
-    int serverId;
-
-public:
-    // Constructors
-    RestaurantCustomer() : tableId(0), serverId(0) {}
-
-    RestaurantCustomer(int id, string name, string email, string phone, string address, int tableId, int serverId, DateTime reservedFrom, DateTime reservedTo)
-        : Customer(id, name, email, phone, address, 0, 0, 0, reservedFrom, reservedTo), tableId(tableId), serverId(serverId) {}
-
-    RestaurantCustomer(int id, string name, string email, string phone, string address, double bill_amt, double bill_payed, double bill_left, DateTime reservedFrom, DateTime reservedTo, vector<int> bills, vector<int> dishes, int tableId, int serverId)
-        : Customer(id, name, email, phone, address, bill_amt, bill_payed, bill_left, reservedFrom, reservedTo, bills), dishes(dishes), tableId(tableId), serverId(serverId) {}
-
-    // Getters
-    vector<int> getDishes() const { return dishes; }
-    int getTableId() const { return tableId; }
-    int getServerId() const { return serverId; }
-
-    // Setters
-    void addDish(int dishId) { dishes.push_back(dishId); }
-    void removeDish(int dishId) {
-        dishes.erase(remove(dishes.begin(), dishes.end(), dishId), dishes.end());
+    const char* utfString = env->GetStringUTFChars(javaString, nullptr);
+    if (utfString == nullptr) {
+        throw std::runtime_error("Failed to convert jstring to std::string");
     }
-    void setTableId(int id) { tableId = id; }
-    void setServerId(int id) { serverId = id; }
-};
 
-// Derived HotelCustomer Class
-class HotelCustomer : public Customer {
-private:
-    vector<int> reservations;
+    std::string cppString(utfString);
+    env->ReleaseStringUTFChars(javaString, utfString);
+    return cppString;
+}
 
-public:
-    // Constructors
-    HotelCustomer() {}
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_loadFromFile(JNIEnv *env, jobject obj) {
+    // Getting the restaurantCustomers ArrayList attribute of InMemoryRestaurantCustomerStore
+    jclass restaurantCustomerClass = env->FindClass("com/operatoroverloaded/hotel/stores/restaurantstore/RestaurantCustomer");
+    jclass InMemoryRestaurantCustomerStoreClass = env->GetObjectClass(obj);
+    jfieldID restaurantCustomerArrayField = env->GetFieldID(InMemoryRestaurantCustomerStoreClass, "restaurantCustomers", "Ljava/util/ArrayList;");
+    jobject restaurantCustomerArray = env->GetObjectField(obj, restaurantCustomerArrayField);
 
-    HotelCustomer(int id, string name, string email, string phone, string address, DateTime reservedFrom, DateTime reservedTo)
-        : Customer(id, name, email, phone, address, 0, 0, 0, reservedFrom, reservedTo) {}
+    // Getting the RestaurantCustomer constructor
+    jmethodID constructor = env->GetMethodID(restaurantCustomerClass, "<init>", "()V");
 
-    HotelCustomer(int id, string name, string email, string phone, string address, double bill_amt, double bill_payed, double bill_left, DateTime reservedFrom, DateTime reservedTo, vector<int> bills, vector<int> reservations)
-        : Customer(id, name, email, phone, address, bill_amt, bill_payed, bill_left, reservedFrom, reservedTo, bills), reservations(reservations) {}
+    // Get ArrayList class and its methods
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    jmethodID addMethod = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
 
-    // Getters
-    vector<int> getReservations() const { return reservations; }
+    // Get DateTime class
+    jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
+    jmethodID dateTimeConstructor = env->GetMethodID(dateTimeClass, "<init>", "(IIIIII)V");
 
-    // Setters
-    void addReservation(int reservationId) { reservations.push_back(reservationId); }
-    void removeReservation(int reservationId) {
-        reservations.erase(remove(reservations.begin(), reservations.end(), reservationId), reservations.end());
-    }
-};
-
-vector<RestaurantCustomer> loadFromFile(){ //filename: RestaurantCustomerStore.txt
+    // Read from the file
     ifstream infile;
-    vector<RestaurantCustomer> v = {};
-    infile.open("RestaurantCustomerStore.txt", ios::out);
+    infile.open("RestaurantCustomerStore.txt", ios::in);
     string customerData = "";
-    while (getline(infile, customerData)){
+    while (getline(infile, customerData)) {
+        jobject customer = env->NewObject(restaurantCustomerClass, constructor);
+
         istringstream ss(customerData);
         int customerId;
-        string name;
-        string email;
-        string phone;
-        string address;
-        double bill_amt;
-        double bill_payed;
-        double bill_left;
+        string name, email, phone, address;
+        double bill_amt, bill_payed, bill_left;
+        
         ss >> customerId >> name >> email >> phone >> address >> bill_amt >> bill_payed >> bill_left;
+        
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setCustomerId", "(I)V"), customerId);
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setName", "(Ljava/lang/String;)V"), stdStringToJString(env, name));
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setEmail", "(Ljava/lang/String;)V"), stdStringToJString(env, email));
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setPhone", "(Ljava/lang/String;)V"), stdStringToJString(env, phone));
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setAddress", "(Ljava/lang/String;)V"), stdStringToJString(env, address));
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillAmount", "(D)V"), bill_amt);
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillPayed", "(D)V"), bill_payed);
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillLeft", "(D)V"), bill_left);
+
         int bills_size;
-        vector<int> bills = {}; 
         ss >> bills_size;
-        while (bills_size--){
+        while (bills_size--) {
             int x;
             ss >> x;
-            bills.push_back(x);
+            env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "addBill", "(I)V"), x);
         }
-        int year, month, day, hour, min, sec;
-        ss >> year >> month >> day >> hour >> min >> sec;
-        DateTime reservedFrom(year, month, day, hour, min, sec);
-        ss >> year >> month >> day >> hour >> min >> sec;
-        DateTime reservedTo(year, month, day, hour, min, sec);
-        int dishes_size;
-        vector<int> dishes;
-        ss >> dishes_size;
-        while (dishes_size--){
+
+        int yearFrom, monthFrom, dayFrom, hourFrom, minFrom, secFrom;
+        ss >> yearFrom >> monthFrom >> dayFrom >> hourFrom >> minFrom >> secFrom;
+        jobject reservedFrom = env->NewObject(dateTimeClass, dateTimeConstructor, yearFrom, monthFrom, dayFrom, hourFrom, minFrom, secFrom);
+
+        int yearTo, monthTo, dayTo, hourTo, minTo, secTo;
+        ss >> yearTo >> monthTo >> dayTo >> hourTo >> minTo >> secTo;
+        jobject reservedTo = env->NewObject(dateTimeClass, dateTimeConstructor, yearTo, monthTo, dayTo, hourTo, minTo, secTo);
+
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setReservedFrom", "(Lcom/operatoroverloaded/hotel/models/DateTime;)V"), reservedFrom);
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setReservedTo", "(Lcom/operatoroverloaded/hotel/models/DateTime;)V"), reservedTo);
+
+        int dish_size;
+        ss >> dish_size;
+        while (dish_size--) {
             int x;
             ss >> x;
-            dishes.push_back(x);
+            env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "addDish", "(I)V"), x);
         }
         int tableId, serverId;
         ss >> tableId >> serverId;
-        RestaurantCustomer customer(customerId, name, email, phone, address, bill_amt, bill_payed, bill_left, reservedFrom, reservedTo, bills, dishes, tableId, serverId);
-        v.push_back(customer);
+
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setTableId", "(I)V"), tableId);
+        env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setServerId", "(I)V"), serverId);
+        // Add the customer to the ArrayList
+        env->CallBooleanMethod(restaurantCustomerArray, addMethod, customer);
     }
     infile.close();
-    return v;
 }
 
-void storeToFile(vector<RestaurantCustomer> v){
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_storeToFile(JNIEnv *env, jobject obj){
+
+    // Getting the restaurantCustomers ArrayList attribute of InMemoryRestaurantCustomerStore
+    jclass restaurantCustomerClass = env->FindClass("com/operatoroverloaded/hotel/stores/restaurantstore/RestaurantCustomer");
+    jclass InMemoryRestaurantCustomerStoreClass = env->GetObjectClass(obj);
+    jfieldID restaurantCustomerArrayField = env->GetFieldID(InMemoryRestaurantCustomerStoreClass, "restaurantCustomers", "Ljava/util/ArrayList;");
+    jobject restaurantCustomerArray = env->GetObjectField(obj, restaurantCustomerArrayField);
+
+    // Get ArrayList class and its methods
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    jmethodID arrayListConstructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+    jmethodID addMethod = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    jmethodID arrayListSize = env->GetMethodID(arrayListClass, "size", "()I");
+    jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
+
+    jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
+
+    jint customerSize = env->CallIntMethod(restaurantCustomerArray, arrayListSize);
     ofstream outfile;
-    outfile.open("HotelCustomerStore.txt");
-    for (auto customer: v){
-        outfile << customer.getCustomerId() << " "<< customer.getName() << " "<< customer.getEmail() << " "<< customer.getPhone() << " "<< customer.getAddress()<< " " << customer.getBillAmt() << " "<< customer.getBillPayed() << " "<< customer.getBillLeft() << " ";
-        vector<int> v = customer.getBills();
-        outfile << v.size() << " ";
-        for (int i: v) outfile << i << " ";
-        DateTime from = customer.getReservedFrom();
-        DateTime to = customer.getReservedTo();
-        outfile << from.year << " "<< from.month << " "<< from.day << " "<< from.hour << " "<< from.minute << " "<< from.second<< " ";
-        outfile << to.year << " "<< to.month << " "<< to.day << " "<< to.hour << " "<< to.minute << " "<< to.second<< " ";
-        v = customer.getDishes();
-        outfile << v.size() << " ";
-        for (int i: v) outfile << i << " ";
-        int tableId, serverId;
-        tableId = customer.getTableId();
-        serverId = customer.getServerId();
-        outfile << tableId << " "<< serverId << endl;
+    outfile.open("RestaurantCustomerStore.txt");
+    for (int i=0; i<customerSize; i++){
+        jobject customer = env->CallObjectMethod(restaurantCustomerArray, arrayListGet, i);
+        jint id = env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getCustomerId", "()I"));
+        string name = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getName", "()Ljava/lang/String;")));
+        string email = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getEmail", "()Ljava/lang/String;")));
+        string phone = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getPhone", "()Ljava/lang/String;")));
+        string address = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getAddress", "()Ljava/lang/String;")));
+        jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillAmt", "()D"));
+        jdouble billPayed = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillPayed", "()D"));
+        jdouble billLeft = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillLeft", "()D"));
+
+        outfile << id << " "<< name << " "<< email << " "<< phone << " "<< address<< " " << billAmt << " "<< billPayed << " "<< billLeft << " ";
+
+        jobject bills = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBills", "()Ljava/util/ArrayList;"));
+
+        jint billSize = env->CallIntMethod(bills, arrayListSize);
+        outfile << billSize << " ";
+        for (int i = 0; i<billSize; i++) {
+            jint bill = env->CallIntMethod(bills, arrayListGet, i);
+            outfile <<  bill << " ";
+        }
+        jobject from = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
+        jobject to = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
+
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
+        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
+
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
+        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
+
+        jobject dishArray = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getDishes", "()Ljava/util/ArrayList;"));
+        jint dishSize = env->CallIntMethod(dishArray, arrayListSize);
+        outfile << dishSize << " ";
+        for (int i = 0; i< dishSize; i++) {
+            jint dish = env->CallIntMethod(dishArray, arrayListGet, i);
+            outfile << dish << " ";
+        }
+        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getTableId", "()I")) << " ";
+        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getServerId", "()I")) << " ";
+        outfile << endl;
     }
     outfile.close();
 }
-
-
