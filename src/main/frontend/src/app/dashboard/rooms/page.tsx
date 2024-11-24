@@ -62,7 +62,7 @@ import axios from 'axios';
 
 const API_BASE_URL = '/api/room';
 
-export const getRoom = async (roomId) => {
+const getRoom = async (roomId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/${roomId}`);
     return response.data;
@@ -72,7 +72,7 @@ export const getRoom = async (roomId) => {
   }
 };
 
-export const addRoom = async (roomData) => {
+const addRoom = async (roomData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/add`, roomData);
     return response.data;
@@ -82,7 +82,7 @@ export const addRoom = async (roomData) => {
   }
 };
 
-export const removeRoom = async (roomId) => {
+const removeRoom = async (roomId) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/remove/${roomId}`);
     return response.data;
@@ -92,7 +92,7 @@ export const removeRoom = async (roomId) => {
   }
 };
 
-export const updateRoom = async (roomId, roomData) => {
+const updateRoom = async (roomId, roomData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/update/${roomId}`, roomData);
     return response.data;
@@ -102,7 +102,7 @@ export const updateRoom = async (roomId, roomData) => {
   }
 };
 
-export const getAllRooms = async () => {
+const getAllRooms = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL}/list`);
     return response.data;
@@ -112,7 +112,7 @@ export const getAllRooms = async () => {
   }
 };
 
-export const saveToFile = async () => {
+const saveToFile = async () => {
   try {
     const response = await axios.post(`${API_BASE_URL}/save`);
     return response.data;
@@ -122,7 +122,7 @@ export const saveToFile = async () => {
   }
 };
 
-export const loadFromFile = async () => {
+const loadFromFile = async () => {
   try {
     const response = await axios.post(`${API_BASE_URL}/load`);
     return response.data;
@@ -134,7 +134,7 @@ export const loadFromFile = async () => {
 
 const API_BASE_URL_2 = '/api/roomtype';
 
-export const getRoomType = async (roomTypeId) => {
+const getRoomType = async (roomTypeId) => {
   try {
     const response = await axios.get(`${API_BASE_URL_2}/${roomTypeId}`);
     return response.data;
@@ -144,7 +144,7 @@ export const getRoomType = async (roomTypeId) => {
   }
 };
 
-export const addRoomType = async (roomTypeData) => {
+const addRoomType = async (roomTypeData) => {
   try {
     const response = await axios.post(`${API_BASE_URL_2}/add`, roomTypeData);
     return response.data;
@@ -154,7 +154,7 @@ export const addRoomType = async (roomTypeData) => {
   }
 };
 
-export const removeRoomType = async (roomTypeId) => {
+const removeRoomType = async (roomTypeId) => {
   try {
     const response = await axios.post(`${API_BASE_URL_2}/remove/${roomTypeId}`);
     return response.data;
@@ -164,7 +164,7 @@ export const removeRoomType = async (roomTypeId) => {
   }
 };
 
-export const updateRoomType = async (roomTypeId, roomTypeData) => {
+const updateRoomType = async (roomTypeId, roomTypeData) => {
   try {
     const response = await axios.post(`${API_BASE_URL_2}/update/${roomTypeId}`, roomTypeData);
     return response.data;
@@ -174,7 +174,7 @@ export const updateRoomType = async (roomTypeId, roomTypeData) => {
   }
 };
 
-export const getAllRoomTypes = async () => {
+const getAllRoomTypes = async () => {
   try {
     const response = await axios.get(`${API_BASE_URL_2}/list`);
     return response.data;
@@ -184,7 +184,7 @@ export const getAllRoomTypes = async () => {
   }
 };
 
-export const saveRoomTypesToFile = async () => {
+const saveRoomTypesToFile = async () => {
   try {
     const response = await axios.post(`${API_BASE_URL_2}/save`);
     return response.data;
@@ -194,7 +194,7 @@ export const saveRoomTypesToFile = async () => {
   }
 };
 
-export const loadRoomTypesFromFile = async () => {
+const loadRoomTypesFromFile = async () => {
   try {
     const response = await axios.post(`${API_BASE_URL_2}/load`);
     return response.data;

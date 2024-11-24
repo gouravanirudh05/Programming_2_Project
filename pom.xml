@@ -29,6 +29,7 @@
     <properties>
         <java.version>21</java.version>
         <frontend-src-dir>${project.basedir}/src/main/frontend</frontend-src-dir>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
@@ -184,10 +185,55 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Copy React Build to Static Folder -->
+            <!-- Exec Maven Plugin to Run Makefile -->
             <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
+                    <!-- Run the Makefile -->
+                    <execution>
+                        <id>run-makefile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/src/main/cpp/src</workingDirectory>
+                            <arguments>
+                                <argument>all</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Maven Resources Plugin to Copy .so Files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <!-- Copy the .so files -->
+                    <execution>
+                        <id>copy-shared-libraries</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources/libs</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/cpp/src</directory>
+                                    <includes>
+                                        <include>**/*.so</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>copy-react-build</id>
                         <goals>
@@ -222,6 +268,31 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Exec Maven Plugin for Make Clean -->
+            <!-- <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    Run `make clean`
+                    <execution>
+                        <id>make-clean</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>make</executable>
+                            <workingDirectory>${project.basedir}/src/main/cpp/src</workingDirectory>
+                            <arguments>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> -->
+            <!-- Copy React Build to Static Folder -->
         </plugins>
     </build>
 </project>

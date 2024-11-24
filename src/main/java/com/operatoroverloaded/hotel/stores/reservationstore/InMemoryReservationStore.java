@@ -22,7 +22,7 @@ public class InMemoryReservationStore extends ReservationStore {
     // Constructor that initializes the reservation data and loads existing data
     private InMemoryReservationStore() {
         this.reservationData = new ArrayList<>();
-        this.load();
+        // this.load();
     }
 
     // Getter for the reservation data
