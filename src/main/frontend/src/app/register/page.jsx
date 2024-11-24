@@ -10,20 +10,26 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertCircle } from 'lucide-react'
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
     setError('')
 
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
     try {
-      const response = await axios.post('http://localhost:8080/login', { email, password })
+      const response = await axios.post('http://localhost:8080/register', { email, password })
       
-      // Assuming the backend returns a JWT token
+      // Assuming the backend returns a JWT token upon successful registration
       const token = response.data
       
       // Store the token in localStorage or a more secure place
@@ -44,10 +50,10 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardTitle className="text-2xl">Register</CardTitle>
+          <CardDescription>Create a new account</CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
@@ -72,10 +78,21 @@ export default function LoginPage() {
                   required
                 />
               </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input 
+                  id="confirmPassword" 
+                  type="password" 
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button className="w-full" type="submit">Login</Button>
+            <Button className="w-full" type="submit">Register</Button>
           </CardFooter>
         </form>
         {error && (
