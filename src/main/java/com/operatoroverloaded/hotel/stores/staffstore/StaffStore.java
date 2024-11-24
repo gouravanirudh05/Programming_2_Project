@@ -1,7 +1,8 @@
 package com.operatoroverloaded.hotel.stores.staffstore;
 
-import com.operatoroverloaded.hotel.models.Staff;
 import java.util.List;
+
+import com.operatoroverloaded.hotel.models.Staff;
 
 public abstract class StaffStore {
     public static StaffStore staffStore = null;
@@ -11,11 +12,11 @@ public abstract class StaffStore {
     public static void setInstance(StaffStore staffStore){
         StaffStore.staffStore = staffStore;
     }
-    abstract void addStaff(Staff staff);
-    abstract void updateStaff(Staff staff);
-    abstract void removeStaff(int staffID);
-    abstract Staff getStaffById(int staffID);
-    abstract List<Staff> getAllStaff();
-    abstract void saveToFile();
-    abstract void loadFromFile();
+    public abstract void addStaff(Staff staff);
+    public abstract void updateStaff(Staff staff);
+    public abstract void removeStaff(int staffID);
+    public abstract Staff getStaffById(int staffID);
+    public abstract List<Staff> getAllStaff();
+    public abstract void saveToFile();
+    public abstract void loadFromFile();
 }

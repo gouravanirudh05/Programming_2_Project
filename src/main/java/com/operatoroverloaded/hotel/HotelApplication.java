@@ -14,6 +14,8 @@ import com.operatoroverloaded.hotel.stores.hotelcustomerstore.HotelCustomerStore
 import com.operatoroverloaded.hotel.stores.hotelcustomerstore.InMemoryHotelCustomerStore;
 import com.operatoroverloaded.hotel.stores.logonstore.InMemoryLogonStore;
 import com.operatoroverloaded.hotel.stores.logonstore.LogonStore;
+import com.operatoroverloaded.hotel.stores.reservationstore.InMemoryReservationStore;
+import com.operatoroverloaded.hotel.stores.reservationstore.ReservationStore;
 import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.InMemoryRestaurantCustomerStore;
 import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.RestaurantCustomerStore;
 import com.operatoroverloaded.hotel.stores.roomstore.InMemoryRoomStore;
@@ -22,6 +24,9 @@ import com.operatoroverloaded.hotel.stores.roomtypestore.InMemoryRoomTypeStore;
 import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
 import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
 import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
+import com.operatoroverloaded.hotel.stores.staffstore.InMemoryStaffStore;
+import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
+
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { 
     SecurityAutoConfiguration.class 
@@ -48,7 +53,8 @@ public class HotelApplication {
         }
         if (args.length > 1) {
             interfaceType = args[1];
-        }   
+        }
+
         if ("in-memory".equals(storeType)) {
             RoomStore.setInstance(InMemoryRoomStore.getInstance());
             RoomTypeStore.setInstance(InMemoryRoomTypeStore.getInstance());
@@ -58,6 +64,8 @@ public class HotelApplication {
             LogonStore.setInstance(InMemoryLogonStore.getInstance());
             DishStore.setInstance(InMemoryDishStore.getInstance()); 
             TableStore.setInstance(InMemoryTableStore.getInstance());
+            ReservationStore.setInstance(InMemoryReservationStore.getInstance());
+            StaffStore.setInstance(InMemoryStaffStore.getInstance());
             Hotel.reConfigure();
         }
         // app.profiles("gui").web(WebApplicationType.SERVLET);

@@ -1,5 +1,6 @@
 package com.operatoroverloaded.hotel.models;
-import java.util.*;
+
+import java.util.List;
 
 public class Reservation {
     private int reservationId; 
@@ -10,7 +11,6 @@ public class Reservation {
     private String guestName;       
     private int billId;             
 
-    
     public Reservation() {
         this.reservationId = -1;
         this.roomID = "";
@@ -21,7 +21,6 @@ public class Reservation {
         this.billId = -1;
     }
 
-    
     public Reservation(int reservationId, String roomID, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
         this.reservationId = reservationId;
         this.roomID = roomID;
@@ -32,7 +31,6 @@ public class Reservation {
         this.totalAmount = 0.0; 
     }
 
-    
     public int getReservationId() {
         return reservationId;
     }
@@ -100,5 +98,23 @@ public class Reservation {
                 ", guestName='" + guestName + '\'' +
                 ", billId=" + (billId != -1 ? billId : "No Bill") +
                 '}';
+    }
+
+    // New method to attempt creating a reservation
+    public static Reservation createReservationIfNoOverlap(
+            List<Reservation> reservations, int reservationId, String roomID, 
+            String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
+
+        // Check for overlaps with existing reservations
+        for (Reservation reservation : reservations) {
+            if (reservation.getRoomID().equals(roomID) && 
+                (startDateTime.compareTo(reservation.getEndDateTime())<0) &&
+                (endDateTime.compareTo(reservation.getStartDateTime()))>0) {
+                return null; // Overlap found, return null
+            }
+        }
+
+        // No overlaps, create and return the new reservation
+        return new Reservation(reservationId, roomID, guestName, startDateTime, endDateTime, billId);
     }
 }

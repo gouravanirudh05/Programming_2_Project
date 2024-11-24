@@ -9,14 +9,21 @@ public class Staff{
     private String role;
     private DateTime workingFrom;
     private DateTime retiredOn;
-    private AssignedTo assignedTo;
+    private String assignedTo;
 
-    public enum AssignedTo {
-        Room,
-        Restaurant
+    public Staff(String staffID, String name, String salary, String phone, String address, String role, String workingFrom, String retiredOn, String assignedTo) {
+        this.staffID = Integer.parseInt(staffID);
+        this.name = name;
+        this.salary = Float.parseFloat(salary);
+        this.phone = Integer.parseInt(phone);
+        this.address = address;
+        this.role = role;
+        this.workingFrom = DateTime.parse(workingFrom);
+        this.retiredOn = DateTime.parse(retiredOn);
+        this.assignedTo = assignedTo;
     }
 
-    public Staff(int staffID, String name, float salary, int phone, String address, String role, DateTime workingFrom, DateTime retiredOn, AssignedTo assignedTo) {
+    public Staff(int staffID, String name, float salary, int phone, String address, String role, DateTime workingFrom, DateTime retiredOn, String assignedTo) {
         this.staffID = staffID;
         this.name = name;
         this.salary = salary;
@@ -92,11 +99,11 @@ public class Staff{
         this.retiredOn = retiredOn;
     }
 
-    public AssignedTo getAssignedTo() {
+    public String getAssignedTo() {
         return assignedTo;
     }
 
-    public void setAssignedTo(AssignedTo assignedTo) {
+    public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
     }
 
@@ -115,11 +122,11 @@ public class Staff{
     }
 
     public void assignToRoom(){
-        this.assignedTo = AssignedTo.Room;
+        this.assignedTo = "Room";
     }
 
     public void assignToRestaurant(){
-        this.assignedTo = AssignedTo.Restaurant;
+        this.assignedTo = "Restaurant";
     }
 
     public void retire(DateTime retiredOn){
@@ -150,7 +157,7 @@ public class Staff{
         this.workingFrom = workingFrom;
     }
 
-    public void changeAssignedTo(AssignedTo assignedTo){
+    public void changeAssignedTo(String assignedTo){
         this.assignedTo = assignedTo;
     }
 
@@ -182,7 +189,7 @@ public class Staff{
     }
 
     // Method to assign the staff to a new location
-    public void reassign(AssignedTo newAssignment) {
+    public void reassign(String newAssignment) {
         assignedTo = newAssignment;
     }
 
@@ -208,7 +215,7 @@ public class Staff{
     }
 
     // Method to check if staff is assigned to a specific location
-    public boolean isAssignedTo(AssignedTo location) {
+    public boolean isAssignedTo(String location) {
         return assignedTo == location;
     }
 }

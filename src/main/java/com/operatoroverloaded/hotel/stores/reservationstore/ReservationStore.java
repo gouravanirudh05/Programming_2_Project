@@ -1,96 +1,57 @@
-
 package com.operatoroverloaded.hotel.stores.reservationstore;
-
-import com.operatoroverloaded.hotel.models.Reservation;
 
 import java.util.ArrayList;
 
-public class InMemoryReservationStore extends ReservationStore {
-    private static final InMemoryReservationStore instance = new InMemoryReservationStore();
-    private ArrayList<Reservation> reservationData;
+import com.operatoroverloaded.hotel.models.DateTime;
+import com.operatoroverloaded.hotel.models.Reservation;
 
-    // Load the native library
-    static {
-        System.loadLibrary("ReservationCPP"); 
+public abstract class ReservationStore {
+    public static ReservationStore reservationStore = null;
+
+    // Singleton Pattern
+    public static ReservationStore getInstance() {
+        return reservationStore;
     }
 
-    // Singleton: Get the single instance of InMemoryReservationStore
-    public static InMemoryReservationStore getInstance() {
-        return instance;
+    public static void setInstance(ReservationStore reservationStore) {
+        ReservationStore.reservationStore = reservationStore;
     }
 
-    // Constructor that initializes the reservation data and loads existing data
-    private InMemoryReservationStore() {
-        this.reservationData = new ArrayList<>();
-        this.load();
-    }
+    // Abstract methods for managing reservations
+    public abstract void addReservation(Reservation reservation);
 
-    // Getter for the reservation data
-    public ArrayList<Reservation> getReservationData() {
-        return this.reservationData;
-    }
+    public abstract void removeReservation(int reservationId);
 
-    // Get a reservation by its ID
-    @Override
-    public Reservation getReservation(int reservationId) {
-        for (Reservation reservation : reservationData) {
-            if (reservationId == reservation.getReservationId()) {
-                return reservation;
-            }
-        }
-        return null;
-    }
+    public abstract void updateReservation(int reservationId, Reservation updatedReservation);
 
-    // Save reservations to persistent storage
-    @Override
-    public void save() {
-        saveReservationsNative();
-    }
+    public abstract Reservation getReservation(int reservationId);
 
-    // Load reservations from persistent storage
-    @Override
-    public void load() {
-        loadReservationsNative();
-    }
+    public abstract ArrayList<Reservation> getAllReservations();
 
-    // Add a new reservation to the data
-    @Override
-    public void addReservation(Reservation reservation) {
-        if (reservation != null) {
-            this.reservationData.add(reservation);
+    public abstract void save();
+
+    public abstract void load();
+
+    // New abstract method to create a reservation if no overlap exists
+    public abstract Reservation createReservationIfNoOverlap(
+            int reservationId, String roomID, String guestName,
+            DateTime startDateTime, DateTime endDateTime, int billId
+    );
+
+    // Implementation of `addReservation` to ensure no overlaps
+    public void addReservationIfNoOverlap(Reservation reservation) {
+        Reservation existing = createReservationIfNoOverlap(
+                reservation.getReservationId(),
+                reservation.getRoomID(),
+                reservation.getGuestName(),
+                reservation.getStartDateTime(),
+                reservation.getEndDateTime(),
+                reservation.getBillId()
+        );
+        if (existing != null) {
+            addReservation(existing);
+        } else {
+            System.out.println("Cannot add reservation: Time conflict detected.");
         }
     }
-
-    // Remove a reservation by its ID
-    @Override
-    public void removeReservation(int reservationId) {
-        for (Reservation reservation : reservationData) {
-            if (reservation.getReservationId() == reservationId) {
-                reservationData.remove(reservation);
-                return;
-            }
-        }
-    }
-
-    // Update an existing reservation
-    @Override
-    public void updateReservation(int reservationId, Reservation updatedReservation) {
-        for (int i = 0; i < reservationData.size(); i++) {
-            if (reservationData.get(i).getReservationId() == reservationId) {
-                reservationData.set(i, updatedReservation);
-                return;
-            }
-        }
-    }
-
-    // Get all reservations as a list
-    @Override
-    public ArrayList<Reservation> getAllReservations() {
-        return new ArrayList<>(this.reservationData);
-    }
-
-    // Native methods for saving and loading reservations
-    private native void saveReservationsNative();
-
-    private native void loadReservationsNative();
 }

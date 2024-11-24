@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.Dish;
-import com.operatoroverloaded.hotel.models.Dish.DishType;
 import com.operatoroverloaded.hotel.stores.dishstore.InMemoryDishStore;
 
 @RestController
@@ -42,17 +41,22 @@ public class DishController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addDish(@RequestBody JsonNode json) {
-        int dishID = json.get("dishID").asInt();
-        String name = json.get("name").asText();
-        float price = (float) json.get("price").asDouble();
-        DishType dishType = DishType.valueOf(json.get("dishType").asText().toUpperCase());
-        int calories = json.get("calories").asInt();
-        int preparationTime = json.get("preparationTime").asInt();
-        boolean isAvailable = json.get("isAvailable").asBoolean();
+        try {
+            int dishID = json.get("dishID").asInt();
+            String name = json.get("name").asText();
+            float price = (float) json.get("price").asDouble();
+            String dishType = json.get("dishType").asText().toUpperCase();
+            int calories = json.get("calories").asInt();
+            int preparationTime = json.get("preparationTime").asInt();
+            boolean isAvailable = json.get("isAvailable").asBoolean();
 
-        Dish newDish = new Dish(dishID, name, price, dishType, calories, preparationTime, isAvailable);
-        dishStore.addDish(newDish);
-        return ResponseEntity.ok().body("Dish added successfully");
+            Dish newDish = new Dish(dishID, name, price, dishType, calories, preparationTime, isAvailable);
+            dishStore.addDish(newDish);
+
+            return ResponseEntity.ok().body("Dish added successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Failed to add dish: " + e.getMessage());
+        }
     }
 
     @PostMapping("/remove/{dishId}")
@@ -71,16 +75,20 @@ public class DishController {
             return ResponseEntity.status(404).body("Dish not found");
         }
 
-        String name = json.get("name").asText(existingDish.getName());
-        float price = (float) json.get("price").asDouble(existingDish.getPrice());
-        DishType dishType = DishType.valueOf(json.get("dishType").asText().toUpperCase());
-        int calories = json.get("calories").asInt(existingDish.getCalories());
-        int preparationTime = json.get("preparationTime").asInt(existingDish.getPreparationTime());
-        boolean isAvailable = json.get("isAvailable").asBoolean(existingDish.isAvailable());
+        try {
+            String name = json.has("name") ? json.get("name").asText() : existingDish.getName();
+            float price = json.has("price") ? (float) json.get("price").asDouble() : existingDish.getPrice();
+            String dishType = json.has("dishType") ? json.get("dishType").asText().toUpperCase() : existingDish.getDishType();
+            int calories = json.has("calories") ? json.get("calories").asInt() : existingDish.getCalories();
+            int preparationTime = json.has("preparationTime") ? json.get("preparationTime").asInt() : existingDish.getPreparationTime();
+            boolean isAvailable = json.has("isAvailable") ? json.get("isAvailable").asBoolean() : existingDish.isAvailable();
 
-        Dish updatedDish = new Dish(dishId, name, price, dishType, calories, preparationTime, isAvailable);
-        dishStore.updateDish(dishId, updatedDish);
-        return ResponseEntity.ok().body("Dish updated successfully");
+            Dish updatedDish = new Dish(dishId, name, price, dishType, calories, preparationTime, isAvailable);
+            dishStore.updateDish(dishId, updatedDish);
+
+            return ResponseEntity.ok().body("Dish updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Failed to update dish: " + e.getMessage());
+        }
     }
 }
-

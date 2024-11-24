@@ -58,6 +58,152 @@ const initialRoomTypes: RoomType[] = [
   { roomTypeID: 'RT2', name: 'DELUXE', tariff: 150, amenities: ['TV', 'Wi-Fi', 'Mini Bar'] },
   { roomTypeID: 'RT3', name: 'SUITE', tariff: 250, amenities: ['TV', 'Wi-Fi', 'Mini Bar', 'Jacuzzi'] },
 ]
+import axios from 'axios';
+
+const API_BASE_URL = '/api/room';
+
+export const getRoom = async (roomId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/${roomId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching room:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const addRoom = async (roomData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/add`, roomData);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding room:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const removeRoom = async (roomId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/remove/${roomId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error removing room:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateRoom = async (roomId, roomData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/update/${roomId}`, roomData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating room:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getAllRooms = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/list`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching rooms:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const saveToFile = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/save`);
+    return response.data;
+  } catch (error) {
+    console.error('Error saving room data:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const loadFromFile = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/load`);
+    return response.data;
+  } catch (error) {
+    console.error('Error loading room data:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+const API_BASE_URL_2 = '/api/roomtype';
+
+export const getRoomType = async (roomTypeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL_2}/${roomTypeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching room type:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const addRoomType = async (roomTypeData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL_2}/add`, roomTypeData);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding room type:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const removeRoomType = async (roomTypeId) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL_2}/remove/${roomTypeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error removing room type:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const updateRoomType = async (roomTypeId, roomTypeData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL_2}/update/${roomTypeId}`, roomTypeData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating room type:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getAllRoomTypes = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL_2}/list`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching room types:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const saveRoomTypesToFile = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL_2}/save`);
+    return response.data;
+  } catch (error) {
+    console.error('Error saving room type data:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const loadRoomTypesFromFile = async () => {
+  try {
+    const response = await axios.post(`${API_BASE_URL_2}/load`);
+    return response.data;
+  } catch (error) {
+    console.error('Error loading room type data:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 export default function RoomsManagement() {
   const [rooms, setRooms] = useState<Room[]>(initialRooms)

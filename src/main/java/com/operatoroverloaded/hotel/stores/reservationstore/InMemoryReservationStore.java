@@ -1,9 +1,9 @@
-
 package com.operatoroverloaded.hotel.stores.reservationstore;
 
-import com.operatoroverloaded.hotel.models.Reservation;
-
 import java.util.ArrayList;
+
+import com.operatoroverloaded.hotel.models.DateTime;
+import com.operatoroverloaded.hotel.models.Reservation;
 
 public class InMemoryReservationStore extends ReservationStore {
     private static final InMemoryReservationStore instance = new InMemoryReservationStore();
@@ -93,4 +93,24 @@ public class InMemoryReservationStore extends ReservationStore {
     private native void saveReservationsNative();
 
     private native void loadReservationsNative();
+
+    // Implementation of the createReservationIfNoOverlap method
+    @Override
+    public Reservation createReservationIfNoOverlap(
+            int reservationId, String roomID, String guestName,
+            DateTime startDateTime, DateTime endDateTime, int billId
+    ) {
+        // Check for overlaps with existing reservations
+        for (Reservation reservation : reservationData) {
+            if (reservation.getRoomID().equals(roomID) &&
+                    (startDateTime.compareTo(reservation.getEndDateTime())<0) &&
+                    (endDateTime.compareTo(reservation.getStartDateTime()))>0) {
+                return null; // Overlap detected
+            }
+        }
+        // No overlaps, create a new reservation and add it to the data
+        Reservation newReservation = new Reservation(reservationId, roomID, guestName, startDateTime, endDateTime, billId);
+        addReservation(newReservation);
+        return newReservation;
+    }
 }

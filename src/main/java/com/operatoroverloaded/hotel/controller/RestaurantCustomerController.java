@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 import com.operatoroverloaded.hotel.models.DateTime;
-
-import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.*;
+import com.operatoroverloaded.hotel.models.RestaurantCustomer;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.InMemoryRestaurantCustomerStore;
+import com.operatoroverloaded.hotel.stores.restaurantcustomerstore.RestaurantCustomerStore;
 
 @RestController
-@RequestMapping("/api/hotelcustomer")
+@RequestMapping("/api/resturantcustomer")
 public class RestaurantCustomerController {
     private RestaurantCustomerStore restaurantCustomerStore;
     public RestaurantCustomerController(){
