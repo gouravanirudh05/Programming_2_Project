@@ -241,12 +241,12 @@ public class ConsoleApplication implements CommandLineRunner {
         // System.out.println("Enter room number to check out: ");
         // int roomNumber = scanner.nextInt();
 
-        // Check if the room exists and is currently booked
-        Room room = roomStore.findRoom(roomNumber);
-        if (room == null) {
-            System.out.println("Room not found.");
-            return;
-        }
+        // // Check if the room exists and is currently booked
+        // Room room = roomStore.getRoomByNumber(roomNumber);
+        // if (room == null) {
+        //     System.out.println("Room not found.");
+        //     return;
+        // }
 
         // // Check if the room is already booked or occupied
         // if (roomStore.isRoomBooked(roomNumber)) {
