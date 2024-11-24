@@ -42,34 +42,101 @@ public class LoadSaveController {
     }
     @GetMapping("/loadall")
     public ResponseEntity<?> loadAll() {
+        String totalError = "";
         try {
             billStore.load();
-        dishStore.loadFromFile();
-        hotelCustomerStore.loadFromFile();
-        logonStore.load();
-        restaurantCustomerStore.loadFromFile();
-        roomStore.load();
-        roomTypeStore.load();
-        tableStore.loadFromFile();
-        return ResponseEntity.ok().body("All data loaded successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to load data: " + e.getMessage());
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            dishStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            hotelCustomerStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }   
+        try {
+            logonStore.load();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            restaurantCustomerStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            roomStore.load();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            roomTypeStore.load();
+            System.out.println("Room type data loaded successfully");
+        }catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            tableStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        if (totalError.isEmpty()) {
+            return ResponseEntity.ok().body("All data loaded successfully");
+        } else {
+            return ResponseEntity.status(500).body(totalError);
         }
     }
     @GetMapping("/saveall")
     public ResponseEntity<?> saveAll() {
+        String totalError = "";
         try {
-            billStore.save();
-        dishStore.saveToFile();
-        hotelCustomerStore.storeToFile();
-        logonStore.save();
-        restaurantCustomerStore.storeToFile();
-        roomStore.save();
-        roomTypeStore.save();
-        tableStore.saveToFile();
-        return ResponseEntity.ok().body("All data loaded successfully");
+            billStore.save();            
+        }catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            dishStore.saveToFile();
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to load data: " + e.getMessage());
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            hotelCustomerStore.storeToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }        
+        try {                        
+            logonStore.save();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            restaurantCustomerStore.storeToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            roomStore.save();
+        }catch(Exception e) {            
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            roomTypeStore.save();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            tableStore.saveToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        if (totalError.isEmpty()) {
+            return ResponseEntity.ok().body("All data saved successfully");
+        }   else {
+            return ResponseEntity.status(500).body(totalError);
         }
     }
 }

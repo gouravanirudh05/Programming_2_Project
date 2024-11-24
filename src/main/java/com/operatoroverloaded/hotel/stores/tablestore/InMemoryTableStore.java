@@ -6,6 +6,9 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.Table;
 
 public class InMemoryTableStore extends TableStore {
+    static {
+        System.loadLibrary("TableCPP");
+    }
     private static final InMemoryTableStore instance = new InMemoryTableStore();
     private final List<Table> tables = new ArrayList<>();
 

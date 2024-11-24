@@ -1,8 +1,9 @@
 package com.operatoroverloaded.hotel.stores.staffstore;
 
-import com.operatoroverloaded.hotel.models.Staff;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.operatoroverloaded.hotel.models.Staff;
 
 public class InMemoryStaffStore extends StaffStore {
     static{
@@ -18,7 +19,7 @@ public class InMemoryStaffStore extends StaffStore {
 
     public InMemoryStaffStore() {
         this.staffList = new ArrayList<>();
-        this.loadFromFile();
+        // this.loadFromFile();
     }
 
     @Override
