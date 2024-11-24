@@ -500,6 +500,23 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+private String[] parseCommand(String command) {
+        ArrayList<String> tokens = new ArrayList<>();
+        Matcher matcher = Pattern.compile("\"([^\"]*)\"|(\\S+)").matcher(command);
+
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                // Add quoted strings
+                tokens.add(matcher.group(1));
+            } else {
+                // Add unquoted words
+                tokens.add(matcher.group(2));
+            }
+        }
+
+        return tokens.toArray(new String[0]);
+    }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
