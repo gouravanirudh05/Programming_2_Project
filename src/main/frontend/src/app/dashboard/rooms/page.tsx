@@ -1,254 +1,208 @@
-'use client'
-
-import { useState } from 'react'
+"use client"
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { toast } from '@/hooks/use-toast'
 
-// Types
+// Define types
 type Room = {
-  roomID: string
-  roomType: string
+  roomId: string
+  roomTypeId: string
   capacity: number
   housekeepingLast: string
 }
 
 type RoomType = {
-  roomTypeID: string
-  name: string
+  roomTypeId: string
+  roomTypeName: string
   tariff: number
   amenities: string[]
 }
 
-// Dummy data
-const initialRooms: Room[] = [
-  { roomID: 'R101', roomType: 'DELUXE', capacity: 2, housekeepingLast: '2024-01-17T08:00:00' },
-  { roomID: 'R102', roomType: 'SUITE', capacity: 4, housekeepingLast: '2024-01-17T09:00:00' },
-  { roomID: 'R103', roomType: 'STANDARD', capacity: 2, housekeepingLast: '2024-01-17T10:00:00' },
-]
-
-const initialRoomTypes: RoomType[] = [
-  { roomTypeID: 'RT1', name: 'STANDARD', tariff: 100, amenities: ['TV', 'Wi-Fi'] },
-  { roomTypeID: 'RT2', name: 'DELUXE', tariff: 150, amenities: ['TV', 'Wi-Fi', 'Mini Bar'] },
-  { roomTypeID: 'RT3', name: 'SUITE', tariff: 250, amenities: ['TV', 'Wi-Fi', 'Mini Bar', 'Jacuzzi'] },
-]
-import axios from 'axios';
-
-const API_BASE_URL = '/api/room';
-
-const getRoom = async (roomId) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/${roomId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching room:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const addRoom = async (roomData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/add`, roomData);
-    return response.data;
-  } catch (error) {
-    console.error('Error adding room:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const removeRoom = async (roomId) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/remove/${roomId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error removing room:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const updateRoom = async (roomId, roomData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/update/${roomId}`, roomData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating room:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const getAllRooms = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/list`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching rooms:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const saveToFile = async () => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/save`);
-    return response.data;
-  } catch (error) {
-    console.error('Error saving room data:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const loadFromFile = async () => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/load`);
-    return response.data;
-  } catch (error) {
-    console.error('Error loading room data:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const API_BASE_URL_2 = '/api/roomtype';
-
-const getRoomType = async (roomTypeId) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL_2}/${roomTypeId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching room type:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const addRoomType = async (roomTypeData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL_2}/add`, roomTypeData);
-    return response.data;
-  } catch (error) {
-    console.error('Error adding room type:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const removeRoomType = async (roomTypeId) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL_2}/remove/${roomTypeId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error removing room type:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const updateRoomType = async (roomTypeId, roomTypeData) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL_2}/update/${roomTypeId}`, roomTypeData);
-    return response.data;
-  } catch (error) {
-    console.error('Error updating room type:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const getAllRoomTypes = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL_2}/list`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching room types:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const saveRoomTypesToFile = async () => {
-  try {
-    const response = await axios.post(`${API_BASE_URL_2}/save`);
-    return response.data;
-  } catch (error) {
-    console.error('Error saving room type data:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
-const loadRoomTypesFromFile = async () => {
-  try {
-    const response = await axios.post(`${API_BASE_URL_2}/load`);
-    return response.data;
-  } catch (error) {
-    console.error('Error loading room type data:', error.response?.data || error.message);
-    throw error;
-  }
-};
-
+const API_BASE_URL = 'http://localhost:8080/api'
 
 export default function RoomsManagement() {
-  const [rooms, setRooms] = useState<Room[]>(initialRooms)
-  const [roomTypes, setRoomTypes] = useState<RoomType[]>(initialRoomTypes)
-  const [newRoom, setNewRoom] = useState<Room>({ roomID: '', roomType: '', capacity: 0, housekeepingLast: '' })
-  const [newRoomType, setNewRoomType] = useState<RoomType>({ roomTypeID: '', name: '', tariff: 0, amenities: [] })
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([])
+  const [newRoom, setNewRoom] = useState<Room>({
+    roomId: '',
+    roomTypeId: '',
+    capacity: 0,
+    housekeepingLast: new Date().toISOString()
+  })
+  const [newRoomType, setNewRoomType] = useState<RoomType>({
+    roomTypeId: '',
+    roomTypeName: '',
+    tariff: 0,
+    amenities: []
+  })
   const [isAddRoomOpen, setIsAddRoomOpen] = useState(false)
   const [isAddRoomTypeOpen, setIsAddRoomTypeOpen] = useState(false)
   const [editingRoom, setEditingRoom] = useState<Room | null>(null)
   const [editingRoomType, setEditingRoomType] = useState<RoomType | null>(null)
 
-  // Room CRUD operations
-  const addRoom = () => {
-    setRooms([...rooms, newRoom])
-    setNewRoom({ roomID: '', roomType: '', capacity: 0, housekeepingLast: '' })
-    setIsAddRoomOpen(false)
+  // Fetch initial data
+  useEffect(() => {
+    fetchRooms()
+    fetchRoomTypes()
+  }, [])
+
+  // API calls for Rooms
+  const fetchRooms = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/room/list`)
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].housekeepingLast = new Date(response.data[i].housekeepingLast.dateString+" "+response.data[i].housekeepingLast.timeString).toISOString()
+      }
+      setRooms(response.data)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch rooms",
+        variant: "destructive"
+      })
+    }
   }
 
-  const updateRoom = () => {
-    if (editingRoom) {
-      setRooms(rooms.map(room => room.roomID === editingRoom.roomID ? editingRoom : room))
+  const addRoom = async () => {
+    try {
+      await axios.post(`${API_BASE_URL}/room/add`, newRoom)
+      await fetchRooms()
+      setNewRoom({
+        roomId: '',
+        roomTypeId: '',
+        capacity: 0,
+        housekeepingLast: new Date().toISOString()
+      })
+      setIsAddRoomOpen(false)
+      toast({
+        title: "Success",
+        description: "Room added successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add room",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const updateRoom = async () => {
+    if (!editingRoom) return
+    try {
+      await axios.post(`${API_BASE_URL}/room/update/${editingRoom.roomId}`, editingRoom)
+      await fetchRooms()
       setEditingRoom(null)
+      toast({
+        title: "Success",
+        description: "Room updated successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update room",
+        variant: "destructive"
+      })
     }
   }
 
-  const deleteRoom = (roomID: string) => {
-    setRooms(rooms.filter(room => room.roomID !== roomID))
+  const deleteRoom = async (roomId: string) => {
+    try {
+      await axios.post(`${API_BASE_URL}/room/remove/${roomId}`)
+      await fetchRooms()
+      toast({
+        title: "Success",
+        description: "Room deleted successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete room",
+        variant: "destructive"
+      })
+    }
   }
 
-  // RoomType CRUD operations
-  const addRoomType = () => {
-    setRoomTypes([...roomTypes, newRoomType])
-    setNewRoomType({ roomTypeID: '', name: '', tariff: 0, amenities: [] })
-    setIsAddRoomTypeOpen(false)
+  // API calls for Room Types
+  const fetchRoomTypes = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/roomtype/list`)
+      setRoomTypes(response.data)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch room types",
+        variant: "destructive"
+      })
+    }
   }
 
-  const updateRoomType = () => {
-    if (editingRoomType) {
-      setRoomTypes(roomTypes.map(rt => rt.roomTypeID === editingRoomType.roomTypeID ? editingRoomType : rt))
+  const addRoomType = async () => {
+    try {
+      await axios.post(`${API_BASE_URL}/roomtype/add`, newRoomType)
+      await fetchRoomTypes()
+      setNewRoomType({
+        roomTypeId: '',
+        roomTypeName: '',
+        tariff: 0,
+        amenities: []
+      })
+      setIsAddRoomTypeOpen(false)
+      toast({
+        title: "Success",
+        description: "Room type added successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add room type",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const updateRoomType = async () => {
+    if (!editingRoomType) return
+    try {
+      await axios.post(`${API_BASE_URL}/roomtype/update/${editingRoomType.roomTypeId}`, editingRoomType)
+      await fetchRoomTypes()
       setEditingRoomType(null)
+      toast({
+        title: "Success",
+        description: "Room type updated successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update room type",
+        variant: "destructive"
+      })
     }
   }
 
-  const deleteRoomType = (roomTypeID: string) => {
-    setRoomTypes(roomTypes.filter(rt => rt.roomTypeID !== roomTypeID))
+  const deleteRoomType = async (roomTypeId: string) => {
+    try {
+      await axios.post(`${API_BASE_URL}/roomtype/remove/${roomTypeId}`)
+      await fetchRoomTypes()
+      toast({
+        title: "Success",
+        description: "Room type deleted successfully"
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete room type",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
@@ -274,23 +228,25 @@ export default function RoomsManagement() {
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="roomID" className="text-right">Room ID</Label>
+                      <Label htmlFor="roomId" className="text-right">Room ID</Label>
                       <Input
-                        id="roomID"
-                        value={newRoom.roomID}
-                        onChange={(e) => setNewRoom({ ...newRoom, roomID: e.target.value })}
+                        id="roomId"
+                        value={newRoom.roomId}
+                        onChange={(e) => setNewRoom({ ...newRoom, roomId: e.target.value })}
                         className="col-span-3"
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="roomType" className="text-right">Room Type</Label>
-                      <Select onValueChange={(value) => setNewRoom({ ...newRoom, roomType: value })}>
+                      <Label htmlFor="roomTypeId" className="text-right">Room Type</Label>
+                      <Select onValueChange={(value) => setNewRoom({ ...newRoom, roomTypeId: value })}>
                         <SelectTrigger className="col-span-3">
                           <SelectValue placeholder="Select room type" />
                         </SelectTrigger>
                         <SelectContent>
                           {roomTypes.map((rt) => (
-                            <SelectItem key={rt.roomTypeID} value={rt.name}>{rt.name}</SelectItem>
+                            <SelectItem key={rt.roomTypeId} value={rt.roomTypeId}>
+                              {rt.roomTypeName}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -325,16 +281,27 @@ export default function RoomsManagement() {
                 </TableHeader>
                 <TableBody>
                   {rooms.map((room) => (
-                    <TableRow key={room.roomID}>
-                      <TableCell>{room.roomID}</TableCell>
-                      <TableCell>{room.roomType}</TableCell>
+                    <TableRow key={room.roomId}>
+                      <TableCell>{room.roomId}</TableCell>
+                      <TableCell>
+                        {roomTypes.find(rt => rt.roomTypeId === room.roomTypeId)?.roomTypeName}
+                      </TableCell>
                       <TableCell>{room.capacity}</TableCell>
                       <TableCell>{new Date(room.housekeepingLast).toLocaleString()}</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingRoom(room)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2"
+                          onClick={() => setEditingRoom(room)}
+                        >
                           Edit
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => deleteRoom(room.roomID)}>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteRoom(room.roomId)}
+                        >
                           Delete
                         </Button>
                       </TableCell>
@@ -360,20 +327,20 @@ export default function RoomsManagement() {
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="roomTypeID" className="text-right">Room Type ID</Label>
+                      <Label htmlFor="roomTypeId" className="text-right">Room Type ID</Label>
                       <Input
-                        id="roomTypeID"
-                        value={newRoomType.roomTypeID}
-                        onChange={(e) => setNewRoomType({ ...newRoomType, roomTypeID: e.target.value })}
+                        id="roomTypeId"
+                        value={newRoomType.roomTypeId}
+                        onChange={(e) => setNewRoomType({ ...newRoomType, roomTypeId: e.target.value })}
                         className="col-span-3"
                       />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">Name</Label>
+                      <Label htmlFor="roomTypeName" className="text-right">Name</Label>
                       <Input
-                        id="name"
-                        value={newRoomType.name}
-                        onChange={(e) => setNewRoomType({ ...newRoomType, name: e.target.value })}
+                        id="roomTypeName"
+                        value={newRoomType.roomTypeName}
+                        onChange={(e) => setNewRoomType({ ...newRoomType, roomTypeName: e.target.value })}
                         className="col-span-3"
                       />
                     </div>
@@ -392,8 +359,12 @@ export default function RoomsManagement() {
                       <Input
                         id="amenities"
                         value={newRoomType.amenities.join(', ')}
-                        onChange={(e) => setNewRoomType({ ...newRoomType, amenities: e.target.value.split(', ') })}
+                        onChange={(e) => setNewRoomType({
+                          ...newRoomType,
+                          amenities: e.target.value.split(',').map(item => item.trim())
+                        })}
                         className="col-span-3"
+                        placeholder="Enter amenities separated by commas"
                       />
                     </div>
                   </div>
@@ -416,16 +387,25 @@ export default function RoomsManagement() {
                 </TableHeader>
                 <TableBody>
                   {roomTypes.map((roomType) => (
-                    <TableRow key={roomType.roomTypeID}>
-                      <TableCell>{roomType.roomTypeID}</TableCell>
-                      <TableCell>{roomType.name}</TableCell>
+                    <TableRow key={roomType.roomTypeId}>
+                      <TableCell>{roomType.roomTypeId}</TableCell>
+                      <TableCell>{roomType.roomTypeName}</TableCell>
                       <TableCell>${roomType.tariff}</TableCell>
                       <TableCell>{roomType.amenities.join(', ')}</TableCell>
                       <TableCell>
-                        <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingRoomType(roomType)}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mr-2"
+                          onClick={() => setEditingRoomType(roomType)}
+                        >
                           Edit
                         </Button>
-                        <Button variant="destructive" size="sm" onClick={() => deleteRoomType(roomType.roomTypeID)}>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteRoomType(roomType.roomTypeId)}
+                        >
                           Delete
                         </Button>
                       </TableCell>
@@ -439,6 +419,7 @@ export default function RoomsManagement() {
       </Tabs>
 
       {/* Edit Room Dialog */}
+      {/* Edit Room Dialog */}
       {editingRoom && (
         <Dialog open={!!editingRoom} onOpenChange={() => setEditingRoom(null)}>
           <DialogContent>
@@ -447,26 +428,29 @@ export default function RoomsManagement() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-roomID" className="text-right">Room ID</Label>
+                <Label htmlFor="edit-roomId" className="text-right">Room ID</Label>
                 <Input
-                  id="edit-roomID"
-                  value={editingRoom.roomID}
-                  onChange={(e) => setEditingRoom({ ...editingRoom, roomID: e.target.value })}
+                  id="edit-roomId"
+                  value={editingRoom.roomId}
+                  onChange={(e) => setEditingRoom({ ...editingRoom, roomId: e.target.value })}
                   className="col-span-3"
+                  disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-roomType" className="text-right">Room Type</Label>
                 <Select 
-                  value={editingRoom.roomType}
-                  onValueChange={(value) => setEditingRoom({ ...editingRoom, roomType: value })}
+                  value={editingRoom.roomTypeId}
+                  onValueChange={(value) => setEditingRoom({ ...editingRoom, roomTypeId: value })}
                 >
                   <SelectTrigger className="col-span-3">
                     <SelectValue placeholder="Select room type" />
                   </SelectTrigger>
                   <SelectContent>
                     {roomTypes.map((rt) => (
-                      <SelectItem key={rt.roomTypeID} value={rt.name}>{rt.name}</SelectItem>
+                      <SelectItem key={rt.roomTypeId} value={rt.roomTypeId}>
+                        {rt.roomTypeName}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -478,6 +462,19 @@ export default function RoomsManagement() {
                   type="number"
                   value={editingRoom.capacity}
                   onChange={(e) => setEditingRoom({ ...editingRoom, capacity: parseInt(e.target.value) })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-housekeeping" className="text-right">Last Housekeeping</Label>
+                <Input
+                  id="edit-housekeeping"
+                  type="datetime-local"
+                  value={editingRoom.housekeepingLast.slice(0, 16)}
+                  onChange={(e) => setEditingRoom({
+                    ...editingRoom,
+                    housekeepingLast: new Date(e.target.value).toISOString()
+                  })}
                   className="col-span-3"
                 />
               </div>
@@ -498,20 +495,21 @@ export default function RoomsManagement() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-roomTypeID" className="text-right">Room Type ID</Label>
+                <Label htmlFor="edit-roomTypeId" className="text-right">Room Type ID</Label>
                 <Input
-                  id="edit-roomTypeID"
-                  value={editingRoomType.roomTypeID}
-                  onChange={(e) => setEditingRoomType({ ...editingRoomType, roomTypeID: e.target.value })}
+                  id="edit-roomTypeId"
+                  value={editingRoomType.roomTypeId}
+                  onChange={(e) => setEditingRoomType({ ...editingRoomType, roomTypeId: e.target.value })}
                   className="col-span-3"
+                  disabled
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-name" className="text-right">Name</Label>
+                <Label htmlFor="edit-roomTypeName" className="text-right">Name</Label>
                 <Input
-                  id="edit-name"
-                  value={editingRoomType.name}
-                  onChange={(e) => setEditingRoomType({ ...editingRoomType, name: e.target.value })}
+                  id="edit-roomTypeName"
+                  value={editingRoomType.roomTypeName}
+                  onChange={(e) => setEditingRoomType({ ...editingRoomType, roomTypeName: e.target.value })}
                   className="col-span-3"
                 />
               </div>
@@ -530,8 +528,12 @@ export default function RoomsManagement() {
                 <Input
                   id="edit-amenities"
                   value={editingRoomType.amenities.join(', ')}
-                  onChange={(e) => setEditingRoomType({ ...editingRoomType, amenities: e.target.value.split(', ') })}
+                  onChange={(e) => setEditingRoomType({
+                    ...editingRoomType,
+                    amenities: e.target.value.split(',').map(item => item.trim())
+                  })}
                   className="col-span-3"
+                  placeholder="Enter amenities separated by commas"
                 />
               </div>
             </div>

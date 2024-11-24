@@ -29,7 +29,7 @@ public class InMemoryRoomTypeStore extends RoomTypeStore {
     public  RoomType deleteRoomType(String roomTypeId){
         RoomType roomType = null;
         for(RoomType r: roomTypes){
-            if(r.getRoomTypeId() == roomTypeId){
+            if(r.getRoomTypeId().equals(roomTypeId)){
                 roomType = r;
                 roomTypes.remove(r);
                 break;
@@ -40,7 +40,7 @@ public class InMemoryRoomTypeStore extends RoomTypeStore {
     
     public  void updateRoomType(String roomTypeId, RoomType roomType){
         for(RoomType r: roomTypes){
-            if(r.getRoomTypeId() == roomTypeId){
+            if(r.getRoomTypeId().equals(roomTypeId)){
                 r.setRoomTypeName(roomType.getRoomTypeName());
                 r.setTariff(roomType.getTariff());
                 r.setAmenities(roomType.getAmenities());
@@ -51,7 +51,7 @@ public class InMemoryRoomTypeStore extends RoomTypeStore {
     
     public  RoomType findRoomType(String roomTypeId){
         for(RoomType r: roomTypes){
-            if(r.getRoomTypeId() == roomTypeId){
+            if(r.getRoomTypeId().equals(roomTypeId)){
                 return r;
             }
         }

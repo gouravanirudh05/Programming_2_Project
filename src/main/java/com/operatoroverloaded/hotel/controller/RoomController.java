@@ -62,9 +62,9 @@ public class RoomController {
         }
 
         String roomTypeId = json.get("roomTypeId").asText();
-        String roomTypeName = json.get("roomTypeName").asText();
+        int capacity = json.get("capacity").asInt();
         DateTime housekeepingLast = DateTime.fromISOString(json.get("housekeepingLast").asText());
-        Room updatedRoom = new Room(roomId, existingRoom.getCapacity(), roomTypeId, housekeepingLast);
+        Room updatedRoom = new Room(roomId, capacity, roomTypeId, housekeepingLast);
         roomStore.updateRoom(roomId, updatedRoom);
         return ResponseEntity.ok().body("Room updated successfully");
     }

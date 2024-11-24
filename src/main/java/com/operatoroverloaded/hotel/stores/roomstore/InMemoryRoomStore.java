@@ -36,7 +36,7 @@ public class InMemoryRoomStore extends RoomStore {
     public Room deleteRoom(String roomId){
         Room room = null;
         for(Room r: rooms){
-            if(r.getRoomId() == roomId){
+            if(r.getRoomId().equals(roomId)){
                 room = r;
                 rooms.remove(r);
                 break;
@@ -48,7 +48,7 @@ public class InMemoryRoomStore extends RoomStore {
     @Override
     public void updateRoom(String roomId, Room room){
         for(Room r: rooms){
-            if(r.getRoomId() == roomId){
+            if(r.getRoomId().equals(roomId)){
                 r.setCapacity(room.getCapacity());
                 r.setHousekeepingLast(room.getHousekeepingLast());
                 r.setRoomTypeId(room.getRoomTypeId());
@@ -60,7 +60,7 @@ public class InMemoryRoomStore extends RoomStore {
     @Override
     public Room findRoom(String roomId){
         for(Room r: rooms){
-            if(r.getRoomId() == roomId){
+            if(r.getRoomId().equals(roomId)){
                 return r;
             }
         }
