@@ -16,8 +16,7 @@ extern "C" {
         if (!fout.is_open()) {
             return;
         }
-
-        jclass roomClass = env->FindClass("com/operatoroverloaded/hotel/stores/roomstore/Room");
+        jclass roomClass = env->FindClass("com/operatoroverloaded/hotel/models/Room");
         jclass InMemoryRoomStoreClass = env->GetObjectClass(obj);
         jfieldID roomArrayField = env->GetFieldID(InMemoryRoomStoreClass, "rooms", "Ljava/util/ArrayList;");
         jobject roomArray = env->GetObjectField(obj, roomArrayField);
@@ -27,12 +26,12 @@ extern "C" {
         jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
         jint length = env->CallIntMethod(roomArray, arrayListSize);
 
-        jmethodID getRoomID = env->GetMethodID(roomClass, "getRoomID", "()Ljava/lang/String;");
+        jmethodID getRoomID = env->GetMethodID(roomClass, "getRoomId", "()Ljava/lang/String;");
         jmethodID getCapacity = env->GetMethodID(roomClass, "getCapacity", "()I");
         jmethodID getRoomTypeId = env->GetMethodID(roomClass, "getRoomTypeId", "()Ljava/lang/String;");
-        jmethodID getHousekeepingLast = env->GetMethodID(roomClass, "getHousekeepingLast", "()Lcom/operatoroverloaded/hotel/stores/roomstore/DateTime;");
+        jmethodID getHousekeepingLast = env->GetMethodID(roomClass, "getHousekeepingLast", "()Lcom/operatoroverloaded/hotel/models/DateTime;");
 
-        jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/stores/roomstore/DateTime");
+        jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
         jmethodID getDateString = env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;");
         jmethodID getTimeString = env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;");
 
@@ -56,8 +55,8 @@ extern "C" {
             string formattedDate = dateCStr;
             replace(formattedDate.begin(), formattedDate.end(), '-', '/');
 
-            fout << roomIdStr << "-" << capacity << "-" << roomTypeIdStr << "-" 
-             << formattedDate << "-" << timeCStr << "\\" << endl;
+            fout << string(roomIdStr) << "-" << capacity << "-" << string(roomTypeIdStr) << "-" 
+             << formattedDate << "-" << string(timeCStr) << "\\" << endl;
 
             env->ReleaseStringUTFChars(roomId, roomIdStr);
             env->ReleaseStringUTFChars(roomTypeId, roomTypeIdStr);
@@ -73,6 +72,11 @@ extern "C" {
         }
 
         fout.close();
+        env->DeleteLocalRef(roomClass);
+        env->DeleteLocalRef(InMemoryRoomStoreClass);
+        env->DeleteLocalRef(roomArray);
+        env->DeleteLocalRef(arrayListClass);
+        env->DeleteLocalRef(dateTimeClass);
     }
 
     JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_roomstore_InMemoryRoomStore_loadFromFile(JNIEnv *env, jobject obj){
@@ -84,7 +88,7 @@ extern "C" {
         string file; file.assign((istreambuf_iterator<char>(fin)), (istreambuf_iterator<char>()));
         fin.close();
 
-        jclass roomClass = env->FindClass("com/operatoroverloaded/hotel/stores/roomstore/Room");
+        jclass roomClass = env->FindClass("com/operatoroverloaded/hotel/models/Room");
         jclass InMemoryRoomStoreClass = env->GetObjectClass(obj);
         jfieldID roomArrayField = env->GetFieldID(InMemoryRoomStoreClass, "rooms", "Ljava/util/ArrayList;");
         jobject roomArray = env->GetObjectField(obj, roomArrayField);

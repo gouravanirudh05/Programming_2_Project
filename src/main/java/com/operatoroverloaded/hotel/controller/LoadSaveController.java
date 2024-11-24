@@ -49,26 +49,6 @@ public class LoadSaveController {
             totalError += e.getMessage() + "\n";
         }
         try {
-            dishStore.loadFromFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
-            hotelCustomerStore.loadFromFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }   
-        try {
-            logonStore.load();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
-            restaurantCustomerStore.loadFromFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
             roomStore.load();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
@@ -77,6 +57,26 @@ public class LoadSaveController {
             roomTypeStore.load();
             System.out.println("Room type data loaded successfully");
         }catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }  
+        try {
+            logonStore.load();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            dishStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            hotelCustomerStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        } 
+        try {
+            restaurantCustomerStore.loadFromFile();
+        } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }
         try {
@@ -94,8 +94,23 @@ public class LoadSaveController {
     public ResponseEntity<?> saveAll() {
         String totalError = "";
         try {
+            roomStore.save();
+        }catch(Exception e) {            
+            totalError += e.getMessage() + "\n";
+        }
+        try {
             billStore.save();            
         }catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }        
+        try {                        
+            logonStore.save();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            roomTypeStore.save();
+        } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }
         try {
@@ -107,24 +122,9 @@ public class LoadSaveController {
             hotelCustomerStore.storeToFile();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
-        }        
-        try {                        
-            logonStore.save();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
         }
         try {
             restaurantCustomerStore.storeToFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
-            roomStore.save();
-        }catch(Exception e) {            
-            totalError += e.getMessage() + "\n";
-        }
-        try {
-            roomTypeStore.save();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }

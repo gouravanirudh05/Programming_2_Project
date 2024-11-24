@@ -20,7 +20,7 @@ public class InMemoryLogonStore extends LogonStore {
     // Constructor which also loads the data from the native library
     public InMemoryLogonStore() {
         this.logonData = new ArrayList<Logon>();
-        // this.load();
+        this.load();
     }
 
     // Getter for the logonData

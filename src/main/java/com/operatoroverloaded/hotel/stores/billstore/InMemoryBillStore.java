@@ -41,22 +41,17 @@ public class InMemoryBillStore extends BillStore {
     }
 
     // // Native method declaration
-    // private native void loadBill();
-    // private native void saveBill();
-
-    // Load the native library
-    // static {
-    //     System.loadLibrary("BillCPP");
-    // }
+    private native void loadBill();
+    private native void saveBill();
 
     @Override
     public void save(){
-        // this.saveBill();
+        this.saveBill();
     }
 
     @Override
     public void load(){
-        // this.loadBill();        
+        this.loadBill();        
     }
 
     // add a new bill to the billData

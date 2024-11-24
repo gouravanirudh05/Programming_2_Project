@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <random>
 #include "com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore.h"
+#include <iostream>
 using namespace std;
 
 const int SALT_SIZE = 16;
@@ -176,18 +177,26 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_saveLogon(JNIEnv *env, jobject obj) {
+        // TODO: change the path to the login.txt file as needed
+        ofstream file("login.txt");
+        if(!file.is_open()){
+            return;
+        }
+
         // Get the Logon class and the ArrayList field
         // TODO: change the path to the Logon class as needed
-        jclass logonClass = env->FindClass("Logon");
+        jclass logonClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon");
         jclass InMemoryLogonStoreClass = env->GetObjectClass(obj);
         jfieldID logonArrayField = env->GetFieldID(InMemoryLogonStoreClass, "logonData", "Ljava/util/ArrayList;");
         jobject logonArray = env->GetObjectField(obj, logonArrayField);
+        cout << "done" << endl;
 
         // Get the ArrayList methods
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
         jmethodID arrayListSize = env->GetMethodID(arrayListClass, "size", "()I");
         jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
         jint length = env->CallIntMethod(logonArray, arrayListSize);
+        cout << "done" << endl;
 
         // Get the Logon fields
         jfieldID roleIdField = env->GetFieldID(logonClass, "roleId", "I");
@@ -195,17 +204,13 @@ extern "C" {
         jfieldID emailField = env->GetFieldID(logonClass, "email", "Ljava/lang/String;");
         jfieldID passwordField = env->GetFieldID(logonClass, "password", "Ljava/lang/String;");
         jfieldID saltField = env->GetFieldID(logonClass, "salt", "Ljava/lang/String;");
+        cout << "done" << endl;
 
         // Get the AccessLevel enum and the toString method
         // TODO: change the path to the AccessLevel enum as needed
         jclass accessLevelClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon$AccessLevel");
         jmethodID toStringMethod = env->GetMethodID(accessLevelClass, "toString", "()Ljava/lang/String;");
-
-        // TODO: change the path to the login.txt file as needed
-        ofstream file("login.txt");
-        if(!file.is_open()){
-            return;
-        }
+        cout << "done" << endl;
         
         for(jint i = 0; i < length; i++) {
             // Get the Logon object
@@ -226,7 +231,7 @@ extern "C" {
             const char *nativeSalt = salt ? env->GetStringUTFChars(salt, nullptr) : nullptr;
             
             // Write the data to the file
-            file << roleId << "-" << nativeAccess << "-" << nativeEmail << "-" << nativePassword << "-" << nativeSalt << "\\" << endl;
+            file << roleId << "-" << string(nativeAccess) << "-" << string(nativeEmail) << "-" << string(nativePassword) << "-" << string(nativeSalt) << "\\" << endl;
 
             // Release the native strings
             env->ReleaseStringUTFChars(access, nativeAccess);
@@ -243,5 +248,6 @@ extern "C" {
             env->DeleteLocalRef(accessEnum);  // Free enum object reference
         }
         file.close();
+        cout << "done" << endl;
     }
 }
