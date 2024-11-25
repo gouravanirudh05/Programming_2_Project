@@ -1,5 +1,5 @@
 package com.operatoroverloaded.hotel.models;
-
+import com.operatoroverloaded.hotel.stores.billstore.InMemoryBillStore;
 import java.util.List;
 
 public class Reservation {
@@ -117,4 +117,52 @@ public class Reservation {
         // No overlaps, create and return the new reservation
         return new Reservation(reservationId, roomID, guestName, startDateTime, endDateTime, billId);
     }
+    public boolean updateReservation(DateTime newStartDateTime, DateTime newEndDateTime, float dailyRate) {
+    InMemoryBillStore billStore = InMemoryBillStore.getInstance();
+
+    // Fetch the associated Bill object using billId
+    Bill bill = billStore.getBill(this.billId);
+    if (bill == null) {
+        System.err.println("Bill not found for the given billId: " + this.billId);
+        return false;
+    }
+
+    // Validate the new date-time range
+    if (newStartDateTime.compareTo(newEndDateTime) >= 0) {
+        System.err.println("Invalid date range: Start time must be before end time.");
+        return false;
+    }
+
+    // Update reservation dates
+    this.startDateTime = newStartDateTime;
+    this.endDateTime = newEndDateTime;
+
+    // Calculate the number of days for the stay
+    int days = newStartDateTime.dateDifference(newEndDateTime);
+
+    // Calculate the new room charges
+    float totalRoomCharge = days * dailyRate;
+
+    // Prepare updated bill details
+    ArrayList<String> purchased = new ArrayList<>();
+    ArrayList<Float> purchasedList = new ArrayList<>();
+    ArrayList<Integer> quantity = new ArrayList<>();
+
+    // Add room charges to the bill
+    purchased.add("Room Charge");
+    purchasedList.add(dailyRate);
+    quantity.add(days);
+
+    // Update the bill details
+    bill.setItems(purchased, purchasedList, quantity);
+    bill.setAmount(totalRoomCharge);
+    bill.setPayedOn(DateTime.getCurrentTime());
+
+    // Update the total amount in the reservation
+    this.totalAmount = totalRoomCharge;
+
+    // Print confirmation and return
+    System.out.println("Reservation and associated bill updated successfully.");
+    return true;
+}
 }
