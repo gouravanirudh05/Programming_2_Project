@@ -50,7 +50,7 @@ public class DishController {
             int preparationTime = json.get("preparationTime").asInt();
             boolean isAvailable = json.get("isAvailable").asBoolean();
 
-            Dish newDish = new Dish(dishID, name, price, dishType, calories, preparationTime, isAvailable);
+            Dish newDish = new Dish(dishStore.getDishes().size() + 1, name, price, dishType, calories, preparationTime, isAvailable);
             dishStore.addDish(newDish);
 
             return ResponseEntity.ok().body("Dish added successfully");

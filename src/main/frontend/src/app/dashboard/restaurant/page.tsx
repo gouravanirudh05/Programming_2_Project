@@ -9,7 +9,7 @@ import TableManagement from './table-management'
 import OrderManagement from './order-management'
 
 export type Dish = {
-  dishID: string
+  dishID: number
   name: string
   price: number
   dishType: string

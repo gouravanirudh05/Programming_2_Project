@@ -1,51 +1,16 @@
-'use client'
-
+"use client"
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from '@/hooks/use-toast'
-
-// API configuration
-const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  }
-})
-
-interface ApiResponse<T> {
-  status: 'success' | 'error'
-  data: T
-  message: string
-}
-
 type Staff = {
   staffID: string
   name: string
@@ -58,128 +23,84 @@ type Staff = {
   assignedTo: string
 }
 
-const ROLES = ['Manager', 'Front Desk', 'Housekeeping', 'Maintenance', 'Restaurant']
-
-const emptyStaff: Staff = {
-  staffID: '',
-  name: '',
-  salary: 0,
-  phone: '',
-  address: '',
-  role: '',
-  workingFrom: '',
-  retiredOn: null,
-  assignedTo: ''
-}
-
 export default function StaffManagement() {
   const [staff, setStaff] = useState<Staff[]>([])
-  const [newStaff, setNewStaff] = useState<Staff>(emptyStaff)
+  const [newStaff, setNewStaff] = useState<Staff>({
+    staffID: '',
+    name: '',
+    salary: 0,
+    phone: '',
+    address: '',
+    role: '',
+    workingFrom: '',
+    retiredOn: '',
+    assignedTo: '',
+  })
   const [isAddStaffOpen, setIsAddStaffOpen] = useState(false)
   const [editingStaff, setEditingStaff] = useState<Staff | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
 
-  // Fetch staff data on component mount
+  // Fetch staff data from the backend
+  const fetchStaff = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/staff/list') // Replace with your backend endpoint
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].workingFrom = new Date(response.data[i].workingFrom.dateString+" "+response.data[i].workingFrom.timeString).toISOString()
+        response.data[i].retiredOn = new Date(response.data[i].retiredOn.dateString+" "+response.data[i].retiredOn.timeString).toISOString()
+      }
+      setStaff(response.data)
+    } catch (error) {
+      console.error('Error fetching staff:', error)
+    }
+  }
+
+  // Add new staff
+  const addStaff = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/staff/add', newStaff) // Replace with your backend endpoint
+      setStaff([...staff, response.data])
+      setNewStaff({
+        staffID: '',
+        name: '',
+        salary: 0,
+        phone: '',
+        address: '',
+        role: '',
+        workingFrom: '',
+        retiredOn: '',
+        assignedTo: '',
+      })
+      setIsAddStaffOpen(false)
+    } catch (error) {
+      console.error('Error adding staff:', error)
+    }
+  }
+
+  // Update staff details
+  const updateStaff = async () => {
+    if (!editingStaff) return
+    try {
+      const response = await axios.put(`http://localhost:8080/api/staff/update/${editingStaff.staffID}`, editingStaff) // Replace with your backend endpoint
+      setStaff(staff.map((s) => (s.staffID === editingStaff.staffID ? response.data : s)))
+      setEditingStaff(null)
+    } catch (error) {
+      console.error('Error updating staff:', error)
+    }
+  }
+
+  // Delete a staff member
+  const deleteStaff = async (id: string) => {
+    try {
+      await axios.post(`http://localhost:8080/api/staff/remove/${id}`) // Replace with your backend endpoint
+      setStaff(staff.filter((s) => s.staffID !== id))
+    } catch (error) {
+      console.error('Error deleting staff:', error)
+    }
+  }
+
+  // Load staff data on component mount
   useEffect(() => {
     fetchStaff()
   }, [])
-
-  const fetchStaff = async () => {
-    try {
-      const response = await api.get<ApiResponse<Staff[]>>('/staff')
-      if (response.data.status === 'success') {
-        setStaff(response.data.data)
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message || "Failed to fetch staff data",
-          variant: "destructive"
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: axios.isAxiosError(error) 
-          ? error.response?.data?.message || error.message 
-          : "An error occurred while fetching staff data",
-        variant: "destructive"
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const addStaff = async () => {
-    try {
-      const response = await api.post<ApiResponse<Staff>>('/staff', newStaff)
-      
-      if (response.data.status === 'success') {
-        setStaff([...staff, response.data.data])
-        setNewStaff(emptyStaff)
-        setIsAddStaffOpen(false)
-        toast({
-          title: "Success",
-          description: "Staff member added successfully",
-        })
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message || "Failed to add staff member",
-          variant: "destructive"
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "An error occurred while adding staff member",
-        variant: "destructive"
-      })
-    }
-  }
-
-  const updateStaff = async () => {
-    if (!editingStaff) return
-
-    try {
-      const response = await api.post<ApiResponse<Staff>>(
-        `/staff/${editingStaff.staffID}`,
-        editingStaff
-      )
-
-      if (response.data.status === 'success') {
-        setStaff(staff.map(s => s.staffID === response.data.data.staffID ? response.data.data : s))
-        setEditingStaff(null)
-        toast({
-          title: "Success",
-          description: "Staff member updated successfully",
-        })
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message || "Failed to update staff member",
-          variant: "destructive"
-        })
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: axios.isAxiosError(error)
-          ? error.response?.data?.message || error.message
-          : "An error occurred while updating staff member",
-        variant: "destructive"
-      })
-    }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -210,22 +131,9 @@ export default function StaffManagement() {
                   id="salary"
                   type="number"
                   value={newStaff.salary}
-                  onChange={(e) => setNewStaff({ ...newStaff, salary: Number(e.target.value) })}
+                  onChange={(e) => setNewStaff({ ...newStaff, salary: +e.target.value })}
                   className="col-span-3"
                 />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="role" className="text-right">Role</Label>
-                <Select onValueChange={(value) => setNewStaff({ ...newStaff, role: value })}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ROLES.map((role) => (
-                      <SelectItem key={role} value={role}>{role}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="phone" className="text-right">Phone</Label>
@@ -246,21 +154,37 @@ export default function StaffManagement() {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="workingFrom" className="text-right">Working From</Label>
+                <Label htmlFor="role" className="text-right">Role</Label>
                 <Input
-                  id="workingFrom"
-                  type="date"
-                  value={newStaff.workingFrom}
-                  onChange={(e) => setNewStaff({ ...newStaff, workingFrom: e.target.value })}
+                  id="role"
+                  value={newStaff.role}
+                  onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="assignedTo" className="text-right">Assigned To</Label>
+                <Label htmlFor="edit-workingfrom" className="text-right">Working From</Label>
                 <Input
-                  id="assignedTo"
-                  value={newStaff.assignedTo}
-                  onChange={(e) => setNewStaff({ ...newStaff, assignedTo: e.target.value })}
+                  id="edit-workingfrom"
+                  type="datetime-local"
+                  value={newStaff.workingFrom.slice(0, 16)}
+                  onChange={(e) => setNewStaff({
+                    ...newStaff,
+                    workingFrom: new Date(e.target.value).toISOString()
+                  })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-retiredon" className="text-right">Retired On</Label>
+                <Input
+                  id="edit-retiredon"
+                  type="datetime-local"
+                  value={newStaff.retiredOn.slice(0, 16)}
+                  onChange={(e) => setNewStaff({
+                    ...newStaff,
+                    retiredOn: new Date(e.target.value).toISOString()
+                  })}
                   className="col-span-3"
                 />
               </div>
@@ -271,7 +195,6 @@ export default function StaffManagement() {
           </DialogContent>
         </Dialog>
       </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Staff List</CardTitle>
@@ -283,10 +206,7 @@ export default function StaffManagement() {
                 <TableHead>ID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Role</TableHead>
-                <TableHead>Salary</TableHead>
                 <TableHead>Phone</TableHead>
-                <TableHead>Working From</TableHead>
-                <TableHead>Assigned To</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -296,13 +216,13 @@ export default function StaffManagement() {
                   <TableCell>{s.staffID}</TableCell>
                   <TableCell>{s.name}</TableCell>
                   <TableCell>{s.role}</TableCell>
-                  <TableCell>${s.salary.toLocaleString()}</TableCell>
                   <TableCell>{s.phone}</TableCell>
-                  <TableCell>{new Date(s.workingFrom).toLocaleDateString()}</TableCell>
-                  <TableCell>{s.assignedTo}</TableCell>
                   <TableCell>
                     <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingStaff(s)}>
                       Edit
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => deleteStaff(s.staffID)}>
+                      Delete
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -311,13 +231,13 @@ export default function StaffManagement() {
           </Table>
         </CardContent>
       </Card>
-
       {editingStaff && (
         <Dialog open={!!editingStaff} onOpenChange={() => setEditingStaff(null)}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Edit Staff</DialogTitle>
             </DialogHeader>
+            {/* {JSON.stringify(editingStaff)} */}
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-name" className="text-right">Name</Label>
@@ -329,65 +249,24 @@ export default function StaffManagement() {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-salary" className="text-right">Salary</Label>
-                <Input
-                  id="edit-salary"
-                  type="number"
-                  value={editingStaff.salary}
-                  onChange={(e) => setEditingStaff({ ...editingStaff, salary: Number(e.target.value) })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="edit-role" className="text-right">Role</Label>
-                <Select 
-                  value={editingStaff.role} 
-                  onValueChange={(value) => setEditingStaff({ ...editingStaff, role: value })}
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ROLES.map((role) => (
-                      <SelectItem key={role} value={role}>{role}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-phone" className="text-right">Phone</Label>
                 <Input
-                  id="edit-phone"
-                  value={editingStaff.phone}
-                  onChange={(e) => setEditingStaff({ ...editingStaff, phone: e.target.value })}
+                  id="edit-role"
+                  value={editingStaff.role}
+                  onChange={(e) => setEditingStaff({ ...editingStaff, role: e.target.value })}
                   className="col-span-3"
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-address" className="text-right">Address</Label>
+                <Label htmlFor="edit-retiredon" className="text-right">Retired On</Label>
                 <Input
-                  id="edit-address"
-                  value={editingStaff.address}
-                  onChange={(e) => setEditingStaff({ ...editingStaff, address: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-workingFrom" className="text-right">Working From</Label>
-                <Input
-                  id="edit-workingFrom"
-                  type="date"
-                  value={editingStaff.workingFrom}
-                  onChange={(e) => setEditingStaff({ ...editingStaff, workingFrom: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-assignedTo" className="text-right">Assigned To</Label>
-                <Input
-                  id="edit-assignedTo"
-                  value={editingStaff.assignedTo}
-                  onChange={(e) => setEditingStaff({ ...editingStaff, assignedTo: e.target.value })}
+                  id="edit-retiredon"
+                  type="datetime-local"
+                  value={editingStaff.retiredOn.slice(0, 16)}
+                  onChange={(e) => setEditingStaff({
+                    ...editingStaff,
+                    retiredOn: new Date(e.target.value).toISOString()
+                  })}
                   className="col-span-3"
                 />
               </div>
