@@ -44,6 +44,17 @@ public class LoadSaveController {
     public ResponseEntity<?> loadAll() {
         String totalError = "";
         try {
+            hotelCustomerStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        } 
+        try {
+            restaurantCustomerStore.loadFromFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        System.out.println("CHECK");
+        try {
             billStore.load();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
@@ -70,16 +81,6 @@ public class LoadSaveController {
             totalError += e.getMessage() + "\n";
         }
         try {
-            hotelCustomerStore.loadFromFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        } 
-        try {
-            restaurantCustomerStore.loadFromFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
             tableStore.loadFromFile();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
@@ -93,6 +94,16 @@ public class LoadSaveController {
     @GetMapping("/saveall")
     public ResponseEntity<?> saveAll() {
         String totalError = "";
+        try {
+            hotelCustomerStore.storeToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            restaurantCustomerStore.storeToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
         try {
             roomStore.save();
         }catch(Exception e) {            
@@ -118,16 +129,7 @@ public class LoadSaveController {
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }
-        try {
-            hotelCustomerStore.storeToFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        try {
-            restaurantCustomerStore.storeToFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
+        
         try {
             tableStore.saveToFile();
         } catch (Exception e) {

@@ -6,6 +6,9 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.RestaurantCustomer;
 
 public abstract class RestaurantCustomerStore {
+    static {
+        System.loadLibrary("RestaurantCustomer");
+    }
     public static RestaurantCustomerStore restaurantCustomerStore = null;
 
     public static RestaurantCustomerStore getInstance() {

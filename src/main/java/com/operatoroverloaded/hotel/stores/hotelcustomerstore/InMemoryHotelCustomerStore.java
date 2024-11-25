@@ -5,6 +5,9 @@ import java.util.List;
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
 public class InMemoryHotelCustomerStore extends HotelCustomerStore {
+    static {
+        System.loadLibrary("HotelCustomer");
+    }
     private static final InMemoryHotelCustomerStore instance = new InMemoryHotelCustomerStore();
 
     public static InMemoryHotelCustomerStore getInstance() {
