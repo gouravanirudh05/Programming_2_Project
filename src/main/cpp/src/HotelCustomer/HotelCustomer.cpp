@@ -29,7 +29,7 @@ string jStringToStdString(JNIEnv* env, jstring javaString) {
 
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomerstore_InMemoryHotelCustomerStore_loadFromFile(JNIEnv *env, jobject obj) {
     // Getting the customers ArrayList attribute of InMemoryHotelCustomerStore
-    jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/stores/roomstore/HotelCustomer");
+    jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/HotelCustomer");
     jclass InMemoryHotelCustomerStoreClass = env->GetObjectClass(obj);
     jfieldID hotelCustomerArrayField = env->GetFieldID(InMemoryHotelCustomerStoreClass, "customers", "Ljava/util/ArrayList;");
     jobject hotelCustomerArray = env->GetObjectField(obj, hotelCustomerArrayField);
@@ -106,7 +106,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomerstore_InMemoryHotelCustomerStore_storeToFile(JNIEnv *env, jobject obj){
 
     // Getting the customers ArrayList attribute of InMemoryHotelCustomerStore
-    jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/stores/roomstore/HotelCustomer");
+    jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/HotelCustomer");
     jclass InMemoryHotelCustomerStoreClass = env->GetObjectClass(obj);
     jfieldID hotelCustomerArrayField = env->GetFieldID(InMemoryHotelCustomerStoreClass, "customers", "Ljava/util/ArrayList;");
     jobject hotelCustomerArray = env->GetObjectField(obj, hotelCustomerArrayField);
