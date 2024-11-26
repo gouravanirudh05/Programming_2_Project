@@ -128,7 +128,7 @@
                     <systemProperties>
                         <property>
                             <name>java.library.path</name>
-                            <value>${project.build.directory}/native-libs</value>
+                            <value>${project.build.directory}/native-libs/</value>
                         </property>
                     </systemProperties>
                 </configuration>
