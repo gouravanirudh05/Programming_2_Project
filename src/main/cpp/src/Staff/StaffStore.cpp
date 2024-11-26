@@ -131,7 +131,7 @@ extern "C" {
 
         // Retrieve the Java `ArrayList` field containing staff data
         jclass staffStoreClass = env->GetObjectClass(obj);
-        jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffList", "Ljava/util/ArrayList;");
+        jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffData", "Ljava/util/ArrayList;");
         jobject staffArray = env->GetObjectField(obj, staffArrayField);
         cout << 1 << endl;
         // Get methods for accessing the `ArrayList`
