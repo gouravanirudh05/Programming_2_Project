@@ -191,27 +191,22 @@ extern "C" {
             replace(retiredOnDateStr.begin(), retiredOnDateStr.end(), '-', '/');
             string retiredOnTimeStr(nativeRetiredOnTime);
             replace(retiredOnTimeStr.begin(), retiredOnTimeStr.end(), '-', '/');
-            
-            // Write the staff data to the file
-            fout << staffID << "\n" << nativeName << "\n" << salary << "\n" << phone << "\n"
-                 << nativeAddress << "\n" << nativeRole << "\n" << nativeWorkingFromDate << " " << nativeWorkingFromTime << "\n"
-                 << nativeRetiredOnDate << " " << nativeRetiredOnTime << "\n" << nativeAssignedTo << "\n";
 
-                        const char *nativeName = env->GetStringUTFChars(name, nullptr);
+            // Write the staff data to the file
+            const char *nativeName = env->GetStringUTFChars(name, nullptr);
             const char *nativeAddress = env->GetStringUTFChars(address, nullptr);
             const char *nativeRole = env->GetStringUTFChars(role, nullptr);
             const char *nativeAssignedTo = env->GetStringUTFChars(assignedTo, nullptr);
 
-            // Write the staff data to the file
-            fout << staffID << "\n"
-                 << nativeName << "\n"
-                 << salary << "\n"
-                 << phone << "\n"
-                 << nativeAddress << "\n"
-                 << nativeRole << "\n"
-                 << workingFromDateStr << " " << workingFromTimeStr << "\n"
-                 << retiredOnDateStr << " " << retiredOnTimeStr << "\n"
-                 << nativeAssignedTo << "\n";
+            fout << staffID << '\n'
+                 << nativeName << '\n'
+                 << salary << '\n'
+                 << phone << '\n'
+                 << nativeAddress << '\n'
+                 << nativeRole << '\n'
+                 << workingFromDateStr << '-' << workingFromTimeStr << '\n'
+                 << retiredOnDateStr << '-' << retiredOnTimeStr << '\n'
+                 << nativeAssignedTo << '\n';
 
             // Release resources
             env->ReleaseStringUTFChars(name, nativeName);
