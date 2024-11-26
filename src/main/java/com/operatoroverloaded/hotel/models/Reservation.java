@@ -1,7 +1,6 @@
 package com.operatoroverloaded.hotel.models;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.ArrayList;
 import com.operatoroverloaded.hotel.stores.billstore.InMemoryBillStore;
 
 public class Reservation {

@@ -1,6 +1,5 @@
 package com.operatoroverloaded.hotel.stores.tablestore;
 
-import java.util.List;
 import com.operatoroverloaded.hotel.models.Table;
 import java.util.ArrayList;
 public abstract class TableStore {

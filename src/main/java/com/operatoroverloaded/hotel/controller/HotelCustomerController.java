@@ -32,6 +32,11 @@ public class HotelCustomerController {
         return ResponseEntity.ok(customer);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllCustomers() {
+        return ResponseEntity.ok().body(hotelCustomerStore.getCustomers());
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> addCustomer(@RequestBody JsonNode json) {
         JsonNode reservationsNode = json.get("reservations"); // ArrayNode
@@ -39,10 +44,8 @@ public class HotelCustomerController {
         for (JsonNode reservation : reservationsNode) {
             reservations.add(reservation.asInt());
         }
-        JsonNode reservedToNode = json.get("reservedTo");
-        JsonNode reservedFromNode = json.get("reservedFrom");
-        DateTime reservedFrom = new DateTime(reservedFromNode.get("year").asInt(),reservedFromNode.get("month").asInt(), reservedFromNode.get("day").asInt(), reservedFromNode.get("hour").asInt(), reservedFromNode.get("minute").asInt(), reservedFromNode.get("second").asInt());
-        DateTime reservedTo = new DateTime(reservedToNode.get("year").asInt(),reservedToNode.get("month").asInt(), reservedToNode.get("day").asInt(), reservedToNode.get("hour").asInt(), reservedToNode.get("minute").asInt(), reservedToNode.get("second").asInt());
+        DateTime reservedTo = DateTime.fromISOString(json.get("reservedTo").asText());
+        DateTime reservedFrom = DateTime.fromISOString(json.get("reservedFrom").asText());
         JsonNode billsNode = json.get("bills"); // ArrayNode
         ArrayList<Integer> bills = new ArrayList<>();
         for (JsonNode bill : billsNode) {
@@ -56,6 +59,7 @@ public class HotelCustomerController {
         String email = json.get("email").asText();
         String name = json.get("name").asText();
         HotelCustomer customer = new HotelCustomer(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo, reservations);
+        this.hotelCustomerStore.addCustomer(customer);
         return ResponseEntity.ok().body(hotelCustomerStore.addCustomer(customer)); //it will return the id of the customer added
     }
     @PostMapping("/remove/{customerId}")

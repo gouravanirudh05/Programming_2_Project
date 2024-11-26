@@ -61,7 +61,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_tablestore_InMem
 }
 
 // Save table data to file
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_tablestore_InMemoryTableStore_storeToFile(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_tablestore_InMemoryTableStore_saveToFile(JNIEnv *env, jobject obj) {
     jclass storeClass = env->GetObjectClass(obj);
     jfieldID tableListField = env->GetFieldID(storeClass, "tables", "Ljava/util/ArrayList;");
     jobject tableList = env->GetObjectField(obj, tableListField);
