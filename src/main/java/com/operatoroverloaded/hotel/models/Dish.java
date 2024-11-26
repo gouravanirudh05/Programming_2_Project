@@ -1,12 +1,10 @@
 package com.operatoroverloaded.hotel.models;
 
-// Basic structural code, changes can be made according to future requirements
 public class Dish {
-
     private int dishID;
     private String name;
     private float price;
-    private String dishType; // Changed from enum to String
+    private String dishType;
     private int calories;
     private int preparationTime;
     private boolean isAvailable;
@@ -15,7 +13,7 @@ public class Dish {
         this.dishID = dishID;
         this.name = name;
         this.price = price;
-        setDishType(dishType); // Validate and set dishType here
+        setDishType(dishType);
         this.calories = calories;
         this.preparationTime = preparationTime;
         this.isAvailable = isAvailable;
@@ -49,13 +47,12 @@ public class Dish {
         return dishType;
     }
 
-    // Validate and set the dishType
     public void setDishType(String dishType) {
         if (dishType.equalsIgnoreCase("APPETIZER") || 
             dishType.equalsIgnoreCase("MAIN_COURSE") || 
             dishType.equalsIgnoreCase("DESSERT") || 
             dishType.equalsIgnoreCase("BEVERAGE")) {
-            this.dishType = dishType.toUpperCase(); // Normalize to uppercase
+            this.dishType = dishType.toUpperCase();
         } else {
             throw new IllegalArgumentException("Invalid dish type. Must be one of: APPETIZER, MAIN_COURSE, DESSERT, BEVERAGE.");
         }
@@ -88,10 +85,25 @@ public class Dish {
     public void display() {
         System.out.println("Dish ID: " + dishID);
         System.out.println("Name: " + name);
-        System.out.println("Price: rupees" + price);
+        System.out.println("Price: rupees " + price);
         System.out.println("Type: " + dishType);
         System.out.println("Calories: " + calories + " kcal");
         System.out.println("Preparation Time: " + preparationTime + " mins");
         System.out.println("Available: " + (isAvailable ? "Yes" : "No"));
+    }
+
+    // Example method using .equals() for comparisons
+    public boolean isSameDish(Dish otherDish) {
+        if (otherDish == null) {
+            return false;
+        }
+
+        return this.dishID == otherDish.dishID && // Primitive type comparison
+               this.name.equals(otherDish.name) && // String comparison
+               Float.compare(this.price, otherDish.price) == 0 && // Float comparison
+               this.dishType.equals(otherDish.dishType) && // String comparison
+               this.calories == otherDish.calories && // Primitive type comparison
+               this.preparationTime == otherDish.preparationTime && // Primitive type comparison
+               this.isAvailable == otherDish.isAvailable; // Primitive type comparison
     }
 }
