@@ -216,6 +216,6 @@ public class Staff{
 
     // Method to check if staff is assigned to a specific location
     public boolean isAssignedTo(String location) {
-        return assignedTo == location;
+        return assignedTo.equals(location);
     }
 }
