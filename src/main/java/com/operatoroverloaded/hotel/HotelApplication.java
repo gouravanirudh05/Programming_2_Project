@@ -100,7 +100,6 @@ public class HotelApplication {
                 }
                 try {
                     RoomTypeStore.getInstance().save();
-                    System.out.println("Room type data loaded successfully");
                 }catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }  

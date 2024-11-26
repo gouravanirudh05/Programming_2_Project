@@ -10,7 +10,7 @@ public class InMemoryTableStore extends TableStore {
         System.loadLibrary("TableCPP");
     }
     private static final InMemoryTableStore instance = new InMemoryTableStore();
-    private final List<Table> tables = new ArrayList<>();
+    private ArrayList<Table> tables = new ArrayList<>();
 
     private InMemoryTableStore() {}
 
@@ -25,7 +25,7 @@ public class InMemoryTableStore extends TableStore {
     }
 
     @Override
-    public List<Table> getTables() {
+    public ArrayList<Table> getTables() {
         return new ArrayList<>(tables); // Return a copy to prevent external modifications
     }
 

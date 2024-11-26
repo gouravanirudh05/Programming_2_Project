@@ -104,7 +104,7 @@ public class Reservation {
 
     // New method to attempt creating a reservation
     public static Reservation createReservationIfNoOverlap(
-            List<Reservation> reservations, int reservationId, String roomID, 
+           ArrayList<Reservation> reservations, int reservationId, String roomID, 
             String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
 
         // Check for overlaps with existing reservations

@@ -1,7 +1,6 @@
 package com.operatoroverloaded.hotel.stores.dishstore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.operatoroverloaded.hotel.models.Dish;
 
@@ -10,7 +9,7 @@ public class InMemoryDishStore extends DishStore {
         System.loadLibrary("DishCPP");
     }
     private static final InMemoryDishStore instance = new InMemoryDishStore();
-    private final List<Dish> dishes = new ArrayList<>();
+    private final ArrayList<Dish> dishes = new ArrayList<>();
 
     private InMemoryDishStore() {}
 
@@ -34,7 +33,7 @@ public class InMemoryDishStore extends DishStore {
     }
 
     @Override
-    public List<Dish> getDishes() {
+    public ArrayList<Dish> getDishes() {
         return new ArrayList<>(dishes); // Return a copy of the list to prevent external modifications
     }
 

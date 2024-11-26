@@ -12,7 +12,7 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
     }
 // -----------------------------------------------------------------Attributes-------------------------------------------------------------------------------------------------------------
 
-    private List<RestaurantCustomer> restaurantCustomers;
+    private ArrayList<RestaurantCustomer> restaurantCustomers;
     private static int id = 0;
     private static boolean objectExists = false; // i want only one database for each class, so this keeps a track of
                                                  // whether a databse already exists or no
@@ -51,7 +51,7 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 
 // -----------------------------------------------------------------Read Operations-------------------------------------------------------------------------------------------------------------
 
-    public List<RestaurantCustomer> getCustomers() {
+    public ArrayList<RestaurantCustomer> getCustomers() {
         return this.restaurantCustomers;
     }
 

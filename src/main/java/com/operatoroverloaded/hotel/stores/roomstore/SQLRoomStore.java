@@ -30,7 +30,7 @@
 //     }
 
 //     @Override
-//     public List<Room> getRooms() {
+//     publicArrayList<Room> getRooms() {
 //         String sql = "SELECT * FROM rooms";
 //         return jdbcTemplate.query(sql, (rs, rowNum) -> new Room(
 //             // rs.getInt("room_number"),

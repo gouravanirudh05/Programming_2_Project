@@ -58,7 +58,7 @@ public class InMemoryStaffStore extends StaffStore {
     }
 
     @Override
-    public List<Staff> getAllStaff() {
+    public ArrayList<Staff> getAllStaff() {
         return new ArrayList<>(staffList);
     }
 

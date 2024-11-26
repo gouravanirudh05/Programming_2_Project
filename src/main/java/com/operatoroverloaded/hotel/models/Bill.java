@@ -8,7 +8,9 @@ public class Bill {
     private ArrayList<Float> purchasedList;
     private ArrayList<Integer> quantity;
     private DateTime generatedOn, payedOn;
-
+    private boolean payed;
+    private String customerID;
+    // private String reservationID;
     // default constructor which initializes the values to garbage values
     public Bill(){
         billId = -1;
@@ -19,6 +21,9 @@ public class Bill {
         this.purchasedList = new ArrayList<Float>();
         this.generatedOn = new DateTime(0, 0, 0, 0, 0, 0);
         this.payedOn = new DateTime(0, 0, 0, 0, 0, 0);
+        this.payed = false;
+        this.customerID = "";
+        // this.reservationID = "";
     }
 
     // parameterized constructor which should be used to create a new bill
@@ -33,6 +38,21 @@ public class Bill {
         this.purchasedList = purchasedList;
         this.generatedOn = DateTime.getCurrentTime();
         this.payedOn = payedOn;
+    }
+    public Bill(int billId,ArrayList<String> purchased, ArrayList<Float> purchasedList, 
+                ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID){
+        this.billId = billId;
+        this.amount = 0;
+        for (int i = 0; i < purchasedList.size(); i++){
+            this.amount += purchasedList.get(i) * quantity.get(i);
+        }
+        this.purchased = purchased;
+        this.quantity = quantity;
+        this.purchasedList = purchasedList;
+        this.generatedOn = DateTime.getCurrentTime();
+        this.payedOn = payedOn;
+        this.payed = true;
+        this.customerID = customerID;
     }
 
     // parameterized constructor which is used to store the bill data in the database file (not to be used to create a new bill)
@@ -85,6 +105,12 @@ public class Bill {
 
     public void setAmount(float amount){
         this.amount = amount;
+    }
+    public void setPayed(boolean payed){
+        this.payed = payed;
+    }
+    public void setCustomerID(String customerID){
+        this.customerID = customerID;
     }
 
     public void setPurchased(ArrayList<String> purchased){

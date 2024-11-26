@@ -2,7 +2,7 @@ package com.operatoroverloaded.hotel.stores.tablestore;
 
 import java.util.List;
 import com.operatoroverloaded.hotel.models.Table;
-
+import java.util.ArrayList;
 public abstract class TableStore {
     public static TableStore tableStore = null;
     public static TableStore getInstance(){
@@ -15,7 +15,7 @@ public abstract class TableStore {
     // Abstract methods for basic operations
     public abstract void addTable(Table table);
 
-    public abstract List<Table> getTables();
+    public abstract ArrayList<Table> getTables();
 
     public abstract Table deleteTable(int tableId);
 

@@ -326,7 +326,7 @@ public class ConsoleApplication implements CommandLineRunner {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    List<Staff> staff = staffStore.getAllStaff();
+                   ArrayList<Staff> staff = staffStore.getAllStaff();
                     for (Staff s : staff)
                         print(s.toString());
                     break;
@@ -626,7 +626,7 @@ public class ConsoleApplication implements CommandLineRunner {
 // System.out.println("\nListing all rooms:");
 
 // // Retrieve all rooms from the store
-// List<Room> rooms = roomStore.getRooms();
+//ArrayList<Room> rooms = roomStore.getRooms();
 
 // if (rooms.isEmpty()) {
 // System.out.println("No rooms available.");
