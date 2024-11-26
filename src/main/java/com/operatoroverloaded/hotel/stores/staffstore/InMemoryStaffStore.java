@@ -15,7 +15,7 @@ public class InMemoryStaffStore extends StaffStore {
         return instance;
     }
 
-    private List<Staff> staffList;
+    private ArrayList<Staff> staffList;
 
     public InMemoryStaffStore() {
         this.staffList = new ArrayList<>();
