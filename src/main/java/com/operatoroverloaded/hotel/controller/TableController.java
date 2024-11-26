@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.Table;
 import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/api/table")
@@ -32,7 +32,7 @@ public class TableController {
     // Get a list of all tables
     @GetMapping("/all")
     public ResponseEntity<?> getAllTables() {
-        List<Table> tables = tableStore.getTables();
+       ArrayList<Table> tables = tableStore.getTables();
         return ResponseEntity.ok(tables);
     }
 

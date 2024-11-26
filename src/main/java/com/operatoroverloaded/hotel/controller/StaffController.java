@@ -1,6 +1,6 @@
 package com.operatoroverloaded.hotel.controller;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +84,7 @@ public class StaffController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getAllStaff() {
-        List<Staff> staffList = staffStore.getAllStaff();
+       ArrayList<Staff> staffList = staffStore.getAllStaff();
         return ResponseEntity.ok().body(staffList);
     }
 

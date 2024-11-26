@@ -1,6 +1,6 @@
 package com.operatoroverloaded.hotel.stores.dishstore;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import com.operatoroverloaded.hotel.models.Dish;
 
@@ -18,7 +18,7 @@ public abstract class DishStore {
 
     public abstract void addDish(String name, float price);
 
-    public abstract List<Dish> getDishes();
+    public abstract ArrayList<Dish> getDishes();
 
     public abstract Dish deleteDish(int dishId);
 

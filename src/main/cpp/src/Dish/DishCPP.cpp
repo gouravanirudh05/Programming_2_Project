@@ -51,9 +51,17 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_dishstore_InMemo
 }
 
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_dishstore_InMemoryDishStore_saveToFile(JNIEnv *env, jobject obj) {
+    cout << "Saving to file" << endl;
+    fflush(stdout);
     jclass storeClass = env->GetObjectClass(obj);
+    cout << 1 << endl;
+    fflush(stdout);
     jfieldID dishListField = env->GetFieldID(storeClass, "dishes", "Ljava/util/ArrayList;");
+    cout << 2 << endl;
+    fflush(stdout);
     jobject dishList = env->GetObjectField(obj, dishListField);
+    cout << 3 << endl;
+    fflush(stdout);
 
     jclass arrayListClass = env->FindClass("java/util/ArrayList");
     jmethodID sizeMethod = env->GetMethodID(arrayListClass, "size", "()I");
