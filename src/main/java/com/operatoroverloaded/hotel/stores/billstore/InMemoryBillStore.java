@@ -56,18 +56,21 @@ public class InMemoryBillStore extends BillStore {
 
     // add a new bill to the billData
     @Override
-    public void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn) {
+    public void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
         // Check if the sizes of the lists are not the same and return if they are not
         if(purchased.size() != purchasedList.size() || purchasedList.size() != quantity.size()){
             return;
         }
-        
+        // int billId,ArrayList<String> purchased, ArrayList<Float> purchasedList, 
+        // ArrayList<Integer> quantity, DateTime payedOn, String customerID
         Bill bill = new Bill(
             this.billData.size() == 0? 1: this.billData.get(this.billData.size()-1).getBillId()+1, 
             purchased, 
             purchasedList, 
             quantity, 
-            payedOn
+            payedOn,
+            payed,
+            customerID
         );
         this.billData.add(bill);
     }
@@ -85,7 +88,7 @@ public class InMemoryBillStore extends BillStore {
 
     // update a bill in the billData based on the billId
     @Override
-    public void updateBill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn) {
+    public void updateBill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn,boolean payed, String customerID) {
         if(purchased.size() != purchasedList.size() || purchasedList.size() != quantity.size()){
             return;
         }
@@ -93,6 +96,8 @@ public class InMemoryBillStore extends BillStore {
             if(billId == bill.getBillId()){
                 bill.setPayedOn(payedOn);
                 bill.setItems(purchased, purchasedList, quantity);
+                bill.setPayed(payed);
+                bill.setCustomerID(customerID);
             }
         }
     }

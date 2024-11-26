@@ -1,15 +1,18 @@
 package com.operatoroverloaded.hotel.controller;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.operatoroverloaded.hotel.models.DateTime;
 import com.operatoroverloaded.hotel.models.Reservation;
 import com.operatoroverloaded.hotel.models.Room;
 import com.operatoroverloaded.hotel.stores.reservationstore.ReservationStore;
 import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
-import java.util.HashMap;
-import java.util.List;
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -48,7 +51,7 @@ public class DashboardController {
         metrics.put("occupancyRate", occupancyRate);
         metrics.put("averageDailyRate", averageDailyRate);
 
-        return ResponseEntity.ok(metrics);
+        return ResponseEntity.ok().body(metrics);
     }
 
     // Helper method: Calculate available rooms dynamically

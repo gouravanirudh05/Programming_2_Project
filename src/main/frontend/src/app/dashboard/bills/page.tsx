@@ -1,6 +1,6 @@
 'use client'
-
-import { useState } from 'react'
+import axios from 'axios'
+import { useState,useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -23,58 +23,52 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { format } from 'date-fns'
 
 type Bill = {
-  billID: string
-  amount: number
-  purchased: string[]
-  purchasedVal: number[]
-  payed: boolean
-  generatedOn: string
-  payedOn: string | null
-  customerID: string
-  reservationID?: string
-}
-
-const initialBills: Bill[] = [
-  {
-    billID: 'B001',
-    amount: 250,
-    purchased: ['Room charge', 'Room service'],
-    purchasedVal: [200, 50],
-    payed: false,
-    generatedOn: '2024-01-20T12:00:00',
-    payedOn: null,
-    customerID: 'C001',
-    reservationID: 'R001'
-  },
-  {
-    billID: 'B002',
-    amount: 100,
-    purchased: ['Restaurant'],
-    purchasedVal: [100],
-    payed: true,
-    generatedOn: '2024-01-21T19:30:00',
-    payedOn: '2024-01-21T20:00:00',
-    customerID: 'C002'
-  }
-]
+  billID: number; // Updated from string to number
+  amount: number;
+  purchased: string[];
+  purchasedList: number[]; // Renamed from purchasedVal to purchasedList
+  quantity: number[];
+  payed: boolean;
+  generatedOn: string;
+  payedOn: string | null;
+  customerID: string;
+  reservationID?: string; // Optional
+};
 
 export default function BillManagement() {
-  const [bills, setBills] = useState<Bill[]>(initialBills)
-  const [editingBill, setEditingBill] = useState<Bill | null>(null)
-  const [printableBill, setPrintableBill] = useState<Bill | null>(null)
+  const [bills, setBills] = useState<Bill[]>([]);
+  const [editingBill, setEditingBill] = useState<Bill | null>(null);
+  const [printableBill, setPrintableBill] = useState<Bill | null>(null);
 
-  const updateBill = () => {
+  // Fetch bills from the backend
+  useEffect(() => {
+    const fetchBills = async () => {
+      try {
+        const response = await axios.get('/api/bills/list'); // Replace with your backend endpoint
+        setBills(response.data);
+      } catch (error) {
+        console.error('Error fetching bills:', error);
+      }
+    };
+    fetchBills();
+  }, []);
+
+  // Update a bill on the backend
+  const updateBill = async () => {
     if (editingBill) {
-      setBills(bills.map(bill => 
-        bill.billID === editingBill.billID ? editingBill : bill
-      ))
-      setEditingBill(null)
+      try {
+        await axios.post(`/api/bills/add/${editingBill.billID}`, editingBill); // Replace with your backend endpoint
+        setBills(bills.map((bill) => (bill.billID === editingBill.billID ? editingBill : bill)));
+        setEditingBill(null);
+      } catch (error) {
+        console.error('Error updating bill:', error);
+      }
     }
-  }
+  };
 
   const generatePrintableBill = (bill: Bill) => {
-    setPrintableBill(bill)
-  }
+    setPrintableBill(bill);
+  };
 
   return (
     <div className="space-y-6">
@@ -142,13 +136,15 @@ export default function BillManagement() {
                 <strong>Generated On:</strong> {new Date(editingBill.generatedOn).toLocaleString()}
               </div>
               <div>
-                <strong>Items:</strong>
-                <ul className="list-disc list-inside">
-                  {editingBill.purchased.map((item, index) => (
-                    <li key={index}>{item}: ${editingBill.purchasedVal[index]}</li>
-                  ))}
-                </ul>
-              </div>
+  <strong>Items:</strong>
+  <ul className="list-disc list-inside">
+    {editingBill.purchased.map((item, index) => (
+      <li key={index}>
+        {item}: ${editingBill.purchasedList[index]} (Quantity: {editingBill.quantity[index]})
+      </li>
+    ))}
+  </ul>
+</div>
               <div>
                 <strong>Total Amount:</strong> ${editingBill.amount}
               </div>
@@ -209,7 +205,7 @@ export default function BillManagement() {
                   {printableBill.purchased.map((item, index) => (
                     <TableRow key={index}>
                       <TableCell>{item}</TableCell>
-                      <TableCell className="text-right">${printableBill.purchasedVal[index].toFixed(2)}</TableCell>
+                      <TableCell className="text-right">${printableBill.purchasedList[index].toFixed(2)}</TableCell>
                     </TableRow>
                   ))}
                   <TableRow>

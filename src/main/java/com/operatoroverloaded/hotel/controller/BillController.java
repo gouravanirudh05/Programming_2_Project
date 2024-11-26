@@ -31,7 +31,7 @@ public class BillController {
         if (bill == null) {
             return ResponseEntity.status(404).body("Bill not found");
         }
-        return ResponseEntity.ok(bill);
+        return ResponseEntity.ok().body(bill);
     }
 
     @PostMapping("/add")
@@ -39,13 +39,15 @@ public class BillController {
         ArrayList<String> purchased = new ArrayList<String>();
         ArrayList<Float> purchasedList = new ArrayList<Float>();
         ArrayList<Integer> quantity = new ArrayList<Integer>();
+        boolean payed = json.get("payed").asBoolean();
+        String customerID = json.get("customerID").asText();
         for (JsonNode item : json.get("items")) {
             purchased.add(item.get("name").asText());
             purchasedList.add((float)item.get("price").asDouble());
             quantity.add(item.get("quantity").asInt());
         }
         DateTime payedOn = DateTime.fromISOString(json.get("payedOn").asText());
-        billStore.addBill(purchased, purchasedList, quantity, payedOn);
+        billStore.addBill(purchased, purchasedList, quantity, payedOn, payed, customerID);
         return ResponseEntity.ok().body("Bill added successfully");
     }
 
@@ -60,13 +62,15 @@ public class BillController {
         ArrayList<String> purchased = new ArrayList<String>();
         ArrayList<Float> purchasedList = new ArrayList<Float>();
         ArrayList<Integer> quantity = new ArrayList<Integer>();
+        boolean payed = json.get("payed").asBoolean();
+        String customerID = json.get("customerID").asText();
         for (JsonNode item : json.get("items")) {
             purchased.add(item.get("name").asText());
             purchasedList.add((float) item.get("price").asDouble());
             quantity.add(item.get("quantity").asInt());
         }
         DateTime payedOn = DateTime.fromISOString(json.get("payedOn").asText());
-        billStore.updateBill(billId, purchased, purchasedList, quantity, payedOn);
+        billStore.updateBill(billId, purchased, purchasedList, quantity, payedOn,payed, customerID);
         return ResponseEntity.ok().body("Bill updated successfully");
     }
 }   
