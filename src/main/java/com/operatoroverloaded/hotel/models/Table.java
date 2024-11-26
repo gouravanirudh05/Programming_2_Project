@@ -82,9 +82,17 @@ public class Table {
 
     // Display information about the table
     public void displayTableInfo() {
-        System.out.println("Table Number: " + tableNumber);
-        System.out.println("Seating Capacity: " + seatingCapacity);
-        System.out.println("Reserved: " + (isReserved ? "Yes" : "No"));
-        System.out.println("Occupied: " + (isOccupied ? "Yes" : "No"));
+        System.out.println(this.toString());
+    }
+
+    // Override toString method
+    @Override
+    public String toString() {
+        return "Table{" +
+                "tableNumber=" + tableNumber +
+                ", seatingCapacity=" + seatingCapacity +
+                ", isReserved=" + (isReserved ? "Yes" : "No") +
+                ", isOccupied=" + (isOccupied ? "Yes" : "No") +
+                '}';
     }
 }
