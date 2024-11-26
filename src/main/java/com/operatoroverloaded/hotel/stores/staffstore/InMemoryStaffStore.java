@@ -1,8 +1,6 @@
 package com.operatoroverloaded.hotel.stores.staffstore;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import com.operatoroverloaded.hotel.models.Staff;
 
 public class InMemoryStaffStore extends StaffStore {
@@ -15,23 +13,23 @@ public class InMemoryStaffStore extends StaffStore {
         return instance;
     }
 
-    private ArrayList<Staff> staffList;
+    private ArrayList<Staff> staffData;
 
     public InMemoryStaffStore() {
-        this.staffList = new ArrayList<>();
+        this.staffData = new ArrayList<>();
         // this.loadFromFile();
     }
 
     @Override
     public void addStaff(Staff staff) {
-        staffList.add(staff);
+        staffData.add(staff);
     }
 
     @Override
     public void updateStaff(Staff staff) {
-        for (int i = 0; i < staffList.size(); i++) {
-            if (staffList.get(i).getStaffID() == staff.getStaffID()) {
-                staffList.set(i, staff);
+        for (int i = 0; i < staffData.size(); i++) {
+            if (staffData.get(i).getStaffID() == staff.getStaffID()) {
+                staffData.set(i, staff);
                 return;
             }
         }
@@ -39,9 +37,9 @@ public class InMemoryStaffStore extends StaffStore {
 
     @Override
     public void removeStaff(int staffID) {
-        for (int i = 0; i < staffList.size(); i++) {
-            if (staffList.get(i).getStaffID() == staffID) {
-                staffList.remove(i);
+        for (int i = 0; i < staffData.size(); i++) {
+            if (staffData.get(i).getStaffID() == staffID) {
+                staffData.remove(i);
                 return;
             }
         }
@@ -49,7 +47,7 @@ public class InMemoryStaffStore extends StaffStore {
 
     @Override
     public Staff getStaffById(int staffID) {
-        for (Staff staff : staffList) {
+        for (Staff staff : staffData) {
             if (staff.getStaffID() == staffID) {
                 return staff;
             }
@@ -59,7 +57,7 @@ public class InMemoryStaffStore extends StaffStore {
 
     @Override
     public ArrayList<Staff> getAllStaff() {
-        return new ArrayList<>(staffList);
+        return new ArrayList<>(staffData);
     }
 
     @Override

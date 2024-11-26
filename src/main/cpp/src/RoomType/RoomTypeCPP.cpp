@@ -16,33 +16,20 @@ extern "C" {
             return;
         }
 
-        cout << 1 << endl;
         jclass roomTypeClass = env->FindClass("com/operatoroverloaded/hotel/models/RoomType");
-        cout << 2 << endl;
         jclass InMemoryRoomTypeStoreClass = env->GetObjectClass(obj);
-        cout << 3 << endl;
         jfieldID roomTypeArrayField = env->GetFieldID(InMemoryRoomTypeStoreClass, "roomTypes", "Ljava/util/ArrayList;");
-        cout << 4 << endl;
         jobject roomTypeArray = env->GetObjectField(obj, roomTypeArrayField);
-        cout << 5 << endl;
 
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
-        cout << 6 << endl;
         jmethodID arrayListSize = env->GetMethodID(arrayListClass, "size", "()I");
-        cout << 7 << endl;
         jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
-        cout << 8 << endl;
         jint length = env->CallIntMethod(roomTypeArray, arrayListSize);\
-        cout << 9 << endl;
 
         jmethodID getRoomTypeId = env->GetMethodID(roomTypeClass, "getRoomTypeId", "()Ljava/lang/String;");
-        cout << 10 << endl;
         jmethodID getRoomTypeName = env->GetMethodID(roomTypeClass, "getRoomTypeName", "()Ljava/lang/String;");
-        cout << 11 << endl;
         jmethodID getTariff = env->GetMethodID(roomTypeClass, "getTariff", "()F");
-        cout << 12 << endl;
         jmethodID getAmenities = env->GetMethodID(roomTypeClass, "getAmenities", "()Ljava/util/ArrayList;");
-        cout << 13 << endl;
 
         for (jint i = 0; i < length; i++) {
             jobject roomType = env->CallObjectMethod(roomTypeArray, arrayListGet, i);

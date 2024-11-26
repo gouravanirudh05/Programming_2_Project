@@ -1,7 +1,8 @@
 package com.operatoroverloaded.hotel.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +32,8 @@ public class DashboardController {
         HashMap<String, Object> metrics = new HashMap<>();
 
         // Fetch dynamic data
-        List<Room> allRooms = roomStore.getRooms();
-        List<Reservation> allReservations = reservationStore.getAllReservations();
+        ArrayList<Room> allRooms = roomStore.getRooms();
+        ArrayList<Reservation> allReservations = reservationStore.getAllReservations();
         DateTime today = DateTime.getCurrentTime();
 
         int totalRooms = allRooms.size();
@@ -55,7 +56,7 @@ public class DashboardController {
     }
 
     // Helper method: Calculate available rooms dynamically
-    private int calculateAvailableRooms(List<Room> rooms, List<Reservation> reservations, DateTime today) {
+    private int calculateAvailableRooms(ArrayList<Room> rooms, ArrayList<Reservation> reservations, DateTime today) {
         int occupiedRooms = 0;
         for (Reservation reservation : reservations) {
             if (isReservationActive(reservation, today)) {
@@ -66,7 +67,7 @@ public class DashboardController {
     }
 
     // Helper method: Calculate active reservations dynamically
-    private int calculateActiveReservations(List<Reservation> reservations, DateTime today) {
+    private int calculateActiveReservations(ArrayList<Reservation> reservations, DateTime today) {
         int activeCount = 0;
         for (Reservation reservation : reservations) {
             if (isReservationActive(reservation, today)) {
@@ -83,7 +84,7 @@ public class DashboardController {
     }
 
     // Helper method: Calculate today's revenue dynamically
-    private double calculateTodaysRevenue(List<Reservation> reservations, DateTime today) {
+    private double calculateTodaysRevenue(ArrayList<Reservation> reservations, DateTime today) {
         double revenue = 0.0;
         for (Reservation reservation : reservations) {
             if (isReservationActive(reservation, today)) {
@@ -94,13 +95,13 @@ public class DashboardController {
     }
 
     // Helper method: Calculate occupancy rate dynamically
-    private double calculateOccupancyRate(List<Room> rooms, List<Reservation> reservations, DateTime today) {
+    private double calculateOccupancyRate(ArrayList<Room> rooms, ArrayList<Reservation> reservations, DateTime today) {
         int occupiedRooms = calculateActiveReservations(reservations, today);
         return (double) occupiedRooms / rooms.size() * 100.0;
     }
 
     // Helper method: Calculate average daily rate dynamically
-    private double calculateAverageDailyRate(List<Reservation> reservations) {
+    private double calculateAverageDailyRate(ArrayList<Reservation> reservations) {
         double totalRevenue = 0.0;
         int totalDays = 0;
 

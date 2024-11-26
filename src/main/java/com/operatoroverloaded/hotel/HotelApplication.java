@@ -82,6 +82,7 @@ public class HotelApplication {
         LogonStore.getInstance().load();
         // StaffStore.getInstance().loadFromFile();
         // DishStore.getInstance().loadFromFile();
+        TableStore.getInstance().loadFromFile();
         app.run(args);
         new Timer().scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -108,11 +109,16 @@ public class HotelApplication {
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }
-                // try {
-                //     DishStore.getInstance().saveToFile();;
-                // } catch (Exception e) {
-                //     totalError += e.getMessage() + "\n";
-                // }
+                try {
+                    StaffStore.getInstance().saveToFile();;
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    TableStore.getInstance().saveToFile();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
             }
         },0,5000);
         
