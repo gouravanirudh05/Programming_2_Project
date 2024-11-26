@@ -32,7 +32,7 @@ extern "C" {
         jclass staffStoreClass = env->GetObjectClass(obj);
         jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffList", "Ljava/util/ArrayList;");
         jobject staffArray = env->GetObjectField(obj, staffArrayField);
-        jmethodID staffInit = env->GetMethodID(staffClass, "<init>", "(IFLjava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+        jmethodID staffInit = env->GetMethodID(staffClass, "<init>", "(ILjava/lang/String;FILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
         // Get methods for `ArrayList` operations
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
@@ -130,7 +130,7 @@ extern "C" {
 
         // Retrieve the Java `ArrayList` field containing staff data
         jclass staffStoreClass = env->GetObjectClass(obj);
-        jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffData", "Ljava/util/ArrayList;");
+        jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffList", "Ljava/util/ArrayList;");
         jobject staffArray = env->GetObjectField(obj, staffArrayField);
 
         // Get methods for accessing the `ArrayList`
