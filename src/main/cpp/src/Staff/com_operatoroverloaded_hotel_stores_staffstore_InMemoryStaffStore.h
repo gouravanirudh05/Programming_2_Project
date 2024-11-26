@@ -14,7 +14,7 @@ extern "C" {
  * Signature: ()V
  * Description: Loads staff data from the "staff.txt" file into the Java `ArrayList`.
  */
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_loadStaff
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_loadFromFile
   (JNIEnv *, jobject);
 
 /*
@@ -23,7 +23,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMem
  * Signature: ()V
  * Description: Saves staff data from the Java `ArrayList` to the "staff.txt" file.
  */
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_saveStaff
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_saveToFile
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

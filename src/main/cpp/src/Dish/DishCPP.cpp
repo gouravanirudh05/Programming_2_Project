@@ -18,7 +18,7 @@ string jStringToStdString(JNIEnv* env, jstring javaString) {
     env->ReleaseStringUTFChars(javaString, utfString);
     return cppString;
 }
-
+extern "C"{
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_dishstore_InMemoryDishStore_loadFromFile(JNIEnv *env, jobject obj) {
     jclass dishClass = env->FindClass("com/operatoroverloaded/hotel/models/Dish");
     jclass storeClass = env->GetObjectClass(obj);
@@ -85,4 +85,4 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_dishstore_InMemo
     }
     outfile.close();
 }
-
+}

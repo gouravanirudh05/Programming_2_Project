@@ -27,7 +27,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await axios.post('http://localhost:8080/register', { email, password })
+      const response = await axios.post('http://localhost:8080/api/auth/register', { email, password })
       
       // Assuming the backend returns a JWT token upon successful registration
       const token = response.data

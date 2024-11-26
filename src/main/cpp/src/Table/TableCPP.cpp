@@ -5,7 +5,6 @@
 #include <jni.h>
 
 using namespace std;
-
 // Utility function to convert std::string to jstring
 jstring stdStringToJString(JNIEnv* env, const string& cppString) {
     return env->NewStringUTF(cppString.c_str());
@@ -19,6 +18,7 @@ string jStringToStdString(JNIEnv* env, jstring javaString) {
     env->ReleaseStringUTFChars(javaString, utfString);
     return cppString;
 }
+extern "C"{
 
 // Load table data from file
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_tablestore_InMemoryTableStore_loadFromFile(JNIEnv *env, jobject obj) {
@@ -87,4 +87,5 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_tablestore_InMem
     }
 
     outfile.close();
+}
 }

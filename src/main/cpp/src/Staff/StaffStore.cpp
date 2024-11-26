@@ -15,7 +15,7 @@ extern "C" {
      * @param env - Pointer to the JNI environment.
      * @param obj - Reference to the calling Java object (`InMemoryStaffStore`).
      */
-    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_loadStaff(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_loadFromFile(JNIEnv *env, jobject obj) {
         // Open the file for reading staff data
         ifstream fin("staff.txt");
         if (!fin.is_open()) {
@@ -118,7 +118,7 @@ extern "C" {
      * @param env - Pointer to the JNI environment.
      * @param obj - Reference to the calling Java object (`InMemoryStaffStore`).
      */
-    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_saveStaff(JNIEnv *env, jobject obj) {
+    JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_staffstore_InMemoryStaffStore_saveToFile(JNIEnv *env, jobject obj) {
         // Open the file for writing staff data
         ofstream fout("staff.txt");
         if (!fout.is_open()) {

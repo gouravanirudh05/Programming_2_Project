@@ -21,7 +21,7 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await axios.post('http://localhost:8080/login', { email, password })
+      const response = await axios.post('http://localhost:8080/api/auth/login', { email, password })
       
       // Assuming the backend returns a JWT token
       const token = response.data

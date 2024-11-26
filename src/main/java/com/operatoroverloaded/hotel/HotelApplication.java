@@ -1,4 +1,7 @@
 package com.operatoroverloaded.hotel;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,11 +25,10 @@ import com.operatoroverloaded.hotel.stores.roomstore.InMemoryRoomStore;
 import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 import com.operatoroverloaded.hotel.stores.roomtypestore.InMemoryRoomTypeStore;
 import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
-import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
-import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 import com.operatoroverloaded.hotel.stores.staffstore.InMemoryStaffStore;
 import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
-
+import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
+import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { 
     SecurityAutoConfiguration.class 
@@ -74,8 +76,46 @@ public class HotelApplication {
         } else {
             app.profiles("cli").web(WebApplicationType.NONE); // Console application
         }
-
+        RoomStore.getInstance().load();
+        RoomTypeStore.getInstance().load();
+        BillStore.getInstance().load();
+        LogonStore.getInstance().load();
+        // StaffStore.getInstance().loadFromFile();
+        DishStore.getInstance().loadFromFile();
         app.run(args);
+        new Timer().scheduleAtFixedRate(new TimerTask(){
+            @Override
+            public void run(){
+                System.out.println("Saving data...");
+                String totalError = "";
+                try {
+                    BillStore.getInstance().save();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    RoomStore.getInstance().save();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    RoomTypeStore.getInstance().save();
+                    System.out.println("Room type data loaded successfully");
+                }catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }  
+                try {
+                    LogonStore.getInstance().save();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    DishStore.getInstance().saveToFile();;
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+            }
+        },0,5000);
         
         // if (args.length > 1 && "cli".equalsIgnoreCase(interfaceType)) {
         //     // Console application logic
