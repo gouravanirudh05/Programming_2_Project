@@ -78,7 +78,7 @@ export default function DashboardOverview() {
     return null
   }
 
-  const occupancyRateNumber = parseFloat(stats.occupancyRate)
+  const occupancyRateNumber = stats.occupancyRate
 
   return (
     <div className="space-y-6">
@@ -189,10 +189,10 @@ export default function DashboardOverview() {
                   <div className="flex justify-between">
                     <div className="text-sm font-medium">RevPAR</div>
                     <div className="text-sm font-medium">
-                      ${((stats.averageDailyRate * parseFloat(stats.occupancyRate)) / 100).toFixed(2)}
+                      ${((stats.averageDailyRate * stats.occupancyRate) / 100).toFixed(2)}
                     </div>
                   </div>
-                  <Progress value={((stats.averageDailyRate * parseFloat(stats.occupancyRate)) / 30000) * 100} className="mt-2" />
+                  <Progress value={((stats.averageDailyRate * stats.occupancyRate) / 30000) * 100} className="mt-2" />
                 </div>
               </div>
               <div className="flex items-center">
