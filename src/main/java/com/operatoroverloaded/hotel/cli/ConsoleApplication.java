@@ -44,7 +44,7 @@ public class ConsoleApplication implements CommandLineRunner {
     private static StaffStore staffStore = InMemoryStaffStore.getInstance();
     private static TableStore tableStore = InMemoryTableStore.getInstance();
 
-    private static boolean roomsAccess = false, restaurantAccess = false;
+    private boolean roomsAccess = false, restaurantAccess = false;
     private Scanner scanner = new Scanner(System.in);
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,8 @@ public class ConsoleApplication implements CommandLineRunner {
             print("Password: ");
             String psw = scanner.next();
             if (psw.equals("MASTER_KEY")) {
-                handleInput();
+                user = new Logon(0, "Admin", "", "");
+                break;
             } else {
                 user = logonStore.tryLogon(email, psw);
                 if (user != null) {
@@ -84,22 +85,22 @@ public class ConsoleApplication implements CommandLineRunner {
                     print("Login failed (" + i + " attempts left).. \nPlease try again.");
                 }
             }
-            if (user.getAccess().equals("Admin")) {
-                roomsAccess = true;
-                restaurantAccess = true;
-            } else if (user.getAccess().equals("Restaurant")) {
-                roomsAccess = false;
-                restaurantAccess = true;
-            } else if (user.getAccess().equals("Room")) {
-                roomsAccess = true;
-                restaurantAccess = false;
-            } else
-                throw new IllegalArgumentException("Incorrect user access type");
-
-            print("LogIn Successful!!");
-            print("\n\n" + "-".repeat(100) + "\n\n");
-            handleInput();
         }
+        if (user.getAccess().equals("Admin")) {
+            roomsAccess = true;
+            restaurantAccess = true;
+        } else if (user.getAccess().equals("Restaurant")) {
+            roomsAccess = false;
+            restaurantAccess = true;
+        } else if (user.getAccess().equals("Room")) {
+            roomsAccess = true;
+            restaurantAccess = false;
+        } else
+            throw new IllegalArgumentException("Incorrect user access type");
+
+        print("LogIn Successful!!");
+        print("\n\n" + "-".repeat(100) + "\n\n");
+        handleInput();
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -108,19 +109,19 @@ public class ConsoleApplication implements CommandLineRunner {
 
         while (true) {
             String message = """
-                        \nHotel Management System
+                    \nHotel Management System
 
-                        DASHBOARD
+                    DASHBOARD
 
-                        Enter a command:
-                        1. Overview
-                        2. Room Management
-                        3. Reservation Management
-                        4. Staff Management
-                        5. Restaurant & RestaurantCustomer Management
-                        6. Hotel Customer Management
-                        7. Bill Management
-                        8. EXIT
+                    Enter a command:
+                    1. Overview
+                    2. Room Management
+                    3. Reservation Management
+                    4. Staff Management
+                    5. Restaurant & RestaurantCustomer Management
+                    6. Hotel Customer Management
+                    7. Bill Management
+                    8. EXIT
                     """;
 
             print(message);
@@ -129,7 +130,7 @@ public class ConsoleApplication implements CommandLineRunner {
                 choice = scanner.nextInt();
                 scanner.nextLine();
             } catch (Exception e) {
-                print("Error: Could not read. Redirecting to dashboard...");
+                print("Error: Could not read. Please try again...");
                 return;
             }
             switch (choice) {
