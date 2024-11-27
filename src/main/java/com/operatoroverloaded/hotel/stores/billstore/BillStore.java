@@ -19,4 +19,5 @@ public abstract class BillStore {
     public abstract void save();
     public abstract void load();
     public abstract Bill getBill(int billId);
+    public abstract ArrayList<Bill> getBills();
 }

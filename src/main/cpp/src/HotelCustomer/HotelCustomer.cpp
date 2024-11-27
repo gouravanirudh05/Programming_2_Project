@@ -104,7 +104,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
 
 
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomerstore_InMemoryHotelCustomerStore_storeToFile(JNIEnv *env, jobject obj){
-    cout << "CAME HERE" << endl;
     // Getting the customers ArrayList attribute of InMemoryHotelCustomerStore
     jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/HotelCustomer");
     jclass InMemoryHotelCustomerStoreClass = env->GetObjectClass(obj);
@@ -123,6 +122,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
     jint customerSize = env->CallIntMethod(hotelCustomerArray, arrayListSize);
     ofstream outfile;
     outfile.open("HotelCustomerStore.txt");
+    cout << customerSize << endl;
     for (int i=0; i<customerSize; i++){
         jobject customer = env->CallObjectMethod(hotelCustomerArray, arrayListGet, i);
         jint id = env->CallIntMethod(customer, env->GetMethodID(hotelCustomerClass, "getCustomerId", "()I"));
@@ -135,7 +135,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         jdouble billLeft = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillLeft", "()D"));
 
         outfile << id << " "<< name << " "<< email << " "<< phone << " "<< address<< " " << billAmt << " "<< billPayed << " "<< billLeft << " ";
-
+        cout << "came here" << endl;
         jobject bills = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getBills", "()Ljava/util/ArrayList;"));
 
         jint billSize = env->CallIntMethod(bills, arrayListSize);
