@@ -65,7 +65,7 @@ public class RestaurantCustomerController {
     @PostMapping("/update/{customerId}")
     public ResponseEntity<?> updateCustomer(@PathVariable int customerId, @RequestBody JsonNode json) {
         JsonNode dishesNode = json.get("dishes"); // ArrayNode
-        int tabelId = json.get("tabelId").asInt();
+        int tabelId = json.get("tableId").asInt();
         int serverId = json.get("serverId").asInt();
         ArrayList<Integer> dishes = new ArrayList<>();
         for (JsonNode dish : dishesNode) {
@@ -80,7 +80,7 @@ public class RestaurantCustomerController {
         for (JsonNode bill : billsNode) {
             bills.add(bill.asInt());
         }
-        double bill_amt = json.get("billAmt").asDouble();
+        double bill_amt = json.get("billAmount").asDouble();
         double bill_left = json.get("billLeft").asDouble();
         double bill_payed = json.get("billPayed").asDouble();
         String address = json.get("address").asText();
