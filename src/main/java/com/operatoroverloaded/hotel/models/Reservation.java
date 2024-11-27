@@ -33,6 +33,16 @@ public class Reservation {
         this.totalAmount = 0.0; 
     }
 
+    public Reservation(int reservationId, String roomID, String customerID, DateTime startDateTime, DateTime endDateTime, int billId, double totalAmount) {
+        this.reservationId = reservationId;
+        this.roomID = roomID;
+        this.customerID = customerID;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.billId = billId;
+        this.totalAmount = totalAmount; 
+    }
+
     public int getReservationId() {
         return reservationId;
     }

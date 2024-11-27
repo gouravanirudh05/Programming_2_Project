@@ -126,19 +126,106 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
 }
 
 // JNI method to load reservations from a space-separated file
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore_InMemoryReservationStore_loadReservationsNative(JNIEnv*, jobject) {
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore_InMemoryReservationStore_loadReservationsNative(JNIEnv *env, jobject obj) {
     std::ifstream inFile("reservations.txt");
     if (!inFile) {
         std::cerr << "Error opening reservations.txt for reading" << std::endl;
         return;
     }
 
-    reservationStore.clear();
-    std::string line;
-    while (std::getline(inFile, line)) {
-        reservationStore.push_back(stringToReservation(line));
+    std::string file;
+    file.assign((std::istreambuf_iterator<char>(inFile)), (std::istreambuf_iterator<char>()));
+    inFile.close();
+
+    // Get the class and field ids
+    jclass reservationClass = env->FindClass("com/operatoroverloaded/hotel/models/Reservation");
+    jclass InMemoryReservationStoreClass = env->GetObjectClass(obj);
+    jfieldID reservationArrayField = env->GetFieldID(InMemoryReservationStoreClass, "reservationData", "Ljava/util/ArrayList;");
+    jobject reservationArray = env->GetObjectField(obj, reservationArrayField);
+    jmethodID reservationInit = env->GetMethodID(reservationClass, "<init>", "(ILjava/lang/String;Ljava/lang/String;Lcom/operatoroverloaded/hotel/models/DateTime;Lcom/operatoroverloaded/hotel/models/DateTime;ID)V");
+
+    // Get the class and method ids for ArrayList
+    jclass arrayListClass = env->FindClass("java/util/ArrayList");
+    jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
+    jmethodID arrayListInit = env->GetMethodID(arrayListClass, "<init>", "()V");
+
+    long long i = 0;
+    while (i < file.size()) {
+        // Get the reservation id
+        long long j = i;
+        while (file[j] != '-') j++;
+        jint reservationId = std::stoi(file.substr(i, j - i));
+        i = j + 1;
+
+        // Get the room ID
+        j = i;
+        while (file[j] != '-') j++;
+        jstring roomID = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the customer ID
+        j = i;
+        while (file[j] != '-') j++;
+        jstring customerID = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the start date
+        j = i;
+        while (file[j] != '-') j++;
+        jstring startDate = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the start time
+        j = i;
+        while (file[j] != '-') j++;
+        jstring startTime = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the end date
+        j = i;
+        while (file[j] != '-') j++;
+        jstring endDate = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the end time
+        j = i;
+        while (file[j] != '-') j++;
+        jstring endTime = env->NewStringUTF(file.substr(i, j - i).c_str());
+        i = j + 1;
+
+        // Get the bill id
+        j = i;
+        while (file[j] != '-') j++;
+        jint billId = std::stoi(file.substr(i, j - i));
+        i = j + 1;
+
+        // Get the total amount
+        j = i;
+        while (file[j] != '\n' && j < file.size()) j++;
+        jdouble totalAmount = std::stod(file.substr(i, j - i));
+        i = j + 1;
+
+        // Create DateTime objects for start and end times
+        jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
+        jmethodID dateTimeInit = env->GetMethodID(dateTimeClass, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+        jobject startDateTime = env->NewObject(dateTimeClass, dateTimeInit, startDate, startTime);
+        jobject endDateTime = env->NewObject(dateTimeClass, dateTimeInit, endDate, endTime);
+
+        // Create the reservation object and add it to the list
+        jobject reservationObject = env->NewObject(reservationClass, reservationInit, reservationId, roomID, customerID, startDateTime, endDateTime, billId, totalAmount);
+        env->CallBooleanMethod(reservationArray, arrayListAdd, reservationObject);
+
+        // Release the local references
+        env->DeleteLocalRef(roomID);
+        env->DeleteLocalRef(customerID);
+        env->DeleteLocalRef(startDate);
+        env->DeleteLocalRef(startTime);
+        env->DeleteLocalRef(endDate);
+        env->DeleteLocalRef(endTime);
+        env->DeleteLocalRef(startDateTime);
+        env->DeleteLocalRef(endDateTime);
+        env->DeleteLocalRef(reservationObject);
     }
 
-    inFile.close();
     std::cout << "Reservations loaded successfully" << std::endl;
 }

@@ -2,3 +2,5 @@ RT1-STANDARD-12-nothin:sauna:bathouse\
 RT2-DELUXE-122-bath:suana\
 RT1-STANDARD-12-nothin:sauna:bathouse\
 RT2-DELUXE-122-bath:suana\
+V322-deluxe-1504.34-ac:double bed\
+V322-deluxe-1504.34-ac:double bed\
