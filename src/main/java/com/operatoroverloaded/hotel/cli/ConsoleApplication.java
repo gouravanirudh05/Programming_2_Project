@@ -120,9 +120,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(message);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     overview();
@@ -219,9 +224,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<RoomType> roomTypes = roomTypeStore.getRoomTypes();
@@ -236,22 +246,27 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 3:
-                    print("Enter details one-by-one:");
-                    print("RoomTypeID:");
-                    String roomTypeId = scanner.nextLine();
-                    print("RoomTypeName:");
-                    String roomTypeName = scanner.nextLine();
-                    print("Tariff:");
-                    float tariff = Float.parseFloat(scanner.nextLine());
-                    print("Amenties(Space-seperated, Use double quotes for multi-word amenity)");
-                    ArrayList<String> amenities = parseInput(scanner.nextLine());
-                    roomTypeStore.addRoomType(new RoomType(roomTypeId, roomTypeName, tariff, amenities));
-                    print("Room type added successfully");
+                    try {
+                        print("Enter details one-by-one:");
+                        print("RoomTypeID:");
+                        String roomTypeId = scanner.nextLine();
+                        print("RoomTypeName:");
+                        String roomTypeName = scanner.nextLine();
+                        print("Tariff:");
+                        float tariff = Float.parseFloat(scanner.nextLine());
+                        print("Amenties(Space-seperated, Use double quotes for multi-word amenity)");
+                        ArrayList<String> amenities = parseInput(scanner.nextLine());
+                        roomTypeStore.addRoomType(new RoomType(roomTypeId, roomTypeName, tariff, amenities));
+                        print("Room type added successfully");
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
                     break;
 
                 case 4:
                     print("Enter roomType Id to delete:");
-                    roomTypeId = scanner.nextLine();
+                    String roomTypeId = scanner.nextLine();
                     RoomType roomType = roomTypeStore.deleteRoomType(roomTypeId);
                     if (roomType == null) {
                         print("Error: Invalid RoomType ID(does not exist)");
@@ -283,9 +298,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<Reservation> reservations = reservationStore.getAllReservations();
@@ -294,40 +314,51 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 2:
-                    print("Enter details one-by-one:");
-                    print("ReservationID:");
-                    int reservationId = Integer.parseInt(scanner.nextLine());
-                    print("Room ID:");
-                    String roomId = scanner.nextLine();
-                    print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
-                    DateTime end = DateTime.parse(scanner.nextLine());
-                    print("Customer ID:");
-                    int customerID = Integer.parseInt(scanner.nextLine());
-                    if (hotelCustomerStore.getCustomer(customerID) == null)
-                        print("Error: Invalid CustomerID(does not exist)");
-                    else {
-                        print("Bill ID:");
-                        int billId = Integer.parseInt(scanner.nextLine());
-                        reservationStore
-                                .addReservation(
-                                        new Reservation(reservationId, roomId, "" + customerID,
-                                                DateTime.getCurrentTime(),
-                                                end, billId));
-                        print("Reservation added successfully");
+                    try {
+                        print("Enter details one-by-one:");
+                        print("ReservationID:");
+                        int reservationId = Integer.parseInt(scanner.nextLine());
+                        print("Room ID:");
+                        String roomId = scanner.nextLine();
+                        print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
+                        DateTime end = DateTime.parse(scanner.nextLine());
+                        print("Customer ID:");
+                        int customerID = Integer.parseInt(scanner.nextLine());
+                        if (hotelCustomerStore.getCustomer(customerID) == null)
+                            print("Error: Invalid CustomerID(does not exist)");
+                        else {
+                            print("Bill ID:");
+                            int billId = Integer.parseInt(scanner.nextLine());
+                            reservationStore
+                                    .addReservation(
+                                            new Reservation(reservationId, roomId, "" + customerID,
+                                                    DateTime.getCurrentTime(),
+                                                    end, billId));
+                            print("Reservation added successfully");
+                        }
+                        break;
                     }
-                    break;
+
+                    catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 3:
-                    print("Enter reservation ID to be deleted:");
-                    reservationId = Integer.parseInt(scanner.nextLine());
-                    if (reservationStore.getReservation(reservationId) == null)
-                        print("Error: Invalid Reservation ID(does not exist)");
-                    else {
-                        reservationStore.removeReservation(reservationId);
-                        print("Reservation deleted successfully");
+                    try {
+                        print("Enter reservation ID to be deleted:");
+                        int reservationId = Integer.parseInt(scanner.nextLine());
+                        if (reservationStore.getReservation(reservationId) == null)
+                            print("Error: Invalid Reservation ID(does not exist)");
+                        else {
+                            reservationStore.removeReservation(reservationId);
+                            print("Reservation deleted successfully");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
-
                 case 4:
                     return;
 
@@ -354,9 +385,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<Staff> staff = staffStore.getAllStaff();
@@ -390,16 +426,20 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 3:
-                    print("Enter staff ID to remove:");
-                    int staffID = Integer.parseInt(scanner.nextLine());
-                    if (staffStore.getStaffById(staffID) == null)
-                        print("Error: Invalid StaffID(does not exist)");
-                    else {
-                        staffStore.removeStaff(staffID);
-                        print("Staff removed successfully");
+                    try {
+                        print("Enter staff ID to remove:");
+                        int staffID = Integer.parseInt(scanner.nextLine());
+                        if (staffStore.getStaffById(staffID) == null)
+                            print("Error: Invalid StaffID(does not exist)");
+                        else {
+                            staffStore.removeStaff(staffID);
+                            print("Staff removed successfully");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
-
                 case 4:
                     return;
 
@@ -436,9 +476,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<Dish> dishes = dishStore.getDishes();
@@ -447,33 +492,43 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 2:
-                    print("Enter details one-by-one");
-                    print("Enter dish ID:");
-                    int dishId = Integer.parseInt(scanner.nextLine());
-                    print("Enter dish name:");
-                    String dishName = scanner.nextLine();
-                    print("Enter dish price");
-                    float price = Float.parseFloat(scanner.nextLine());
-                    print("Enter dish type(E.g. 'appetizer' or 'dessert'):");
-                    String dishType = scanner.nextLine();
-                    print("Enter dish calorie count:");
-                    int calories = Integer.parseInt(scanner.nextLine());
-                    print("Enter preperation time (in minutes):");
-                    int preparationTime = Integer.parseInt(scanner.nextLine());
-                    Dish newDish = new Dish(dishId, dishName, price, dishType, calories, preparationTime, true);
-                    dishStore.addDish(newDish);
-                    print("Dish added successfully");
-                    break;
+                    try {
+                        print("Enter details one-by-one");
+                        print("Enter dish ID:");
+                        int dishId = Integer.parseInt(scanner.nextLine());
+                        print("Enter dish name:");
+                        String dishName = scanner.nextLine();
+                        print("Enter dish price");
+                        float price = Float.parseFloat(scanner.nextLine());
+                        print("Enter dish type(E.g. 'appetizer' or 'dessert'):");
+                        String dishType = scanner.nextLine();
+                        print("Enter dish calorie count:");
+                        int calories = Integer.parseInt(scanner.nextLine());
+                        print("Enter preperation time (in minutes):");
+                        int preparationTime = Integer.parseInt(scanner.nextLine());
+                        Dish newDish = new Dish(dishId, dishName, price, dishType, calories, preparationTime, true);
+                        dishStore.addDish(newDish);
+                        print("Dish added successfully");
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 3:
-                    print("Enter dish ID to remove:");
-                    dishId = Integer.parseInt(scanner.nextLine());
-                    Dish dish = dishStore.deleteDish(dishId);
-                    if (dish == null)
-                        print("Error: Invalid DishID(does not exist)");
-                    else
-                        print("Dish deleted successfully");
-                    break;
+                    try {
+                        print("Enter dish ID to remove:");
+                        int dishId = Integer.parseInt(scanner.nextLine());
+                        Dish dish = dishStore.deleteDish(dishId);
+                        if (dish == null)
+                            print("Error: Invalid DishID(does not exist)");
+                        else
+                            print("Dish deleted successfully");
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 4:
                     ArrayList<Table> tables = tableStore.getTables();
@@ -482,25 +537,35 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 5:
-                    print("Enter details one-by-one:");
-                    print("Table Number:");
-                    int tableNumber = Integer.parseInt(scanner.nextLine());
-                    print("Seating Capacity:");
-                    int seatingCapacity = Integer.parseInt(scanner.nextLine());
-                    Table newTable = new Table(tableNumber, seatingCapacity);
-                    tableStore.addTable(newTable);
-                    print("Table added successfully");
-                    break;
+                    try {
+                        print("Enter details one-by-one:");
+                        print("Table Number:");
+                        int tableNumber = Integer.parseInt(scanner.nextLine());
+                        print("Seating Capacity:");
+                        int seatingCapacity = Integer.parseInt(scanner.nextLine());
+                        Table newTable = new Table(tableNumber, seatingCapacity);
+                        tableStore.addTable(newTable);
+                        print("Table added successfully");
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 6:
-                    print("Enter table number to remove:");
-                    tableNumber = Integer.parseInt(scanner.nextLine());
-                    Table table = tableStore.deleteTable(tableNumber);
-                    if (table == null)
-                        print("Error: Invalid TableID(does not exist)");
-                    else
-                        print("Table removed successfully");
-                    break;
+                    try {
+                        print("Enter table number to remove:");
+                        int tableNumber = Integer.parseInt(scanner.nextLine());
+                        Table table = tableStore.deleteTable(tableNumber);
+                        if (table == null)
+                            print("Error: Invalid TableID(does not exist)");
+                        else
+                            print("Table removed successfully");
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 7:
                     ArrayList<RestaurantCustomer> restaurantCustomers = restaurantCustomerStore.getCustomers();
@@ -509,59 +574,75 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 8:
-                    print("Enter customer details one-by-one:");
-                    print("Enter customer ID:");
-                    int restaurantCustomerId = Integer.parseInt(scanner.nextLine());
-                    print("Customer name:");
-                    String restaurantCustomerName = scanner.nextLine();
-                    print("Email:");
-                    String email = scanner.nextLine();
-                    print("Phone No.:");
-                    String phoneNo = scanner.nextLine();
-                    print("Address:");
-                    String address = scanner.nextLine();
-                    DateTime fromTime = DateTime.getCurrentTime();
-                    print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
-                    DateTime endTime = DateTime.parse(scanner.nextLine());
+                    try {
+                        print("Enter customer details one-by-one:");
+                        print("Enter customer ID:");
+                        int restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                        print("Customer name:");
+                        String restaurantCustomerName = scanner.nextLine();
+                        print("Email:");
+                        String email = scanner.nextLine();
+                        print("Phone No.:");
+                        String phoneNo = scanner.nextLine();
+                        print("Address:");
+                        String address = scanner.nextLine();
+                        DateTime fromTime = DateTime.getCurrentTime();
+                        print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
+                        DateTime endTime = DateTime.parse(scanner.nextLine());
 
-                    print("Now, enter order details one-by-one:");
-                    print("Table ID for customer:");
-                    int tableId = Integer.parseInt(scanner.nextLine());
-                    print("Server ID:");
-                    int serverId = Integer.parseInt(scanner.nextLine());
-                    RestaurantCustomer restaurantCustomer = new RestaurantCustomer(restaurantCustomerId,
-                            restaurantCustomerName, email, phoneNo, address, tableId, serverId, fromTime, endTime);
-                    print("Enter number of dishes to be added:");
-                    int n = Integer.parseInt(scanner.nextLine());
-                    for (int i = 0; i < n; i++) {
-                        dishId = Integer.parseInt(scanner.nextLine());
-                        if (dishStore.findDish(dishId) == null)
-                            print("Error: Could not add dish (Does not exist)");
-                        else {
-                            restaurantCustomer.addDish(dishId);
-                            print("Dish added successfully");
+                        print("Now, enter order details one-by-one:");
+                        print("Table ID for customer:");
+                        int tableId = Integer.parseInt(scanner.nextLine());
+                        print("Server ID:");
+                        int serverId = Integer.parseInt(scanner.nextLine());
+                        RestaurantCustomer restaurantCustomer = new RestaurantCustomer(restaurantCustomerId,
+                                restaurantCustomerName, email, phoneNo, address, tableId, serverId, fromTime, endTime);
+                        print("Enter number of dishes to be added:");
+                        int n = Integer.parseInt(scanner.nextLine());
+                        for (int i = 0; i < n; i++) {
+                            int dishId = Integer.parseInt(scanner.nextLine());
+                            if (dishStore.findDish(dishId) == null)
+                                print("Error: Could not add dish (Does not exist)");
+                            else {
+                                restaurantCustomer.addDish(dishId);
+                                print("Dish added successfully");
+                            }
                         }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
 
                 case 9:
-                    print("Enter Restaurant Customer ID to be removed:");
-                    restaurantCustomerId = Integer.parseInt(scanner.nextLine());
-                    restaurantCustomerStore.deleteCustomer(restaurantCustomerId);
-                    break;
+                    try {
+                        print("Enter Restaurant Customer ID to be removed:");
+                        int restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                        restaurantCustomerStore.deleteCustomer(restaurantCustomerId);
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 10:
-                    print("Enter customerID:");
-                    restaurantCustomerId = Integer.parseInt(scanner.nextLine());
-                    restaurantCustomer = restaurantCustomerStore.getCustomer(restaurantCustomerId);
-                    if (restaurantCustomer == null)
-                        print("Error: Invalid Customer ID(does not exist)");
-                    else {
-                        ArrayList<Integer> billIds = restaurantCustomer.getBills();
-                        for (int billId : billIds)
-                            print(billStore.getBill(billId).toString());
+                    try {
+                        print("Enter customerID:");
+                        int restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                        RestaurantCustomer restaurantCustomer = restaurantCustomerStore
+                                .getCustomer(restaurantCustomerId);
+                        if (restaurantCustomer == null)
+                            print("Error: Invalid Customer ID(does not exist)");
+                        else {
+                            ArrayList<Integer> billIds = restaurantCustomer.getBills();
+                            for (int billId : billIds)
+                                print(billStore.getBill(billId).toString());
+                        }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
 
                 case 11:
                     return;
@@ -590,9 +671,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<HotelCustomer> hotelCustomers = hotelCustomerStore.getCustomers();
@@ -601,36 +687,47 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 2:
-                    print("Enter customer details one-by-one:");
-                    print("Enter customer ID:");
-                    int hotelCustomerId = Integer.parseInt(scanner.nextLine());
-                    print("Customer name:");
-                    String hotelCustomerName = scanner.nextLine();
-                    print("Email:");
-                    String email = scanner.nextLine();
-                    print("Phone No.:");
-                    String phoneNo = scanner.nextLine();
-                    print("Address:");
-                    String address = scanner.nextLine();
-                    DateTime fromTime = DateTime.getCurrentTime();
-                    print("Customer uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
-                    DateTime endTime = DateTime.parse(scanner.nextLine());
-                    HotelCustomer hotelCustomer = new HotelCustomer(hotelCustomerId, hotelCustomerName, email, phoneNo,
-                            address, fromTime, endTime);
-                    hotelCustomerStore.addCustomer(hotelCustomer);
-                    print("Hotel Customer added successfully");
-                    break;
+                    try {
+                        print("Enter customer details one-by-one:");
+                        print("Enter customer ID:");
+                        int hotelCustomerId = Integer.parseInt(scanner.nextLine());
+                        print("Customer name:");
+                        String hotelCustomerName = scanner.nextLine();
+                        print("Email:");
+                        String email = scanner.nextLine();
+                        print("Phone No.:");
+                        String phoneNo = scanner.nextLine();
+                        print("Address:");
+                        String address = scanner.nextLine();
+                        DateTime fromTime = DateTime.getCurrentTime();
+                        print("Customer uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
+                        DateTime endTime = DateTime.parse(scanner.nextLine());
+                        HotelCustomer hotelCustomer = new HotelCustomer(hotelCustomerId, hotelCustomerName, email,
+                                phoneNo,
+                                address, fromTime, endTime);
+                        hotelCustomerStore.addCustomer(hotelCustomer);
+                        print("Hotel Customer added successfully");
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
+                    }
 
                 case 3:
-                    print("Enter Customer ID to remove:");
-                    hotelCustomerId = Integer.parseInt(scanner.nextLine());
-                    if (hotelCustomerStore.getCustomer(hotelCustomerId) == null)
-                        print("Error: Invalid customerID(does not exist)");
-                    else {
-                        hotelCustomerStore.deleteCustomer(hotelCustomerId);
-                        print("Hotel Customer successfully removed.");
+                    try {
+                        print("Enter Customer ID to remove:");
+                        int hotelCustomerId = Integer.parseInt(scanner.nextLine());
+                        if (hotelCustomerStore.getCustomer(hotelCustomerId) == null)
+                            print("Error: Invalid customerID(does not exist)");
+                        else {
+                            hotelCustomerStore.deleteCustomer(hotelCustomerId);
+                            print("Hotel Customer successfully removed.");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
 
                 case 5:
                     return;
@@ -657,9 +754,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     """;
 
             print(options);
-
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice;
+            try {
+                choice = scanner.nextInt();
+                scanner.nextLine();
+            } catch (Exception e) {
+                print("Error: Could not read. Redirecting to dashboard...");
+                return;
+            }
             switch (choice) {
                 case 1:
                     ArrayList<Bill> bills = billStore.getBills();
@@ -683,15 +785,20 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 3:
-                    print("Enter Bill ID to be deleted:");
-                    int billId = Integer.parseInt(scanner.nextLine());
-                    if (billStore.getBill(billId) == null)
-                        print("Error: Invalid bill ID(does not exist)");
-                    else {
-                        billStore.removeBill(billId);
-                        print("Bill successfully removed");
+                    try {
+                        print("Enter Bill ID to be deleted:");
+                        int billId = Integer.parseInt(scanner.nextLine());
+                        if (billStore.getBill(billId) == null)
+                            print("Error: Invalid bill ID(does not exist)");
+                        else {
+                            billStore.removeBill(billId);
+                            print("Bill successfully removed");
+                        }
+                        break;
+                    } catch (Exception e) {
+                        print("Error in reading inputs. Redirecting to dashboard...");
+                        return;
                     }
-                    break;
 
                 case 4:
                     return;
