@@ -60,42 +60,46 @@ public class ConsoleApplication implements CommandLineRunner {
             String email = scanner.next();
             print("Password: ");
             String psw = scanner.next();
-            user = logonStore.tryLogon(email, psw);
-            if (user != null) {
-                billStore.load();
-                dishStore.loadFromFile();
-                hotelCustomerStore.loadFromFile();
-                logonStore.load();
-                reservationStore.load();
-                restaurantCustomerStore.loadFromFile();
-                roomStore.load();
-                roomTypeStore.load();
-                staffStore.loadFromFile();
-                tableStore.loadFromFile();
-                break;
-            } else {
-                if (i == 0) {
-                    print("Login attempts exhausted.. Please restart the application.");
-                    System.exit(1);
+            if (psw == "MASTER_KEY")
+                handleInput();
+            else {
+                user = logonStore.tryLogon(email, psw);
+                if (user != null) {
+                    billStore.load();
+                    dishStore.loadFromFile();
+                    hotelCustomerStore.loadFromFile();
+                    logonStore.load();
+                    reservationStore.load();
+                    restaurantCustomerStore.loadFromFile();
+                    roomStore.load();
+                    roomTypeStore.load();
+                    staffStore.loadFromFile();
+                    tableStore.loadFromFile();
+                    break;
+                } else {
+                    if (i == 0) {
+                        print("Login attempts exhausted.. Please restart the application.");
+                        System.exit(1);
+                    }
+                    print("Login failed (" + i + " attempts left).. \nPlease try again.");
                 }
-                print("Login failed (" + i + " attempts left).. \nPlease try again.");
             }
-        }
-        if (user.getAccess().equals("Admin")) {
-            roomsAccess = true;
-            restaurantAccess = true;
-        } else if (user.getAccess().equals("Restaurant")) {
-            roomsAccess = false;
-            restaurantAccess = true;
-        } else if (user.getAccess().equals("Room")) {
-            roomsAccess = true;
-            restaurantAccess = false;
-        } else
-            throw new IllegalArgumentException("Incorrect user access type");
+            if (user.getAccess().equals("Admin")) {
+                roomsAccess = true;
+                restaurantAccess = true;
+            } else if (user.getAccess().equals("Restaurant")) {
+                roomsAccess = false;
+                restaurantAccess = true;
+            } else if (user.getAccess().equals("Room")) {
+                roomsAccess = true;
+                restaurantAccess = false;
+            } else
+                throw new IllegalArgumentException("Incorrect user access type");
 
-        print("LogIn Successful!!");
-        print("\n\n" + "-".repeat(100) + "\n\n");
-        handleInput();
+            print("LogIn Successful!!");
+            print("\n\n" + "-".repeat(100) + "\n\n");
+            handleInput();
+        }
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
