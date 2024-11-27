@@ -48,12 +48,12 @@ public class DateTime {
     }
 
     //parse the date and time
-    public static DateTime parse(String date) {
-        String[] parts = date.split(" ");
-        String[] dateParts = parts[0].split("-");
-        String[] timeParts = parts[1].split(":");
-        return new DateTime(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),
-                Integer.parseInt(timeParts[0]), Integer.parseInt(timeParts[1]), Integer.parseInt(timeParts[2]));
+    public static DateTime parse(String dateTime) {
+        System.out.println(dateTime);
+        String[] parts = dateTime.split("-");
+        String date = parts[0].replace("/", "-");
+        String time = parts[1];
+        return fromString(date, time);
     }
 
     // Checks if the year is a leap year

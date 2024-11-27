@@ -133,13 +133,13 @@ extern "C" {
         jclass staffStoreClass = env->GetObjectClass(obj);
         jfieldID staffArrayField = env->GetFieldID(staffStoreClass, "staffData", "Ljava/util/ArrayList;");
         jobject staffArray = env->GetObjectField(obj, staffArrayField);
-        cout << 1 << endl;
+
         // Get methods for accessing the `ArrayList`
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
         jmethodID arrayListSize = env->GetMethodID(arrayListClass, "size", "()I");
         jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
         jint length = env->CallIntMethod(staffArray, arrayListSize);
-        cout << 2 << endl;
+
         // Get field IDs for `Staff` attributes
         jclass staffClass = env->FindClass("com/operatoroverloaded/hotel/models/Staff");
         jfieldID staffIDField = env->GetFieldID(staffClass, "staffID", "I");
@@ -151,15 +151,15 @@ extern "C" {
         jfieldID workingFromField = env->GetFieldID(staffClass, "workingFrom", "Lcom/operatoroverloaded/hotel/models/DateTime;");
         jfieldID retiredOnField = env->GetFieldID(staffClass, "retiredOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
         jfieldID assignedToField = env->GetFieldID(staffClass, "assignedTo", "Ljava/lang/String;");
-        cout << 3 << endl;
+
         jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
         jmethodID getDateString = env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;");
         jmethodID getTimeString = env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;");
-        cout << 4 << endl;
+
         // Iterate over each `Staff` object in the ArrayList
         for (jint i = 0; i < length; i++) {
             jobject staffObject = env->CallObjectMethod(staffArray, arrayListGet, i);
-            cout << 5 << endl;
+
             // Retrieve each field from the `Staff` object
             jint staffID = env->GetIntField(staffObject, staffIDField);
             jstring name = (jstring) env->GetObjectField(staffObject, nameField);
@@ -170,19 +170,19 @@ extern "C" {
             jobject workingFrom = env->GetObjectField(staffObject, workingFromField);
             jobject retiredOn = env->GetObjectField(staffObject, retiredOnField);
             jstring assignedTo = (jstring) env->GetObjectField(staffObject, assignedToField);
-            cout << 6 << endl;
+
             // Retrieve date and time strings from `DateTime` objects
             jstring workingFromDateString = (jstring) env->CallObjectMethod(workingFrom, getDateString);
             jstring workingFromTimeString = (jstring) env->CallObjectMethod(workingFrom, getTimeString);
             jstring retiredOnDateString = (jstring) env->CallObjectMethod(retiredOn, getDateString);
             jstring retiredOnTimeString = (jstring) env->CallObjectMethod(retiredOn, getTimeString);
-            cout << 7 << endl;
+
             // Convert Java strings to C++ native strings
             const char *nativeWorkingFromDate = env->GetStringUTFChars(workingFromDateString, nullptr);
             const char *nativeWorkingFromTime = env->GetStringUTFChars(workingFromTimeString, nullptr);
             const char *nativeRetiredOnDate = retiredOnDateString != nullptr ? env->GetStringUTFChars(retiredOnDateString, nullptr) : "";
             const char *nativeRetiredOnTime = retiredOnTimeString != nullptr ? env->GetStringUTFChars(retiredOnTimeString, nullptr) : "";
-            cout << 8 << endl;
+
             // Replace '-' with '/' in the date strings
             string workingFromDateStr(nativeWorkingFromDate);
             replace(workingFromDateStr.begin(), workingFromDateStr.end(), '-', '/');
@@ -192,13 +192,13 @@ extern "C" {
             replace(retiredOnDateStr.begin(), retiredOnDateStr.end(), '-', '/');
             string retiredOnTimeStr(nativeRetiredOnTime);
             replace(retiredOnTimeStr.begin(), retiredOnTimeStr.end(), '-', '/');
-            cout << 9 << endl;
+
             // Write the staff data to the file
             const char *nativeName = env->GetStringUTFChars(name, nullptr);
             const char *nativeAddress = env->GetStringUTFChars(address, nullptr);
             const char *nativeRole = env->GetStringUTFChars(role, nullptr);
             const char *nativeAssignedTo = env->GetStringUTFChars(assignedTo, nullptr);
-            cout << 10 << endl;
+
             fout << staffID << '\n'
                  << nativeName << '\n'
                  << salary << '\n'

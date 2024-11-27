@@ -292,7 +292,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     int reservationId = Integer.parseInt(scanner.nextLine());
                     print("roomId:");
                     String roomId = scanner.nextLine();
-                    print("Reserved uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
                     DateTime end = DateTime.parse(scanner.nextLine());
                     print("Guest Name:");
                     String guestName = scanner.nextLine();
@@ -509,7 +509,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     print("Address:");
                     String address = scanner.nextLine();
                     DateTime fromTime = DateTime.getCurrentTime();
-                    print("Reserved uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
                     DateTime endTime = DateTime.parse(scanner.nextLine());
 
                     print("Now, enter order details one-by-one:");
@@ -601,7 +601,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     print("Address:");
                     String address = scanner.nextLine();
                     DateTime fromTime = DateTime.getCurrentTime();
-                    print("Customer uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    print("Customer uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
                     DateTime endTime = DateTime.parse(scanner.nextLine());
                     HotelCustomer hotelCustomer = new HotelCustomer(hotelCustomerId, hotelCustomerName, email, phoneNo,
                             address, fromTime, endTime);

@@ -56,7 +56,7 @@ public class BillController {
         billStore.removeBill(billId);
         return ResponseEntity.ok().body("Bill removed successfully");
     }
-    @GetMapping("/paid/{billId}")
+    @PostMapping("/paid/{billId}")
     public ResponseEntity<?> getPaidBill(@PathVariable int billId,@RequestBody JsonNode json) {
         boolean payed = json.get("payed").asBoolean();
         Bill bill = billStore.getBill(billId);

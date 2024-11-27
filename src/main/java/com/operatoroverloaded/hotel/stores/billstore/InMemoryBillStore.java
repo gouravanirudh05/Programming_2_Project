@@ -102,6 +102,7 @@ public class InMemoryBillStore extends BillStore {
             }
         }
     }
+
     @Override
     public ArrayList<Bill> getBills() {
         return new ArrayList<>(billData);

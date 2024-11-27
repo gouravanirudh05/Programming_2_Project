@@ -1,4 +1,4 @@
-package com.operatoroverloaded.hotel.stores.restaurantcustomerstore;
+    package com.operatoroverloaded.hotel.stores.restaurantcustomerstore;
 import java.util.ArrayList;
 
 import com.operatoroverloaded.hotel.models.RestaurantCustomer;

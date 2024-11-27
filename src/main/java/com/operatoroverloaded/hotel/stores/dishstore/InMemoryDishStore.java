@@ -9,7 +9,7 @@ public class InMemoryDishStore extends DishStore {
         System.loadLibrary("DishCPP");
     }
     private static final InMemoryDishStore instance = new InMemoryDishStore();
-    private final ArrayList<Dish> dishes = new ArrayList<>();
+    private ArrayList<Dish> dishes = new ArrayList<>();
 
     private InMemoryDishStore() {}
 

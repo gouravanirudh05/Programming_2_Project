@@ -29,6 +29,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { format } from 'date-fns'
 
@@ -72,11 +75,34 @@ export default function ReservationManagement() {
   const [availableRooms, setAvailableRooms] = useState<Room[]>([])
   const [isExistingCustomer, setIsExistingCustomer] = useState(true)
   const [roomTypes, setRoomTypes] = useState<RoomType[]>([])
+  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null)
+  const [isEditReservationOpen, setIsEditReservationOpen] = useState(false)
+  const handleEditReservation = async () => {
+    if (!editingReservation) return
+    try {
+      await axios.post(`http://localhost:8080/api/reservation/update/${editingReservation.reservationID}`, editingReservation)
+      fetchReservations()
+      setIsEditReservationOpen(false)
+      setEditingReservation(null)
+    } catch (error) {
+      console.error('Error updating reservation:', error)
+    }
+  }
+
+  const handleDeleteReservation = async (reservationID: string) => {
+    try {
+      await axios.post(`http://localhost:8080/api/reservation/remove/${reservationID}`)
+      fetchReservations()
+    } catch (error) {
+      console.error('Error deleting reservation:', error)
+    }
+  }
+
   useEffect(() => {
     fetchRoomTypes()
     fetchReservations()
     // fetchRooms()
-    // fetchCustomers()
+    fetchCustomers()
   }, [])
 
   const fetchReservations = async () => {
@@ -114,7 +140,12 @@ export default function ReservationManagement() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/customers')
+      const response = await axios.get('http://localhost:8080/api/hotelcustomer/all')
+      for(let i = 0; i < response.data.length; i++){
+        response.data[i].reservedFrom = new Date(response.data[i].reservedFrom.year+"-"+response.data[i].reservedFrom.month+"-"+response.data[i].reservedFrom.day+" "+response.data[i].reservedFrom.hour+":"+response.data[i].reservedFrom.minute+":"+response.data[i].reservedFrom.second)
+        response.data[i].reservedTo = new Date(response.data[i].reservedTo.year+"-"+response.data[i].reservedTo.month+"-"+response.data[i].reservedTo.day+" "+response.data[i].reservedTo.hour+":"+response.data[i].reservedTo.minute+":"+response.data[i].reservedTo.second)
+        response.data[i].customerID = response.data[i].customerID || response.data[i].customerId
+      }
       setCustomers(response.data)
     } catch (error) {
       console.error('Error fetching customers:', error)
@@ -345,6 +376,7 @@ export default function ReservationManagement() {
                 <TableHead>Customer ID</TableHead>
                 <TableHead>Check-in</TableHead>
                 <TableHead>Check-out</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -355,12 +387,108 @@ export default function ReservationManagement() {
                   <TableCell>{reservation.customerID}</TableCell>
                   <TableCell>{format(new Date(reservation.startDateTime), 'PPpp')}</TableCell>
                   <TableCell>{format(new Date(reservation.endDateTime), 'PPpp')}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" size="sm" className="mr-2" disabled onClick={() => {
+                      setEditingReservation(reservation)
+                      setIsEditReservationOpen(true)
+                    }}>
+                      Edit
+                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm">Delete</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the reservation.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => handleDeleteReservation(reservation.reservationID)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+      <Dialog open={isEditReservationOpen} onOpenChange={setIsEditReservationOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Reservation</DialogTitle>
+            <DialogDescription>Update the details for this reservation.</DialogDescription>
+          </DialogHeader>
+          {editingReservation && (
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="edit-roomID">Room</Label>
+                <Select
+                  value={editingReservation.roomId}
+                  onValueChange={(value) => setEditingReservation({ ...editingReservation, roomId: value })}
+                >
+                  <SelectTrigger id="edit-roomID">
+                    <SelectValue placeholder="Select a room" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {rooms.map((room) => (
+                      <SelectItem key={room.roomId} value={room.roomId}>
+                        {room.roomId} - {room.type} (Capacity: {room.capacity})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="edit-customerID">Customer</Label>
+                <Select
+                  value={editingReservation.customerID}
+                  onValueChange={(value) => setEditingReservation({ ...editingReservation, customerID: value })}
+                >
+                  <SelectTrigger id="edit-customerID">
+                    <SelectValue placeholder="Select a customer" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {customers.map((customer) => (
+                      <SelectItem key={customer.customerID} value={customer.customerID}>
+                        {customer.name} ({customer.email})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="edit-startDateTime">Check-in Date</Label>
+                <Input
+                  id="edit-startDateTime"
+                  type="datetime-local"
+                  value={editingReservation.startDateTime}
+                  onChange={(e) => setEditingReservation({ ...editingReservation, startDateTime: e.target.value })}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="edit-endDateTime">Check-out Date</Label>
+                <Input
+                  id="edit-endDateTime"
+                  type="datetime-local"
+                  value={editingReservation.endDateTime}
+                  onChange={(e) => setEditingReservation({ ...editingReservation, endDateTime: e.target.value })}
+                />
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button onClick={handleEditReservation}>Update Reservation</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

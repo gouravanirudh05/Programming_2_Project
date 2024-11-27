@@ -169,7 +169,7 @@ export default function BillManagement() {
                     };
                     setEditingBill(updatedBill);
                     try {
-                      await axios.get(`http://localhost:8080/api/bill/payed/${editingBill.billId}`, editingBill.payed);
+                      await axios.post(`http://localhost:8080/api/bill/paid/${editingBill.billId}`, {"payed":editingBill.payed});
                     } catch (error) {
                       console.error('Error updating payment status:', error);
                     }
