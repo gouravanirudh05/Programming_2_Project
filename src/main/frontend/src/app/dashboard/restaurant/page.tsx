@@ -34,18 +34,6 @@ export type RestaurantCustomer = {
 }
 
 export default function RestaurantManagement() {
-  const [dishes, setDishes] = useState<Dish[]>([
-    { dishID: 'D1', name: 'Margherita Pizza', price: 12.99, dishType: 'Main Course' },
-    { dishID: 'D2', name: 'Caesar Salad', price: 8.99, dishType: 'Appetizer' },
-    { dishID: 'D3', name: 'Tiramisu', price: 6.99, dishType: 'Dessert' },
-  ])
-
-  const [tables, setTables] = useState<Table[]>([
-    { tableID: 'T1', capacity: 4, occupied: false, occupiedBy: null, orderStatus: 'Vacant' },
-    { tableID: 'T2', capacity: 2, occupied: true, occupiedBy: null, orderStatus: 'Occupied' },
-    { tableID: 'T3', capacity: 6, occupied: false, occupiedBy: null, orderStatus: 'Vacant' },
-  ])
-
   const [customers, setCustomers] = useState<RestaurantCustomer[]>([])
 
   return (
@@ -63,7 +51,7 @@ export default function RestaurantManagement() {
               <CardTitle>Dish Management</CardTitle>
             </CardHeader>
             <CardContent>
-              <DishManagement dishes={dishes} setDishes={setDishes} />
+              <DishManagement />
             </CardContent>
           </Card>
         </TabsContent>
@@ -73,7 +61,7 @@ export default function RestaurantManagement() {
               <CardTitle>Table Management</CardTitle>
             </CardHeader>
             <CardContent>
-              <TableManagement tables={tables} setTables={setTables} />
+              <TableManagement />
             </CardContent>
           </Card>
         </TabsContent>
@@ -83,13 +71,7 @@ export default function RestaurantManagement() {
               <CardTitle>Order Management</CardTitle>
             </CardHeader>
             <CardContent>
-              <OrderManagement 
-                tables={tables} 
-                setTables={setTables} 
-                dishes={dishes} 
-                customers={customers} 
-                setCustomers={setCustomers} 
-              />
+              <OrderManagement />
             </CardContent>
           </Card>
         </TabsContent>

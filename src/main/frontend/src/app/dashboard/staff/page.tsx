@@ -57,7 +57,7 @@ export default function StaffManagement() {
   const addStaff = async () => {
     try {
       const response = await axios.post('http://localhost:8080/api/staff/add', newStaff) // Replace with your backend endpoint
-      setStaff([...staff, response.data])
+      fetchStaff()
       setNewStaff({
         staffID: '',
         name: '',
@@ -80,7 +80,7 @@ export default function StaffManagement() {
     if (!editingStaff) return
     try {
       const response = await axios.put(`http://localhost:8080/api/staff/update/${editingStaff.staffID}`, editingStaff) // Replace with your backend endpoint
-      setStaff(staff.map((s) => (s.staffID === editingStaff.staffID ? response.data : s)))
+      fetchStaff()
       setEditingStaff(null)
     } catch (error) {
       console.error('Error updating staff:', error)
@@ -91,7 +91,7 @@ export default function StaffManagement() {
   const deleteStaff = async (id: string) => {
     try {
       await axios.post(`http://localhost:8080/api/staff/remove/${id}`) // Replace with your backend endpoint
-      setStaff(staff.filter((s) => s.staffID !== id))
+      fetchStaff()
     } catch (error) {
       console.error('Error deleting staff:', error)
     }

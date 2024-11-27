@@ -97,7 +97,7 @@ public class InMemoryReservationStore extends ReservationStore {
     // Implementation of the createReservationIfNoOverlap method
     @Override
     public Reservation createReservationIfNoOverlap(
-            int reservationId, String roomID, String guestName,
+            int reservationId, String roomID, String customerID,
             DateTime startDateTime, DateTime endDateTime, int billId
     ) {
         // Check for overlaps with existing reservations
@@ -109,7 +109,7 @@ public class InMemoryReservationStore extends ReservationStore {
             }
         }
         // No overlaps, create a new reservation and add it to the data
-        Reservation newReservation = new Reservation(reservationId, roomID, guestName, startDateTime, endDateTime, billId);
+        Reservation newReservation = new Reservation(reservationId, roomID, customerID, startDateTime, endDateTime, billId);
         addReservation(newReservation);
         return newReservation;
     }

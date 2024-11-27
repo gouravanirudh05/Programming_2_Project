@@ -27,7 +27,7 @@ string jStringToStdString(JNIEnv* env, jstring javaString) {
     return cppString;
 }
 
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_loadFromFile(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_loadFromFile(JNIEnv *env, jobject obj) {
     // Getting the restaurantCustomers ArrayList attribute of InMemoryRestaurantCustomerStore
     jclass restaurantCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/RestaurantCustomer");
     jclass InMemoryRestaurantCustomerStoreClass = env->GetObjectClass(obj);
@@ -51,6 +51,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
     infile.open("RestaurantCustomerStore.txt", ios::in);
     string customerData = "";
     while (getline(infile, customerData)) {
+        replace(customerData.begin(), customerData.end(), '-', ' ');
         jobject customer = env->NewObject(restaurantCustomerClass, constructor);
 
         istringstream ss(customerData);
@@ -68,7 +69,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillAmount", "(D)V"), bill_amt);
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillPayed", "(D)V"), bill_payed);
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setBillLeft", "(D)V"), bill_left);
-
         int bills_size;
         ss >> bills_size;
         while (bills_size--) {
@@ -87,7 +87,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
 
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setReservedFrom", "(Lcom/operatoroverloaded/hotel/models/DateTime;)V"), reservedFrom);
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setReservedTo", "(Lcom/operatoroverloaded/hotel/models/DateTime;)V"), reservedTo);
-
         int dish_size;
         ss >> dish_size;
         while (dish_size--) {
@@ -97,7 +96,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
         }
         int tableId, serverId;
         ss >> tableId >> serverId;
-
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setTableId", "(I)V"), tableId);
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setServerId", "(I)V"), serverId);
         // Add the customer to the ArrayList
@@ -106,7 +104,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
     infile.close();
 }
 
-JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_storeToFile(JNIEnv *env, jobject obj){
+JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_restaurantcustomerstore_InMemoryRestaurantCustomerStore_storeToFile(JNIEnv *env, jobject obj){
 
     // Getting the restaurantCustomers ArrayList attribute of InMemoryRestaurantCustomerStore
     jclass restaurantCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/RestaurantCustomer");
@@ -123,6 +121,8 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
 
     jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
 
+    jclass IntegerClass = env->FindClass("java/lang/Integer");
+
     jint customerSize = env->CallIntMethod(restaurantCustomerArray, arrayListSize);
     ofstream outfile;
     outfile.open("RestaurantCustomerStore.txt");
@@ -133,46 +133,45 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_restaurant_stores_restaurantc
         string email = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getEmail", "()Ljava/lang/String;")));
         string phone = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getPhone", "()Ljava/lang/String;")));
         string address = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getAddress", "()Ljava/lang/String;")));
-        jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillAmt", "()D"));
+        jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillAmount", "()D"));
         jdouble billPayed = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillPayed", "()D"));
         jdouble billLeft = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillLeft", "()D"));
 
-        outfile << id << " "<< name << " "<< email << " "<< phone << " "<< address<< " " << billAmt << " "<< billPayed << " "<< billLeft << " ";
+        outfile << id << "-"<< name << "-"<< email << "-"<< phone << "-"<< address<< "-" << billAmt << "-"<< billPayed << "-"<< billLeft << "-";
 
         jobject bills = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBills", "()Ljava/util/ArrayList;"));
 
         jint billSize = env->CallIntMethod(bills, arrayListSize);
-        outfile << billSize << " ";
+        outfile << billSize << "-";
         for (int i = 0; i<billSize; i++) {
-            jint bill = env->CallIntMethod(bills, arrayListGet, i);
-            outfile <<  bill << " ";
+            jobject bill_integer = env->CallObjectMethod(bills, arrayListGet, i);
+            jint bill = env->CallIntMethod(bill_integer, env->GetMethodID(IntegerClass, "intValue", "()I"));
+            outfile <<  bill << "-";
         }
-        jobject from = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
-        jobject to = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
+        jobject from = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
+        jobject to = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
 
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
-
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
+        string fromDate = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;")));
+        outfile << fromDate<<"-";
+        string fromTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
+        replace(fromTime.begin(), fromTime.end(), ':', '-');
+        outfile << fromTime<<"-";
+        string toDate = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;")));
+        outfile << toDate<<"-";
+        string toTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
+        replace(toTime.begin(), toTime.end(), ':', '-');
+        outfile << toTime<<"-";
 
         jobject dishArray = env->CallObjectMethod(customer, env->GetMethodID(restaurantCustomerClass, "getDishes", "()Ljava/util/ArrayList;"));
         jint dishSize = env->CallIntMethod(dishArray, arrayListSize);
-        outfile << dishSize << " ";
+        outfile << dishSize << "-";
         for (int i = 0; i< dishSize; i++) {
-            jint dish = env->CallIntMethod(dishArray, arrayListGet, i);
-            outfile << dish << " ";
+            jobject dish_integer = env->CallObjectMethod(dishArray, arrayListGet, i);
+            jint dish = env->CallIntMethod(dish_integer, env->GetMethodID(IntegerClass, "intValue", "()I"));
+            outfile <<  dish << "-";
         }
-        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getTableId", "()I")) << " ";
-        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getServerId", "()I")) << " ";
+        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getTableId", "()I")) << "-";
+        outfile << env->CallIntMethod(customer, env->GetMethodID(restaurantCustomerClass, "getServerId", "()I")) << "-";
         outfile << endl;
     }
     outfile.close();

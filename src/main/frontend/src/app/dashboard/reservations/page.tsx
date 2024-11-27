@@ -1,10 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -22,322 +29,338 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { format } from 'date-fns'
 
 type Reservation = {
   reservationID: string
-  room: string
-  reservedFrom: string
-  reservedTo: string
-  tariff: number
-  billID: string
+  roomId: string
   customerID: string
-}
-
-type Customer = {
-  customerID: string
-  name: string
-  phone: string
+  startDateTime: string
+  endDateTime: string
 }
 
 type Room = {
-  roomID: string
-  roomType: string
+  roomId: string
+  type: string
+  capacity: number
+  price: number
+}
+type RoomType = {
+  roomTypeId: string
+  roomTypeName: string
+  tariff: number
+  amenities: string[]
+}
+type Customer = {
+  customerID: string
+  name: string
+  address: string
+  phone: string
+  email: string
 }
 
-const initialReservations: Reservation[] = [
-  {
-    reservationID: 'R001',
-    room: '101',
-    reservedFrom: '2024-01-20',
-    reservedTo: '2024-01-22',
-    tariff: 200,
-    billID: 'B001',
-    customerID: 'C001'
-  }
-]
-
-const initialCustomers: Customer[] = [
-  { customerID: 'C001', name: 'John Doe', phone: '123-456-7890' },
-  { customerID: 'C002', name: 'Jane Smith', phone: '098-765-4321' }
-]
-
-const initialRooms: Room[] = [
-  { roomID: '101', roomType: 'Standard' },
-  { roomID: '102', roomType: 'Deluxe' },
-  { roomID: '103', roomType: 'Suite' }
-]
-
 export default function ReservationManagement() {
-  const [reservations, setReservations] = useState<Reservation[]>(initialReservations)
-  const [newReservation, setNewReservation] = useState<Reservation>({
-    reservationID: '',
-    room: '',
-    reservedFrom: '',
-    reservedTo: '',
-    tariff: 0,
-    billID: '',
-    customerID: ''
-  })
-  const [isAddReservationOpen, setIsAddReservationOpen] = useState(false)
-  const [editingReservation, setEditingReservation] = useState<Reservation | null>(null)
-  const [customers] = useState<Customer[]>(initialCustomers)
-  const [rooms] = useState<Room[]>(initialRooms)
-  const [selectedCustomer, setSelectedCustomer] = useState<string>('')
-  const [isNewCustomer, setIsNewCustomer] = useState(false)
-  const [newCustomer, setNewCustomer] = useState<Customer>({ customerID: '', name: '', phone: '' })
+  const [reservations, setReservations] = useState<Reservation[]>([])
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [customers, setCustomers] = useState<Customer[]>([])
+  const [isNewReservationOpen, setIsNewReservationOpen] = useState(false)
+  const [currentStep, setCurrentStep] = useState(1)
+  const [newReservation, setNewReservation] = useState<Partial<Reservation>>({})
+  const [newCustomer, setNewCustomer] = useState<Partial<Customer>>({})
+  const [roomType, setRoomType] = useState('')
+  const [availableRooms, setAvailableRooms] = useState<Room[]>([])
+  const [isExistingCustomer, setIsExistingCustomer] = useState(true)
+  const [roomTypes, setRoomTypes] = useState<RoomType[]>([])
+  useEffect(() => {
+    fetchRoomTypes()
+    fetchReservations()
+    // fetchRooms()
+    // fetchCustomers()
+  }, [])
 
-  const addReservation = () => {
-    const reservationToAdd = {
-      ...newReservation,
-      reservationID: `R${reservations.length + 1}`.padStart(4, '0'),
-      billID: `B${reservations.length + 1}`.padStart(4, '0'),
-      customerID: isNewCustomer ? `C${customers.length + 1}`.padStart(4, '0') : selectedCustomer
-    }
-    setReservations([...reservations, reservationToAdd])
-    setNewReservation({
-      reservationID: '',
-      room: '',
-      reservedFrom: '',
-      reservedTo: '',
-      tariff: 0,
-      billID: '',
-      customerID: ''
-    })
-    setIsAddReservationOpen(false)
-  }
-
-  const updateReservation = () => {
-    if (editingReservation) {
-      setReservations(reservations.map(reservation => 
-        reservation.reservationID === editingReservation.reservationID ? editingReservation : reservation
-      ))
-      setEditingReservation(null)
+  const fetchReservations = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/reservation/all')
+      
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].customerID = response.data[i].customerID || response.data[i].customerId
+        response.data[i].reservationID = response.data[i].reservationID || response.data[i].reservationId
+        response.data[i].roomId = response.data[i].roomID || response.data[i].roomId
+        response.data[i].startDateTime = new Date(response.data[i].startDateTime.dateString + " " + response.data[i].startDateTime.timeString).toISOString()
+        response.data[i].endDateTime = new Date(response.data[i].endDateTime.dateString + " " + response.data[i].endDateTime.timeString).toISOString()
+      }
+      setReservations(response.data)
+    } catch (error) {
+      console.error('Error fetching reservations:', error)
     }
   }
+  const fetchRoomTypes = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/roomtype/list')
+      setRoomTypes(response.data)
+    } catch (error) {
+      console.error('Error fetching room types:', error)
+    }
+  }
+  const fetchRooms = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/api/reservation/available',{roomType: roomType, startDateTime: new Date(newReservation.startDateTime).toISOString(), endDateTime: new Date(newReservation.endDateTime).toISOString()})
+      setRooms(response.data)
+    } catch (error) {
+      console.error('Error fetching rooms:', error)
+    }
+  }
 
-  const deleteReservation = (reservationID: string) => {
-    setReservations(reservations.filter(reservation => reservation.reservationID !== reservationID))
+  const fetchCustomers = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/customers')
+      setCustomers(response.data)
+    } catch (error) {
+      console.error('Error fetching customers:', error)
+    }
+  }
+
+  const handleNewReservation = async () => {
+    try {
+      if (isExistingCustomer) {
+        await axios.post('http://localhost:8080/api/reservation/add', newReservation)
+      } else {
+        const customerResponse = await axios.post('http://localhost:8080/api/hotelcustomer/add', newCustomer)
+        const customerID = customerResponse.data.customerId
+        await axios.post('http://localhost:8080/api/reservation/add', { ...newReservation, customerID })
+      }
+      fetchReservations()
+      setIsNewReservationOpen(false)
+      resetNewReservationForm()
+    } catch (error) {
+      console.error('Error creating reservation:', error)
+    }
+  }
+
+  const resetNewReservationForm = () => {
+    setNewReservation({})
+    setNewCustomer({})
+    setCurrentStep(1)
+    setRoomType('')
+    setAvailableRooms([])
+    setIsExistingCustomer(true)
+  }
+
+  const handleNextStep = async () => {
+    if (currentStep === 1) {
+      try {
+        const response = await axios.post('http://localhost:8080/api/reservation/available', {
+            roomType: roomType,
+            startDateTime: newReservation.startDateTime,
+            endDateTime: newReservation.endDateTime
+        })
+        setAvailableRooms(response.data)
+        setCurrentStep(2)
+      } catch (error) {
+        console.error('Error fetching available rooms:', error)
+      }
+    } else if (currentStep === 2) {
+      setCurrentStep(3)
+    }
+  }
+
+  const renderReservationStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="roomType">Room Type</Label>
+                <Select onValueChange={(value) => setRoomType(value)}>
+                  <SelectTrigger id="roomType">
+                    <SelectValue placeholder="Select room type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {roomTypes.map((roomType) => (
+                      <SelectItem key={roomType.roomTypeId} value={roomType.roomTypeId}>
+                        {roomType.roomTypeName} (${roomType.tariff})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="startDateTime">Check-in Date</Label>
+                <Input
+                  id="startDateTime"
+                  type="datetime-local"
+                  value={newReservation.startDateTime || ''}
+                  onChange={(e) => setNewReservation({ ...newReservation, startDateTime: e.target.value })}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="endDateTime">Check-out Date</Label>
+                <Input
+                  id="endDateTime"
+                  type="datetime-local"
+                  value={newReservation.endDateTime || ''}
+                  onChange={(e) => setNewReservation({ ...newReservation, endDateTime: e.target.value })}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleNextStep}>Next</Button>
+            </DialogFooter>
+          </>
+        )
+      case 2:
+        return (
+          <>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="roomId">Available Rooms</Label>
+                <Select onValueChange={(value) => setNewReservation({ ...newReservation, roomId: value })}>
+                  <SelectTrigger id="roomId">
+                    <SelectValue placeholder="Select a room" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableRooms.map((room) => (
+                      <SelectItem key={room.roomId} value={room.roomId}>
+                        {room.roomId} - {room.type} (Capacity: {room.capacity})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleNextStep}>Next</Button>
+            </DialogFooter>
+          </>
+        )
+      case 3:
+        return (
+          <>
+            <div className="grid w-full items-center gap-4">
+              <div className="flex flex-col space-y-1.5">
+                <Label>Customer Type</Label>
+                <Select onValueChange={(value) => setIsExistingCustomer(value === 'existing')}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select customer type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="existing">Existing Customer</SelectItem>
+                    <SelectItem value="new">New Customer</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {isExistingCustomer ? (
+                <div className="flex flex-col space-y-1.5">
+                  <Label htmlFor="customerID">Customer</Label>
+                  <Select onValueChange={(value) => setNewReservation({ ...newReservation, customerID: value })}>
+                    <SelectTrigger id="customerID">
+                      <SelectValue placeholder="Select a customer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {customers.map((customer) => (
+                        <SelectItem key={customer.customerID} value={customer.customerID}>
+                          {customer.name} ({customer.email})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      value={newCustomer.name || ''}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="address">Address</Label>
+                    <Input
+                      id="address"
+                      value={newCustomer.address || ''}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, address: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input
+                      id="phone"
+                      value={newCustomer.phone || ''}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-1.5">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={newCustomer.email || ''}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+            <DialogFooter>
+              <Button onClick={handleNewReservation}>Create Reservation</Button>
+            </DialogFooter>
+          </>
+        )
+      default:
+        return null
+    }
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold tracking-tight">Reservation Management</h1>
-        <Dialog open={isAddReservationOpen} onOpenChange={setIsAddReservationOpen}>
+        <Dialog open={isNewReservationOpen} onOpenChange={setIsNewReservationOpen}>
           <DialogTrigger asChild>
-            <Button>Add Reservation</Button>
+            <Button onClick={() => setIsNewReservationOpen(true)}>New Reservation</Button>
           </DialogTrigger>
-          <DialogContent className="max-w-md">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add New Reservation</DialogTitle>
-              <DialogDescription>Enter the details for the new reservation.</DialogDescription>
+              <DialogTitle>Create New Reservation</DialogTitle>
+              <DialogDescription>Fill in the details for the new reservation.</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="customer" className="text-right">Customer</Label>
-                <Select onValueChange={(value) => {
-                  setSelectedCustomer(value)
-                  setIsNewCustomer(value === 'new')
-                }}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select customer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {customers.map((customer) => (
-                      <SelectItem key={customer.customerID} value={customer.customerID}>
-                        {customer.name} ({customer.phone})
-                      </SelectItem>
-                    ))}
-                    <SelectItem value="new">Add New Customer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {isNewCustomer && (
-                <>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="newCustomerName" className="text-right">Name</Label>
-                    <Input
-                      id="newCustomerName"
-                      value={newCustomer.name}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="newCustomerPhone" className="text-right">Phone</Label>
-                    <Input
-                      id="newCustomerPhone"
-                      value={newCustomer.phone}
-                      onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
-                      className="col-span-3"
-                    />
-                  </div>
-                </>
-              )}
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="room" className="text-right">Room</Label>
-                <Select onValueChange={(value) => setNewReservation({ ...newReservation, room: value })}>
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select room" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {rooms.map((room) => (
-                      <SelectItem key={room.roomID} value={room.roomID}>
-                        {room.roomID} ({room.roomType})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="reservedFrom" className="text-right">From</Label>
-                <Input
-                  id="reservedFrom"
-                  type="date"
-                  value={newReservation.reservedFrom}
-                  onChange={(e) => setNewReservation({ ...newReservation, reservedFrom: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="reservedTo" className="text-right">To</Label>
-                <Input
-                  id="reservedTo"
-                  type="date"
-                  value={newReservation.reservedTo}
-                  onChange={(e) => setNewReservation({ ...newReservation, reservedTo: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="tariff" className="text-right">Tariff</Label>
-                <Input
-                  id="tariff"
-                  type="number"
-                  value={newReservation.tariff}
-                  onChange={(e) => setNewReservation({ ...newReservation, tariff: parseFloat(e.target.value) })}
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={addReservation}>Add Reservation</Button>
-            </DialogFooter>
+            {renderReservationStep()}
           </DialogContent>
         </Dialog>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Reservations</CardTitle>
+          <CardTitle>All Reservations</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Room</TableHead>
-                <TableHead>From</TableHead>
-                <TableHead>To</TableHead>
-                <TableHead>Tariff</TableHead>
-                <TableHead>Bill ID</TableHead>
+                <TableHead>Reservation ID</TableHead>
+                <TableHead>Room ID</TableHead>
                 <TableHead>Customer ID</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead>Check-in</TableHead>
+                <TableHead>Check-out</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {reservations.map((reservation) => (
                 <TableRow key={reservation.reservationID}>
                   <TableCell>{reservation.reservationID}</TableCell>
-                  <TableCell>{reservation.room}</TableCell>
-                  <TableCell>{reservation.reservedFrom}</TableCell>
-                  <TableCell>{reservation.reservedTo}</TableCell>
-                  <TableCell>${reservation.tariff}</TableCell>
-                  <TableCell>{reservation.billID}</TableCell>
+                  <TableCell>{reservation.roomId}</TableCell>
                   <TableCell>{reservation.customerID}</TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingReservation(reservation)}>
-                      Edit
-                    </Button>
-                    <Button variant="destructive" size="sm" onClick={() => deleteReservation(reservation.reservationID)}>
-                      Delete
-                    </Button>
-                  </TableCell>
+                  <TableCell>{format(new Date(reservation.startDateTime), 'PPpp')}</TableCell>
+                  <TableCell>{format(new Date(reservation.endDateTime), 'PPpp')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
-
-      {editingReservation && (
-        <Dialog open={!!editingReservation} onOpenChange={() => setEditingReservation(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Reservation</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-room" className="text-right">Room</Label>
-                <Select 
-                  value={editingReservation.room}
-                  onValueChange={(value) => setEditingReservation({ ...editingReservation, room: value })}
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select room" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {rooms.map((room) => (
-                      <SelectItem key={room.roomID} value={room.roomID}>
-                        {room.roomID} ({room.roomType})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-reservedFrom" className="text-right">From</Label>
-                <Input
-                  id="edit-reservedFrom"
-                  type="date"
-                  value={editingReservation.reservedFrom}
-                  onChange={(e) => setEditingReservation({ ...editingReservation, reservedFrom: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-reservedTo" className="text-right">To</Label>
-                <Input
-                  id="edit-reservedTo"
-                  type="date"
-                  value={editingReservation.reservedTo}
-                  onChange={(e) => setEditingReservation({ ...editingReservation, reservedTo: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-tariff" className="text-right">Tariff</Label>
-                <Input
-                  id="edit-tariff"
-                  type="number"
-                  value={editingReservation.tariff}
-                  onChange={(e) => setEditingReservation({ ...editingReservation, tariff: parseFloat(e.target.value) })}
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={updateReservation}>Update Reservation</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   )
 }

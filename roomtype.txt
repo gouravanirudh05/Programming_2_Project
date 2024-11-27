@@ -1,1 +1,2 @@
-RT1-STANDARD-500-nothin:sauna:bathouse\
+RT1-STANDARD-12-nothin:sauna:bathouse\
+RT2-DELUXE-122-bath:suana\

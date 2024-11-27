@@ -9,7 +9,7 @@
 struct Reservation {
     int reservationId;
     std::string roomDetails;
-    std::string guestName;
+    std::string customerID;
     std::string startDateTime;
     std::string endDateTime;
     double totalAmount;

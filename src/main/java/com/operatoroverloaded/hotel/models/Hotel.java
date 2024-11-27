@@ -34,6 +34,130 @@ public class Hotel {
     private String state;
     private String country;
     private int rating;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Restaurant getRestaurant() {
+        return restaurant;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
+
+    public static RoomStore getRoomStore() {
+        return roomStore;
+    }
+
+    public static void setRoomStore(RoomStore roomStore) {
+        Hotel.roomStore = roomStore;
+    }
+
+    public static RoomTypeStore getRoomTypeStore() {
+        return roomTypeStore;
+    }
+     public  String getAddress()
+     {
+        String address=location+","+city+","+state+','+country;
+        return address;
+     }
+    public static void setRoomTypeStore(RoomTypeStore roomTypeStore) {
+        Hotel.roomTypeStore = roomTypeStore;
+    }
+
+    public static BillStore getBillStore() {
+        return billStore;
+    }
+
+    public static void setBillStore(BillStore billStore) {
+        Hotel.billStore = billStore;
+    }
+
+    public static HotelCustomerStore getHotelCustomerStore() {
+        return hotelCustomerStore;
+    }
+
+    public static void setHotelCustomerStore(HotelCustomerStore hotelCustomerStore) {
+        Hotel.hotelCustomerStore = hotelCustomerStore;
+    }
+
+    public static RestaurantCustomerStore getRestaurantCustomerStore() {
+        return restaurantCustomerStore;
+    }
+
+    public static void setRestaurantCustomerStore(RestaurantCustomerStore restaurantCustomerStore) {
+        Hotel.restaurantCustomerStore = restaurantCustomerStore;
+    }
+
+    public static LogonStore getLogonStore() {
+        return logonStore;
+    }
+
+    public static void setLogonStore(LogonStore logonStore) {
+        Hotel.logonStore = logonStore;
+    }
+
     private String phone;
 
     public Restaurant restaurant;
