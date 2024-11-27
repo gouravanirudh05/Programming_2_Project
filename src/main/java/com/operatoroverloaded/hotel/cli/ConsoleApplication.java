@@ -60,9 +60,9 @@ public class ConsoleApplication implements CommandLineRunner {
             String email = scanner.next();
             print("Password: ");
             String psw = scanner.next();
-            if (psw.equals("MASTER_KEY"))
+            if (psw.equals("MASTER_KEY")) {
                 handleInput();
-            else {
+            } else {
                 user = logonStore.tryLogon(email, psw);
                 if (user != null) {
                     billStore.load();
