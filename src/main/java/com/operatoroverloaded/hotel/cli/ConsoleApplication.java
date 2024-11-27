@@ -194,7 +194,13 @@ public class ConsoleApplication implements CommandLineRunner {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     private void overview() {
-
+        print("GRAND HOTEL");
+        print("123 Main Street, New York, NY");
+        print("Contact us at: \nPh.No.:+1 12345-67890\nEmail:grandHotel@someprovider.com");
+        print("Total Rooms: " + roomStore.getRooms().size());
+        print("Active Reservations: " + reservationStore.getAllReservations().size());
+        print("Total Staff: " + staffStore.getAllStaff().size());
+        print("Restaurant Orders: " + restaurantCustomerStore.getCustomers().size());
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -290,19 +296,24 @@ public class ConsoleApplication implements CommandLineRunner {
                     print("Enter details one-by-one:");
                     print("ReservationID:");
                     int reservationId = Integer.parseInt(scanner.nextLine());
-                    print("roomId:");
+                    print("Room ID:");
                     String roomId = scanner.nextLine();
                     print("Reserved uptill(Enter DateTime in the format 'YYYY/MM/DD-hh:mm:ss'):");
                     DateTime end = DateTime.parse(scanner.nextLine());
-                    print("Guest Name:");
-                    String guestName = scanner.nextLine();
-                    print("Bill ID:");
-                    int billId = Integer.parseInt(scanner.nextLine());
-
-                    reservationStore
-                            .addReservation(new Reservation(reservationId, roomId, guestName, DateTime.getCurrentTime(),
-                                    end, billId));
-                    print("Reservation added successfully");
+                    print("Customer ID:");
+                    int customerID = Integer.parseInt(scanner.nextLine());
+                    if (hotelCustomerStore.getCustomer(customerID) == null)
+                        print("Error: Invalid CustomerID(does not exist)");
+                    else {
+                        print("Bill ID:");
+                        int billId = Integer.parseInt(scanner.nextLine());
+                        reservationStore
+                                .addReservation(
+                                        new Reservation(reservationId, roomId, "" + customerID,
+                                                DateTime.getCurrentTime(),
+                                                end, billId));
+                        print("Reservation added successfully");
+                    }
                     break;
 
                 case 3:
