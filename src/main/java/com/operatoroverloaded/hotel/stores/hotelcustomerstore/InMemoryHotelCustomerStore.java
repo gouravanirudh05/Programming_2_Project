@@ -1,8 +1,6 @@
 package com.operatoroverloaded.hotel.stores.hotelcustomerstore;
 import java.util.ArrayList;
 
-// import java.util.List;
-
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 
 public class InMemoryHotelCustomerStore extends HotelCustomerStore {
@@ -33,8 +31,14 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
 
-    public void addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
+    public HotelCustomer addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
+        for (HotelCustomer x : customers)
+        if (customer.getPhone() == x.getPhone())
+        return x; // assuming that every customer has a unique phone number
+        customer.setCustomerId(id);
+        id++;
         customers.add(customer);
+        return customer;
     }
 
 // -----------------------------------------------------------------Delete Operations-------------------------------------------------------------------------------------------------------------

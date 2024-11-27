@@ -2,7 +2,6 @@ package com.operatoroverloaded.hotel.cli;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +11,12 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.operatoroverloaded.hotel.models.*;
+import com.operatoroverloaded.hotel.models.DateTime;
+import com.operatoroverloaded.hotel.models.Logon;
+import com.operatoroverloaded.hotel.models.Reservation;
+import com.operatoroverloaded.hotel.models.Room;
+import com.operatoroverloaded.hotel.models.RoomType;
+import com.operatoroverloaded.hotel.models.Staff;
 import com.operatoroverloaded.hotel.stores.billstore.BillStore;
 import com.operatoroverloaded.hotel.stores.dishstore.DishStore;
 import com.operatoroverloaded.hotel.stores.dishstore.InMemoryDishStore;
@@ -280,12 +284,12 @@ public class ConsoleApplication implements CommandLineRunner {
                             Integer.parseInt(endDT.get(2)), Integer.parseInt(endDT.get(3)),
                             Integer.parseInt(endDT.get(4)), Integer.parseInt(endDT.get(5)));
                     print("Guest Name:");
-                    String guestName = scanner.nextLine();
+                    String customerID = scanner.nextLine();
                     print("Bill ID:");
                     int billId = Integer.parseInt(scanner.nextLine());
 
                     reservationStore
-                            .addReservation(new Reservation(reservationId, roomId, guestName, start, end, billId));
+                            .addReservation(new Reservation(reservationId, roomId, customerID, start, end, billId));
                     print("Reservation added successfully");
                     break;
 

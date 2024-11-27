@@ -34,7 +34,7 @@ public abstract class ReservationStore {
 
     // New abstract method to create a reservation if no overlap exists
     public abstract Reservation createReservationIfNoOverlap(
-            int reservationId, String roomID, String guestName,
+            int reservationId, String roomID, String customerID,
             DateTime startDateTime, DateTime endDateTime, int billId
     );
 
@@ -43,7 +43,7 @@ public abstract class ReservationStore {
         Reservation existing = createReservationIfNoOverlap(
                 reservation.getReservationId(),
                 reservation.getRoomID(),
-                reservation.getGuestName(),
+                reservation.getcustomerID(),
                 reservation.getStartDateTime(),
                 reservation.getEndDateTime(),
                 reservation.getBillId()

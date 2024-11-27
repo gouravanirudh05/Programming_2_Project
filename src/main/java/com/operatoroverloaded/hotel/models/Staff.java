@@ -23,6 +23,18 @@ public class Staff{
         this.assignedTo = assignedTo;
     }
 
+    public Staff(int staffID, String name, float salary, int phone, String address, String role, String workingFrom, String retiredOn, String assignedTo) {
+        this.staffID = staffID;
+        this.name = name;
+        this.salary = salary;
+        this.phone = phone;
+        this.address = address;
+        this.role = role;
+        this.workingFrom = DateTime.parse(workingFrom);
+        this.retiredOn = DateTime.parse(retiredOn);
+        this.assignedTo = assignedTo;
+    }
+
     public Staff(int staffID, String name, float salary, int phone, String address, String role, DateTime workingFrom, DateTime retiredOn, String assignedTo) {
         this.staffID = staffID;
         this.name = name;

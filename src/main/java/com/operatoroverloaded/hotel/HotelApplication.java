@@ -76,12 +76,20 @@ public class HotelApplication {
         } else {
             app.profiles("cli").web(WebApplicationType.NONE); // Console application
         }
+        System.out.println("Loading data...");
         RoomStore.getInstance().load();
+        System.err.println("1");
         RoomTypeStore.getInstance().load();
+        System.err.println("2");
         BillStore.getInstance().load();
+        System.err.println("3");
         LogonStore.getInstance().load();
+        System.err.println("4");
         // StaffStore.getInstance().loadFromFile();
-        // DishStore.getInstance().loadFromFile();
+        DishStore.getInstance().loadFromFile();
+        System.err.println("5");
+        TableStore.getInstance().loadFromFile();
+
         app.run(args);
         new Timer().scheduleAtFixedRate(new TimerTask(){
             @Override
@@ -108,11 +116,16 @@ public class HotelApplication {
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }
-                // try {
-                //     DishStore.getInstance().saveToFile();;
-                // } catch (Exception e) {
-                //     totalError += e.getMessage() + "\n";
-                // }
+                try {
+                    StaffStore.getInstance().saveToFile();;
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    TableStore.getInstance().saveToFile();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
             }
         },0,5000);
         

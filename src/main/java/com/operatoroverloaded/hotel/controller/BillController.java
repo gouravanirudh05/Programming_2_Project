@@ -56,7 +56,16 @@ public class BillController {
         billStore.removeBill(billId);
         return ResponseEntity.ok().body("Bill removed successfully");
     }
-
+    @GetMapping("/paid/{billId}")
+    public ResponseEntity<?> getPaidBill(@PathVariable int billId,@RequestBody JsonNode json) {
+        boolean payed = json.get("payed").asBoolean();
+        Bill bill = billStore.getBill(billId);
+        if (bill == null) {
+            return ResponseEntity.status(404).body("Bill not found");
+        }
+        bill.setPayed(payed);
+        return ResponseEntity.ok(bill);
+    }
     @PostMapping("/update/{billId}")
     public ResponseEntity<?> updateBill(@PathVariable int billId, @RequestBody JsonNode json) {
         ArrayList<String> purchased = new ArrayList<String>();
@@ -72,5 +81,10 @@ public class BillController {
         DateTime payedOn = DateTime.fromISOString(json.get("payedOn").asText());
         billStore.updateBill(billId, purchased, purchasedList, quantity, payedOn,payed, customerID);
         return ResponseEntity.ok().body("Bill updated successfully");
+    }
+    @GetMapping("/list")
+    public ResponseEntity<?> listBills(){
+        ArrayList<Bill> bills = billStore.getBills();
+        return ResponseEntity.ok().body(bills);
     }
 }   

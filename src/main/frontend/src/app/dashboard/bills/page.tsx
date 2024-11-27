@@ -22,17 +22,18 @@ import { Checkbox } from '@/components/ui/checkbox'
 // } from '@/components/ui/checkbox'
 import { format } from 'date-fns'
 
+type Item = {
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 type Bill = {
-  billID: number; // Updated from string to number
-  amount: number;
-  purchased: string[];
-  purchasedList: number[]; // Renamed from purchasedVal to purchasedList
-  quantity: number[];
+  billId: number;
   payed: boolean;
-  generatedOn: string;
-  payedOn: string | null;
   customerID: string;
-  reservationID?: string; // Optional
+  items: Item[];
+  payedOn: string | null; // `null` if not paid
 };
 
 export default function BillManagement() {
@@ -41,15 +42,27 @@ export default function BillManagement() {
   const [printableBill, setPrintableBill] = useState<Bill | null>(null);
 
   // Fetch bills from the backend
-  useEffect(() => {
     const fetchBills = async () => {
       try {
-        const response = await axios.get('/api/bills/list'); // Replace with your backend endpoint
+        const response = await axios.get('http://localhost:8080/api/bill/list'); // Replace with your backend endpoint
+        for (let i = 0; i < response.data.length; i++) {
+          response.data[i].items = [];
+          response.data[i].customerID = response.data[i].customerID || response.data[i].customerId
+          for (let j = 0; j < response.data[i].quantity.length; j++) {
+            console.log(response.data[i].purchased[j])
+            response.data[i].items.push({
+              name: response.data[i].purchased[j],
+              price: response.data[i].purchasedList[j],
+              quantity: response.data[i].quantity[j],
+            });
+          }
+        }
         setBills(response.data);
       } catch (error) {
         console.error('Error fetching bills:', error);
       }
     };
+  useEffect(() => {
     fetchBills();
   }, []);
 
@@ -57,8 +70,8 @@ export default function BillManagement() {
   const updateBill = async () => {
     if (editingBill) {
       try {
-        await axios.post(`/api/bills/add/${editingBill.billID}`, editingBill); // Replace with your backend endpoint
-        setBills(bills.map((bill) => (bill.billID === editingBill.billID ? editingBill : bill)));
+        await axios.put(`http://localhost:8080/api/bill/update/${editingBill.billId}`, editingBill); // Replace with your backend endpoint
+        fetchBills()
         setEditingBill(null);
       } catch (error) {
         console.error('Error updating bill:', error);
@@ -81,31 +94,38 @@ export default function BillManagement() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Bill ID</TableHead>
-                <TableHead>Amount</TableHead>
                 <TableHead>Customer ID</TableHead>
-                <TableHead>Reservation ID</TableHead>
-                <TableHead>Generated On</TableHead>
+                <TableHead>Items</TableHead>
                 <TableHead>Paid</TableHead>
                 <TableHead>Paid On</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {bills.map((bill) => (
-                <TableRow key={bill.billID}>
-                  <TableCell>{bill.billID}</TableCell>
-                  <TableCell>${bill.amount}</TableCell>
+              {bills.map((bill, index) => (
+                <TableRow key={index}>
                   <TableCell>{bill.customerID}</TableCell>
-                  <TableCell>{bill.reservationID || 'N/A'}</TableCell>
-                  <TableCell>{new Date(bill.generatedOn).toLocaleString()}</TableCell>
-                  <TableCell>{bill.payed ? 'Yes' : 'No'}</TableCell>
-                  <TableCell>{bill.payedOn ? new Date(bill.payedOn).toLocaleString() : 'N/A'}</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm" onClick={() => setEditingBill(bill)} className="mr-2">
+                    {bill.items.map((item) => item.name).join(', ')}
+                  </TableCell>
+                  <TableCell>{bill.payed ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>
+                    {bill.payedOn ? new Date(bill.payedOn).toLocaleString() : 'N/A'}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingBill(bill)}
+                      className="mr-2"
+                    >
                       View/Edit
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => generatePrintableBill(bill)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => generatePrintableBill(bill)}
+                    >
                       Print Bill
                     </Button>
                   </TableCell>
@@ -116,6 +136,7 @@ export default function BillManagement() {
         </CardContent>
       </Card>
 
+      {/* Edit Bill Dialog */}
       {editingBill && (
         <Dialog open={!!editingBill} onOpenChange={() => setEditingBill(null)}>
           <DialogContent className="max-w-md">
@@ -124,47 +145,44 @@ export default function BillManagement() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div>
-                <strong>Bill ID:</strong> {editingBill.billID}
-              </div>
-              <div>
                 <strong>Customer ID:</strong> {editingBill.customerID}
               </div>
               <div>
-                <strong>Reservation ID:</strong> {editingBill.reservationID || 'N/A'}
-              </div>
-              <div>
-                <strong>Generated On:</strong> {new Date(editingBill.generatedOn).toLocaleString()}
-              </div>
-              <div>
-  <strong>Items:</strong>
-  <ul className="list-disc list-inside">
-    {editingBill.purchased.map((item, index) => (
-      <li key={index}>
-        {item}: ${editingBill.purchasedList[index]} (Quantity: {editingBill.quantity[index]})
-      </li>
-    ))}
-  </ul>
-</div>
-              <div>
-                <strong>Total Amount:</strong> ${editingBill.amount}
+                <strong>Items:</strong>
+                <ul className="list-disc list-inside">
+                  {editingBill.items.map((item, index) => (
+                    <li key={index}>
+                      {item.name}: ${item.price.toFixed(2)} (Quantity: {item.quantity})
+                    </li>
+                  ))}
+                </ul>
               </div>
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="paid"
                   checked={editingBill.payed}
-                  onCheckedChange={(checked) => {
-                    setEditingBill({
+                  onCheckedChange={async (checked) => {
+                    const updatedBill = {
                       ...editingBill,
                       payed: checked as boolean,
-                      payedOn: checked ? new Date().toISOString() : null
-                    })
+                      payedOn: checked ? new Date().toISOString() : null,
+                    };
+                    setEditingBill(updatedBill);
+                    try {
+                      await axios.get(`http://localhost:8080/api/bill/payed/${editingBill.billId}`, editingBill.payed);
+                    } catch (error) {
+                      console.error('Error updating payment status:', error);
+                    }
                   }}
                 />
                 <label htmlFor="paid">Paid</label>
               </div>
               {editingBill.payed && (
                 <div>
-                  <strong>Paid On:</strong> {editingBill.payedOn ? new Date(editingBill.payedOn).toLocaleString() : 'N/A'}
+                  <strong>Paid On:</strong>{' '}
+                  {editingBill.payedOn
+                    ? new Date(editingBill.payedOn).toLocaleString()
+                    : 'N/A'}
                 </div>
               )}
             </div>
@@ -175,6 +193,7 @@ export default function BillManagement() {
         </Dialog>
       )}
 
+      {/* Printable Bill Dialog */}
       {printableBill && (
         <Dialog open={!!printableBill} onOpenChange={() => setPrintableBill(null)}>
           <DialogContent className="max-w-3xl">
@@ -189,37 +208,45 @@ export default function BillManagement() {
               </div>
               <div className="mb-6">
                 <h3 className="text-xl font-semibold mb-2">Bill Details</h3>
-                <p><strong>Bill ID:</strong> {printableBill.billID}</p>
                 <p><strong>Customer ID:</strong> {printableBill.customerID}</p>
-                <p><strong>Reservation ID:</strong> {printableBill.reservationID || 'N/A'}</p>
-                <p><strong>Generated On:</strong> {format(new Date(printableBill.generatedOn), 'PPpp')}</p>
+                <p>
+                  <strong>Paid On:</strong>{' '}
+                  {printableBill.payedOn
+                    ? new Date(printableBill.payedOn).toLocaleString()
+                    : 'N/A'}
+                </p>
               </div>
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Item</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Total</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {printableBill.purchased.map((item, index) => (
+                  {printableBill.items.map((item, index) => (
                     <TableRow key={index}>
-                      <TableCell>{item}</TableCell>
-                      <TableCell className="text-right">${printableBill.purchasedList[index].toFixed(2)}</TableCell>
+                      <TableCell>{item.name}</TableCell>
+                      <TableCell>${item.price.toFixed(2)}</TableCell>
+                      <TableCell>{item.quantity}</TableCell>
+                      <TableCell>${(item.price * item.quantity).toFixed(2)}</TableCell>
                     </TableRow>
                   ))}
                   <TableRow>
                     <TableCell className="font-bold">Total</TableCell>
-                    <TableCell className="text-right font-bold">${printableBill.amount.toFixed(2)}</TableCell>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell className="font-bold">
+                      $
+                      {printableBill.items
+                        .reduce((total, item) => total + item.price * item.quantity, 0)
+                        .toFixed(2)}
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
-              <div className="mt-6">
-                <p><strong>Payment Status:</strong> {printableBill.payed ? 'Paid' : 'Unpaid'}</p>
-                {printableBill.payedOn && (
-                  <p><strong>Paid On:</strong> {format(new Date(printableBill.payedOn), 'PPpp')}</p>
-                )}
-              </div>
               <div className="mt-8 text-center text-sm text-gray-500">
                 <p>Thank you for choosing our hotel. We hope you enjoyed your stay!</p>
               </div>
@@ -231,5 +258,5 @@ export default function BillManagement() {
         </Dialog>
       )}
     </div>
-  )
+  );
 }

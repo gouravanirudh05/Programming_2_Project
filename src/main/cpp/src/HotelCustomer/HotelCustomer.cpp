@@ -104,7 +104,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
 
 
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomerstore_InMemoryHotelCustomerStore_storeToFile(JNIEnv *env, jobject obj){
-
+    cout << "CAME HERE" << endl;
     // Getting the customers ArrayList attribute of InMemoryHotelCustomerStore
     jclass hotelCustomerClass = env->FindClass("com/operatoroverloaded/hotel/models/HotelCustomer");
     jclass InMemoryHotelCustomerStoreClass = env->GetObjectClass(obj);

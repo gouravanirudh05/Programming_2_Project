@@ -1,6 +1,6 @@
 package com.operatoroverloaded.hotel.models;
+
 import java.util.ArrayList;
-import java.util.List;
 
 import com.operatoroverloaded.hotel.stores.billstore.InMemoryBillStore;
 
@@ -10,7 +10,7 @@ public class Reservation {
     private DateTime startDateTime; 
     private DateTime endDateTime;   
     private double totalAmount;     
-    private String guestName;       
+    private String customerID;       
     private int billId;             
 
     public Reservation() {
@@ -19,14 +19,14 @@ public class Reservation {
         this.startDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.endDateTime = new DateTime(0, 0, 0, 0, 0, 0);
         this.totalAmount = 0.0;
-        this.guestName = "";
+        this.customerID = "";
         this.billId = -1;
     }
 
-    public Reservation(int reservationId, String roomID, String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
+    public Reservation(int reservationId, String roomID, String customerID, DateTime startDateTime, DateTime endDateTime, int billId) {
         this.reservationId = reservationId;
         this.roomID = roomID;
-        this.guestName = guestName;
+        this.customerID = customerID;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.billId = billId;
@@ -73,12 +73,12 @@ public class Reservation {
         this.totalAmount = totalAmount;
     }
 
-    public String getGuestName() {
-        return guestName;
+    public String getcustomerID() {
+        return customerID;
     }
 
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
+    public void setcustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public int getBillId() {
@@ -97,7 +97,7 @@ public class Reservation {
                 ", startDateTime=" + startDateTime.getDateString() + " " + startDateTime.getTimeString() +
                 ", endDateTime=" + endDateTime.getDateString() + " " + endDateTime.getTimeString() +
                 ", totalAmount=" + totalAmount +
-                ", guestName='" + guestName + '\'' +
+                ", customerID='" + customerID + '\'' +
                 ", billId=" + (billId != -1 ? billId : "No Bill") +
                 '}';
     }
@@ -105,7 +105,7 @@ public class Reservation {
     // New method to attempt creating a reservation
     public static Reservation createReservationIfNoOverlap(
            ArrayList<Reservation> reservations, int reservationId, String roomID, 
-            String guestName, DateTime startDateTime, DateTime endDateTime, int billId) {
+            String customerID, DateTime startDateTime, DateTime endDateTime, int billId) {
 
         // Check for overlaps with existing reservations
         for (Reservation reservation : reservations) {
@@ -117,7 +117,7 @@ public class Reservation {
         }
 
         // No overlaps, create and return the new reservation
-        return new Reservation(reservationId, roomID, guestName, startDateTime, endDateTime, billId);
+        return new Reservation(reservationId, roomID, customerID, startDateTime, endDateTime, billId);
     }
     public boolean updateReservation(DateTime newStartDateTime, DateTime newEndDateTime, float dailyRate) {
     InMemoryBillStore billStore = InMemoryBillStore.getInstance();

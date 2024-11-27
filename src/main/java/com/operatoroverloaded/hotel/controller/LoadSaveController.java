@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.operatoroverloaded.hotel.models.Staff;
 import com.operatoroverloaded.hotel.stores.billstore.BillStore;
 import com.operatoroverloaded.hotel.stores.dishstore.DishStore;
 import com.operatoroverloaded.hotel.stores.hotelcustomerstore.HotelCustomerStore;
@@ -15,6 +16,7 @@ import com.operatoroverloaded.hotel.stores.roomstore.InMemoryRoomStore;
 import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 import com.operatoroverloaded.hotel.stores.roomtypestore.InMemoryRoomTypeStore;
 import com.operatoroverloaded.hotel.stores.roomtypestore.RoomTypeStore;
+import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
 import com.operatoroverloaded.hotel.stores.tablestore.InMemoryTableStore;
 import com.operatoroverloaded.hotel.stores.tablestore.TableStore;
 
@@ -29,6 +31,7 @@ public class LoadSaveController {
     private final RoomStore roomStore;
     private final RoomTypeStore roomTypeStore;
     private final TableStore tableStore;
+    private final StaffStore staff;
 
     public LoadSaveController() {
         this.billStore = BillStore.getInstance();
@@ -39,10 +42,16 @@ public class LoadSaveController {
         this.roomStore = InMemoryRoomStore.getInstance();
         this.roomTypeStore = InMemoryRoomTypeStore.getInstance();
         this.tableStore = InMemoryTableStore.getInstance();
+        this.staff = StaffStore.getInstance();
     }
     @GetMapping("/loadall")
     public ResponseEntity<?> loadAll() {
         String totalError = "";
+        // try {
+        //     staff.loadFromFile();
+        // } catch (Exception e) {
+        //     totalError += e.getMessage() + "\n";
+        // }
         try {
             hotelCustomerStore.loadFromFile();
         } catch (Exception e) {
@@ -94,16 +103,27 @@ public class LoadSaveController {
     @GetMapping("/saveall")
     public ResponseEntity<?> saveAll() {
         String totalError = "";
+        try{
+            staff.saveToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
+        try {
+            tableStore.saveToFile();
+        } catch (Exception e) {
+            totalError += e.getMessage() + "\n";
+        }
         try {
             hotelCustomerStore.storeToFile();
+            System.out.println("Printed IG");
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }
-        try {
-            restaurantCustomerStore.storeToFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
+        // try {
+        //     restaurantCustomerStore.storeToFile();
+        // } catch (Exception e) {
+        //     totalError += e.getMessage() + "\n";
+        // }
         try {
             roomStore.save();
         }catch(Exception e) {            
@@ -126,12 +146,6 @@ public class LoadSaveController {
         }
         try {
             dishStore.saveToFile();
-        } catch (Exception e) {
-            totalError += e.getMessage() + "\n";
-        }
-        
-        try {
-            tableStore.saveToFile();
         } catch (Exception e) {
             totalError += e.getMessage() + "\n";
         }
