@@ -1,7 +1,6 @@
 package com.operatoroverloaded.hotel.cli;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -532,6 +531,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 default:
+                    print("Invalid choice! Please choose from 1 to 11...");
                     break;
             }
 
@@ -596,6 +596,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 default:
+                    print("Invalid choice! Please choose from 1 to 5...");
                     break;
             }
         }
@@ -656,6 +657,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 default:
+                    print("Invalid choice! Please choose from 1 to 4...");
                     break;
             }
         }
