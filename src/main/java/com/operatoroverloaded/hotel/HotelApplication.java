@@ -91,10 +91,12 @@ public class HotelApplication {
         System.err.println("6");
         StaffStore.getInstance().loadFromFile();
         System.err.println("7");
-        // HotelCustomerStore.getInstance().loadFromFile();
+        HotelCustomerStore.getInstance().loadFromFile();
         System.err.println("8");
         ReservationStore.getInstance().load();
         System.err.println("9");
+        RestaurantCustomerStore.getInstance().loadFromFile();
+        System.err.println("10");
         
 
         app.run(args);
@@ -138,13 +140,13 @@ public class HotelApplication {
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }
-                // try {
-                //     HotelCustomerStore.getInstance().saveToFile();
-                // } catch (Exception e) {
-                //     totalError += e.getMessage() + "\n";
-                // }
                 try {
-                    RestaurantCustomerStore.getInstance().storeToFile();;
+                    HotelCustomerStore.getInstance().storeToFile();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    RestaurantCustomerStore.getInstance().storeToFile();
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }
