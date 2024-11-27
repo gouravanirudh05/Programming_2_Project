@@ -22,6 +22,10 @@ public class DateTime {
         this.second = second;
     }
 
+    public int getYear() {
+        return year;
+    }
+
     // Parses an ISO 8601 string into a DateTime object
     public static DateTime fromISOString(String isoString) {
         // Parse the ISO string into a LocalDateTime object
@@ -140,6 +144,7 @@ public class DateTime {
 
     // Returns a DateTime object from a string
     public static DateTime fromString(String date, String time) {
+        System.err.println(date + " " + time);
         String[] dateParts = date.split("-");
         String[] timeParts = time.split(":");
         return new DateTime(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),

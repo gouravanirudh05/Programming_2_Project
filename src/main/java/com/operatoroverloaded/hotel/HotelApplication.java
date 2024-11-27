@@ -93,6 +93,8 @@ public class HotelApplication {
         System.err.println("7");
         // HotelCustomerStore.getInstance().loadFromFile();
         System.err.println("8");
+        ReservationStore.getInstance().load();
+        System.err.println("9");
         
 
         app.run(args);
@@ -143,6 +145,11 @@ public class HotelApplication {
                 // }
                 try {
                     RestaurantCustomerStore.getInstance().storeToFile();;
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                try {
+                    ReservationStore.getInstance().save();
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }

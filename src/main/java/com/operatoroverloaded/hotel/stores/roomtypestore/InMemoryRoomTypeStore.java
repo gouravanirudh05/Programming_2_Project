@@ -51,6 +51,7 @@ public class InMemoryRoomTypeStore extends RoomTypeStore {
     
     public  RoomType findRoomType(String roomTypeId){
         for(RoomType r: roomTypes){
+            System.err.println(roomTypeId+" "+r.getRoomTypeId());
             if(r.getRoomTypeId().equals(roomTypeId)){
                 return r;
             }
