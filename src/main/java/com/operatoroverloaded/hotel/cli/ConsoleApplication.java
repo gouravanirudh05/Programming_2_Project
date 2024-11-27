@@ -11,12 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.operatoroverloaded.hotel.models.DateTime;
-import com.operatoroverloaded.hotel.models.Logon;
-import com.operatoroverloaded.hotel.models.Reservation;
-import com.operatoroverloaded.hotel.models.Room;
-import com.operatoroverloaded.hotel.models.RoomType;
-import com.operatoroverloaded.hotel.models.Staff;
+import com.operatoroverloaded.hotel.models.*;
 import com.operatoroverloaded.hotel.stores.billstore.BillStore;
 import com.operatoroverloaded.hotel.stores.dishstore.DishStore;
 import com.operatoroverloaded.hotel.stores.dishstore.InMemoryDishStore;
@@ -67,13 +62,22 @@ public class ConsoleApplication implements CommandLineRunner {
             print("Password: ");
             String psw = scanner.next();
             user = logonStore.tryLogon(email, psw);
-            if (user != null)
+            if (user != null) {
+                billStore.load();
+                dishStore.loadFromFile();
+                hotelCustomerStore.loadFromFile();
+                logonStore.load();
+                reservationStore.load();
+                restaurantCustomerStore.loadFromFile();
+                roomStore.load();
+                roomTypeStore.load();
+                staffStore.loadFromFile();
+                tableStore.loadFromFile();
                 break;
-            else {
+            } else {
                 if (i == 0) {
                     print("Login attempts exhausted.. Please restart the application.");
                     System.exit(1);
-                    ;
                 }
                 print("Login failed (" + i + " attempts left).. \nPlease try again.");
             }
@@ -110,8 +114,8 @@ public class ConsoleApplication implements CommandLineRunner {
                         2. Room Management
                         3. Reservation Management
                         4. Staff Management
-                        5. Restaurant Management
-                        6. Customer Management
+                        5. Restaurant & RestaurantCustomer Management
+                        6. Hotel Customer Management
                         7. Bill Management
                         8. EXIT
                     """;
@@ -119,6 +123,7 @@ public class ConsoleApplication implements CommandLineRunner {
             print(message);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
                     overview();
@@ -150,7 +155,7 @@ public class ConsoleApplication implements CommandLineRunner {
 
                 case 5:
                     if (restaurantAccess) {
-                        restaurantManagement();
+                        restaurantNrestaurantCustomerManagement();
                         print("\n\n" + "-".repeat(100) + "\n\n");
                     } else {
                         print("Access Denied.");
@@ -158,7 +163,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 6:
-                    customerManagement();
+                    hotelCustomerManagement();
                     print("\n\n" + "-".repeat(100) + "\n\n");
                     break;
 
@@ -169,6 +174,16 @@ public class ConsoleApplication implements CommandLineRunner {
 
                 case 8:
                     print("Exiting...");
+                    billStore.save();
+                    dishStore.saveToFile();
+                    hotelCustomerStore.storeToFile();
+                    logonStore.save();
+                    reservationStore.save();
+                    restaurantCustomerStore.storeToFile();
+                    roomStore.save();
+                    roomTypeStore.save();
+                    staffStore.saveToFile();
+                    tableStore.saveToFile();
                     System.exit(0);
 
                 default:
@@ -201,6 +216,7 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
                     ArrayList<RoomType> roomTypes = roomTypeStore.getRoomTypes();
@@ -260,6 +276,7 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
                     ArrayList<Reservation> reservations = reservationStore.getAllReservations();
@@ -273,23 +290,16 @@ public class ConsoleApplication implements CommandLineRunner {
                     int reservationId = Integer.parseInt(scanner.nextLine());
                     print("roomId:");
                     String roomId = scanner.nextLine();
-                    print("Starting DateTime(as Y:M:D:H:M:S):");
-                    ArrayList<String> startDT = new ArrayList<>(Arrays.asList(scanner.nextLine().split(":")));
-                    DateTime start = new DateTime(Integer.parseInt(startDT.get(0)), Integer.parseInt(startDT.get(1)),
-                            Integer.parseInt(startDT.get(2)), Integer.parseInt(startDT.get(3)),
-                            Integer.parseInt(startDT.get(4)), Integer.parseInt(startDT.get(5)));
-                    print("Ending DateTime(as Y:M:D:H:M:S):");
-                    ArrayList<String> endDT = new ArrayList<>(Arrays.asList(scanner.nextLine().split(":")));
-                    DateTime end = new DateTime(Integer.parseInt(endDT.get(0)), Integer.parseInt(endDT.get(1)),
-                            Integer.parseInt(endDT.get(2)), Integer.parseInt(endDT.get(3)),
-                            Integer.parseInt(endDT.get(4)), Integer.parseInt(endDT.get(5)));
+                    print("Reserved uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    DateTime end = DateTime.parse(scanner.nextLine());
                     print("Guest Name:");
-                    String customerID = scanner.nextLine();
+                    String guestName = scanner.nextLine();
                     print("Bill ID:");
                     int billId = Integer.parseInt(scanner.nextLine());
 
                     reservationStore
-                            .addReservation(new Reservation(reservationId, roomId, customerID, start, end, billId));
+                            .addReservation(new Reservation(reservationId, roomId, guestName, DateTime.getCurrentTime(),
+                                    end, billId));
                     print("Reservation added successfully");
                     break;
 
@@ -328,9 +338,10 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
-                   ArrayList<Staff> staff = staffStore.getAllStaff();
+                    ArrayList<Staff> staff = staffStore.getAllStaff();
                     for (Staff s : staff)
                         print(s.toString());
                     break;
@@ -380,11 +391,11 @@ public class ConsoleApplication implements CommandLineRunner {
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void restaurantManagement() {
+    private void restaurantNrestaurantCustomerManagement() {
         while (true) {
             String options = """
 
-                    Restaurant Management
+                    Restaurant & Restaurant Customer Management
 
                     1. View all Dishes
                     2. Add Dish
@@ -394,9 +405,9 @@ public class ConsoleApplication implements CommandLineRunner {
                     5. Add Table
                     6. Remove Table
 
-                    7. View all Orders
-                    8. Create Order
-                    9. Remove Order
+                    7. View all Orders by all Restaurant Customers
+                    8. Create Order for new Restaurant Customer
+                    9. Remove Order for existing Restaurant Customer
                     10. Generate Order Bill
 
                     11. Back to Dashboard
@@ -405,47 +416,119 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
+                    ArrayList<Dish> dishes = dishStore.getDishes();
+                    for (Dish dish : dishes)
+                        print(dish.toString());
                     break;
 
                 case 2:
+                    print("Enter details one-by-one");
+                    print("Enter dish ID:");
+                    int dishId = Integer.parseInt(scanner.nextLine());
+                    print("Enter dish name:");
+                    String dishName = scanner.nextLine();
+                    print("Enter dish price");
+                    float price = Float.parseFloat(scanner.nextLine());
+                    print("Enter dish type(E.g. 'appetizer' or 'dessert'):");
+                    String dishType = scanner.nextLine();
+                    print("Enter dish calorie count:");
+                    int calories = Integer.parseInt(scanner.nextLine());
+                    print("Enter preperation time (in minutes):");
+                    int preparationTime = Integer.parseInt(scanner.nextLine());
+                    Dish newDish = new Dish(dishId, dishName, price, dishType, calories, preparationTime, true);
+                    dishStore.addDish(newDish);
+                    print("Dish added successfully");
                     break;
 
                 case 3:
+                    print("Enter dish ID to remove:");
+                    dishId = Integer.parseInt(scanner.nextLine());
+                    dishStore.deleteDish(dishId);
+                    print("Dish deleted successfully");
                     break;
 
                 case 4:
+                    ArrayList<Table> tables = tableStore.getTables();
+                    for (Table table : tables)
+                        print(table.toString());
                     break;
 
                 case 5:
+                    print("Enter details one-by-one:");
+                    print("Table Number:");
+                    int tableNumber = Integer.parseInt(scanner.nextLine());
+                    print("Seating Capacity:");
+                    int seatingCapacity = Integer.parseInt(scanner.nextLine());
+                    Table newTable = new Table(tableNumber, seatingCapacity);
+                    tableStore.addTable(newTable);
+                    print("Table added successfully");
                     break;
 
                 case 6:
+                    print("Enter table number to remove:");
+                    tableNumber = Integer.parseInt(scanner.nextLine());
+                    tableStore.deleteTable(tableNumber);
+                    print("Table removed successfully");
                     break;
 
                 case 7:
-                    break;
+                    // TO BE IMPLEMENTED
+                    // ArrayList<RestaurantCustomer> restaurantCustomers =
+                    // restaurantCustomerStore.getCustomers();
+                    // for (RestaurantCustomer restaurantCustomer : restaurantCustomers)
+                    // print(restaurantCustomer.toString());
+                    // break;
 
                 case 8:
+                    print("Enter customer details one-by-one:");
+                    print("Enter customer ID:");
+                    int restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                    print("Customer name:");
+                    String restaurantCustomerName = scanner.nextLine();
+                    print("Email:");
+                    String email = scanner.nextLine();
+                    print("Phone No.:");
+                    String phoneNo = scanner.nextLine();
+                    print("Address:");
+                    String address = scanner.nextLine();
+                    DateTime fromTime = DateTime.getCurrentTime();
+                    print("Reserved uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    DateTime endTime = DateTime.parse(scanner.nextLine());
+
+                    print("Now, enter order details one-by-one:");
+                    print("Table ID for customer:");
+                    int tableId = Integer.parseInt(scanner.nextLine());
+                    print("Server ID:");
+                    int serverId = Integer.parseInt(scanner.nextLine());
+                    RestaurantCustomer restaurantCustomer = new RestaurantCustomer(restaurantCustomerId,
+                            restaurantCustomerName, email, phoneNo, address, tableId, serverId, fromTime, endTime);
+                    print("Enter number of dishes to be added:");
+                    int n = Integer.parseInt(scanner.nextLine());
+                    for (int i = 0; i < n; i++) {
+                        dishId = Integer.parseInt(scanner.nextLine());
+                        if (dishStore.findDish(dishId) == null)
+                            print("Error: Could not add dish (Does not exist)");
+                        else {
+                            restaurantCustomer.addDish(dishId);
+                            print("Dish added successfully");
+                        }
+                    }
                     break;
 
                 case 9:
+                    print("Enter Restaurant Customer ID to be removed:");
+                    restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                    restaurantCustomerStore.deleteCustomer(restaurantCustomerId);
                     break;
 
                 case 10:
+                    // TO BE IMPLEMENTED LATER
                     break;
 
                 case 11:
-                    break;
-
-                case 12:
-                    break;
-
-                case 13:
-                    break;
-
-                case 14:
                     break;
 
                 default:
@@ -453,15 +536,16 @@ public class ConsoleApplication implements CommandLineRunner {
             }
 
         }
+
     }
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    private void customerManagement() {
+    private void hotelCustomerManagement() {
         while (true) {
             String options = """
 
-                    Customer Management
+                    Hotel Customer Management
 
                     1. View all Customers
                     2. Add Customer
@@ -472,17 +556,40 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
+                    ArrayList<HotelCustomer> hotelCustomers = hotelCustomerStore.getCustomers();
+                    for (HotelCustomer hotelCustomer : hotelCustomers)
+                        print(hotelCustomer.toString());
                     break;
 
                 case 2:
+                    print("Enter customer details one-by-one:");
+                    print("Enter customer ID:");
+                    int hotelCustomerId = Integer.parseInt(scanner.nextLine());
+                    print("Customer name:");
+                    String hotelCustomerName = scanner.nextLine();
+                    print("Email:");
+                    String email = scanner.nextLine();
+                    print("Phone No.:");
+                    String phoneNo = scanner.nextLine();
+                    print("Address:");
+                    String address = scanner.nextLine();
+                    DateTime fromTime = DateTime.getCurrentTime();
+                    print("Customer uptill(Enter DateTime in the format 'YYYY-MM-DD hh:mm:ss'):");
+                    DateTime endTime = DateTime.parse(scanner.nextLine());
+                    HotelCustomer hotelCustomer = new HotelCustomer(hotelCustomerId, hotelCustomerName, email, phoneNo,
+                            address, fromTime, endTime);
+                    hotelCustomerStore.addCustomer(hotelCustomer);
+                    print("Hotel Customer added successfully");
                     break;
 
                 case 3:
-                    break;
-
-                case 4:
+                    print("Enter Customer ID to remove:");
+                    hotelCustomerId = Integer.parseInt(scanner.nextLine());
+                    hotelCustomerStore.deleteCustomer(hotelCustomerId);
+                    print("Hotel Customer successfully removed.");
                     break;
 
                 case 5:
@@ -503,7 +610,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     Bill Management
 
                     1. View all Bills
-                    2. View Bill Details
+                    2. View Customer's Bill
                     3. Delete Bill
                     4. Back to Dashboard
                     """;
@@ -511,14 +618,38 @@ public class ConsoleApplication implements CommandLineRunner {
             print(options);
 
             int choice = scanner.nextInt();
+            scanner.nextLine();
             switch (choice) {
                 case 1:
+                    ArrayList<Bill> bills = billStore.getBills();
+                    for (Bill bill : bills)
+                        print(bill.toString());
                     break;
 
                 case 2:
+                    print("Enter Customer ID:");
+                    String customerID = scanner.nextLine();
+                    bills = billStore.getBills();
+                    boolean billFound = false;
+                    for (Bill bill : bills) {
+                        if (customerID.equals(bill.getCustomerID())) {
+                            print(bill.toString());
+                            billFound = true;
+                        }
+                    }
+                    if (!billFound)
+                        print("No bill found for this customer ID");
                     break;
 
                 case 3:
+                    print("Enter Bill ID to be deleted:");
+                    int billId = Integer.parseInt(scanner.nextLine());
+                    if (billStore.getBill(billId) == null)
+                        print("Error: Invalid bill ID(does not exist)");
+                    else {
+                        billStore.removeBill(billId);
+                        print("Bill successfully removed");
+                    }
                     break;
 
                 case 4:
@@ -630,7 +761,7 @@ public class ConsoleApplication implements CommandLineRunner {
 // System.out.println("\nListing all rooms:");
 
 // // Retrieve all rooms from the store
-//ArrayList<Room> rooms = roomStore.getRooms();
+// ArrayList<Room> rooms = roomStore.getRooms();
 
 // if (rooms.isEmpty()) {
 // System.out.println("No rooms available.");
