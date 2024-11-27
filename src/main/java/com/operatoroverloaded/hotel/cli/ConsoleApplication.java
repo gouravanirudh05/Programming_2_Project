@@ -610,7 +610,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     Bill Management
 
                     1. View all Bills
-                    2. View Bill Details
+                    2. View Customer's Bill
                     3. Delete Bill
                     4. Back to Dashboard
                     """;
@@ -627,10 +627,29 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 2:
-
+                    print("Enter Customer ID:");
+                    String customerID = scanner.nextLine();
+                    bills = billStore.getBills();
+                    boolean billFound = false;
+                    for (Bill bill : bills) {
+                        if (customerID.equals(bill.getCustomerID())) {
+                            print(bill.toString());
+                            billFound = true;
+                        }
+                    }
+                    if (!billFound)
+                        print("No bill found for this customer ID");
                     break;
 
                 case 3:
+                    print("Enter Bill ID to be deleted:");
+                    int billId = Integer.parseInt(scanner.nextLine());
+                    if (billStore.getBill(billId) == null)
+                        print("Error: Invalid bill ID(does not exist)");
+                    else {
+                        billStore.removeBill(billId);
+                        print("Bill successfully removed");
+                    }
                     break;
 
                 case 4:
