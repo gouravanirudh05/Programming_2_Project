@@ -246,8 +246,11 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 4:
                     print("Enter roomType Id to delete:");
                     roomTypeId = scanner.nextLine();
-                    roomTypeStore.deleteRoomType(roomTypeId);
-                    print("Room type deleted successfully");
+                    RoomType roomType = roomTypeStore.deleteRoomType(roomTypeId);
+                    if (roomType == null) {
+                        print("Error: Invalid RoomType ID(does not exist)");
+                    } else
+                        print("Room type deleted successfully");
                     break;
 
                 default:
@@ -305,8 +308,12 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 3:
                     print("Enter reservation ID to be deleted:");
                     reservationId = Integer.parseInt(scanner.nextLine());
-                    reservationStore.removeReservation(reservationId);
-                    print("Reservation deleted successfully");
+                    if (reservationStore.getReservation(reservationId) == null)
+                        print("Error: Invalid Reservation ID(does not exist)");
+                    else {
+                        reservationStore.removeReservation(reservationId);
+                        print("Reservation deleted successfully");
+                    }
                     break;
 
                 case 4:
@@ -373,8 +380,12 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 3:
                     print("Enter staff ID to remove:");
                     int staffID = Integer.parseInt(scanner.nextLine());
-                    staffStore.removeStaff(staffID);
-                    print("Staff removed successfully");
+                    if (staffStore.getStaffById(staffID) == null)
+                        print("Error: Invalid StaffID(does not exist)");
+                    else {
+                        staffStore.removeStaff(staffID);
+                        print("Staff removed successfully");
+                    }
                     break;
 
                 case 4:
@@ -407,7 +418,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     7. View all Orders by all Restaurant Customers
                     8. Create Order for new Restaurant Customer
                     9. Remove Order for existing Restaurant Customer
-                    10. Generate Order Bill
+                    10. Generate Order Bill for existing customer
 
                     11. Back to Dashboard
                     """;
@@ -445,8 +456,11 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 3:
                     print("Enter dish ID to remove:");
                     dishId = Integer.parseInt(scanner.nextLine());
-                    dishStore.deleteDish(dishId);
-                    print("Dish deleted successfully");
+                    Dish dish = dishStore.deleteDish(dishId);
+                    if (dish == null)
+                        print("Error: Invalid DishID(does not exist)");
+                    else
+                        print("Dish deleted successfully");
                     break;
 
                 case 4:
@@ -469,17 +483,18 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 6:
                     print("Enter table number to remove:");
                     tableNumber = Integer.parseInt(scanner.nextLine());
-                    tableStore.deleteTable(tableNumber);
-                    print("Table removed successfully");
+                    Table table = tableStore.deleteTable(tableNumber);
+                    if (table == null)
+                        print("Error: Invalid TableID(does not exist)");
+                    else
+                        print("Table removed successfully");
                     break;
 
                 case 7:
-                    // TO BE IMPLEMENTED
-                    // ArrayList<RestaurantCustomer> restaurantCustomers =
-                    // restaurantCustomerStore.getCustomers();
-                    // for (RestaurantCustomer restaurantCustomer : restaurantCustomers)
-                    // print(restaurantCustomer.toString());
-                    // break;
+                    ArrayList<RestaurantCustomer> restaurantCustomers = restaurantCustomerStore.getCustomers();
+                    for (RestaurantCustomer restaurantCustomer : restaurantCustomers)
+                        print(restaurantCustomer.viewOrder());
+                    break;
 
                 case 8:
                     print("Enter customer details one-by-one:");
@@ -524,7 +539,16 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 10:
-                    // TO BE IMPLEMENTED LATER
+                    print("Enter customerID:");
+                    restaurantCustomerId = Integer.parseInt(scanner.nextLine());
+                    restaurantCustomer = restaurantCustomerStore.getCustomer(restaurantCustomerId);
+                    if (restaurantCustomer == null)
+                        print("Error: Invalid Customer ID(does not exist)");
+                    else {
+                        ArrayList<Integer> billIds = restaurantCustomer.getBills();
+                        for (int billId : billIds)
+                            print(billStore.getBill(billId).toString());
+                    }
                     break;
 
                 case 11:
@@ -588,8 +612,12 @@ public class ConsoleApplication implements CommandLineRunner {
                 case 3:
                     print("Enter Customer ID to remove:");
                     hotelCustomerId = Integer.parseInt(scanner.nextLine());
-                    hotelCustomerStore.deleteCustomer(hotelCustomerId);
-                    print("Hotel Customer successfully removed.");
+                    if (hotelCustomerStore.getCustomer(hotelCustomerId) == null)
+                        print("Error: Invalid customerID(does not exist)");
+                    else {
+                        hotelCustomerStore.deleteCustomer(hotelCustomerId);
+                        print("Hotel Customer successfully removed.");
+                    }
                     break;
 
                 case 5:
