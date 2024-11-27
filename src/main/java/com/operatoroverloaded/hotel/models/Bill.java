@@ -71,7 +71,12 @@ public class Bill {
         this.generatedOn = DateTime.fromString(genDate.replace('/', '-'), genTime);
         this.payedOn = DateTime.fromString(payedDate.replace('/', '-'), payedTime);
     }
-
+    public DateTime getGeneratedOnDT() {
+        return generatedOn;
+    }
+    public DateTime getPayedOnDT() {
+        return payedOn;
+    }
     public int getBillId() {
         return billId;
     }

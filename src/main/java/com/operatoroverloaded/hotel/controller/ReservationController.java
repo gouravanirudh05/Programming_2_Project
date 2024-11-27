@@ -50,7 +50,7 @@ public class ReservationController {
         ArrayList<Float> purchasedList = new ArrayList<>();
         purchasedList.add(RoomTypeStore.getInstance().findRoomType(RoomStore.getInstance().findRoom(roomId).getRoomTypeId()).getTariff());
         ArrayList<Integer> quantity = new ArrayList<>();
-        quantity.add(1);
+        quantity.add((int) endDateTime.dateDifference(startDateTime)/(60*60*24));
 
         for (Reservation reservation : reservationStore.getAllReservations()) {
             if (reservation.getRoomID().equals(roomId) && 

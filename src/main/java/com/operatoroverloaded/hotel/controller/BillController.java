@@ -64,6 +64,7 @@ public class BillController {
             return ResponseEntity.status(404).body("Bill not found");
         }
         bill.setPayed(payed);
+        bill.setPayedOn(DateTime.getCurrentTime());
         return ResponseEntity.ok(bill);
     }
     @PostMapping("/update/{billId}")

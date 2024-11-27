@@ -95,4 +95,9 @@ public class RestaurantCustomerController {
         restaurantCustomerStore.updateCustomer(customerId, customer);
         return ResponseEntity.ok().body("Customer details updated successfully");
     }
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllCustomers(){
+        ArrayList<RestaurantCustomer> customers = restaurantCustomerStore.getCustomers();
+        return ResponseEntity.ok(customers);
+    }
 }
