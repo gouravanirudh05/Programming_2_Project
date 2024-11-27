@@ -33,14 +33,14 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
 
-    public int addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
+    public HotelCustomer addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
         for (HotelCustomer x : customers)
         if (customer.getPhone() == x.getPhone())
-        return x.getCustomerId(); // assuming that every customer has a unique phone number
+        return x; // assuming that every customer has a unique phone number
         customer.setCustomerId(id);
         id++;
         customers.add(customer);
-        return id - 1;
+        return customer;
     }
 
 // -----------------------------------------------------------------Delete Operations-------------------------------------------------------------------------------------------------------------

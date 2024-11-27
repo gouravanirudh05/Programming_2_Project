@@ -73,4 +73,9 @@ public class BillController {
         billStore.updateBill(billId, purchased, purchasedList, quantity, payedOn,payed, customerID);
         return ResponseEntity.ok().body("Bill updated successfully");
     }
+    @GetMapping("/list")
+    public ResponseEntity<?> listBills(){
+        ArrayList<Bill> bills = billStore.getBills();
+        return ResponseEntity.ok().body(bills);
+    }
 }   

@@ -33,7 +33,7 @@ type TableManagementProps = {
   setTables: React.Dispatch<React.SetStateAction<TableType[]>>
 }
 
-export default function TableManagement({ tables, setTables }: TableManagementProps) {
+export default function TableManagement() {
   const [newTable, setNewTable] = useState<TableType>({ 
     tableID: '', 
     capacity: 0, 
@@ -43,6 +43,8 @@ export default function TableManagement({ tables, setTables }: TableManagementPr
   })
   const [isAddTableOpen, setIsAddTableOpen] = useState(false)
   const [editingTable, setEditingTable] = useState<TableType | null>(null)
+  const [tables, setTables] = useState<TableType[]>([])
+  // const [customers, setCustomers] = useState<RestaurantCustomer[]>([])
 
   const addTable = () => {
     setTables([...tables, { ...newTable, tableID: `T${tables.length + 1}` }])

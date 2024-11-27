@@ -21,6 +21,7 @@ public class InMemoryLogonStore extends LogonStore {
     public InMemoryLogonStore() {
         this.logonData = new ArrayList<Logon>();
         this.load();
+        System.err.println("Logon store loaded");
     }
 
     // Getter for the logonData

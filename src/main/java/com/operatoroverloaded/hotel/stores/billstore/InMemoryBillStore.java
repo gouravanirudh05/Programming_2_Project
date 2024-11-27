@@ -56,10 +56,10 @@ public class InMemoryBillStore extends BillStore {
 
     // add a new bill to the billData
     @Override
-    public void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
+    public Bill addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
         // Check if the sizes of the lists are not the same and return if they are not
         if(purchased.size() != purchasedList.size() || purchasedList.size() != quantity.size()){
-            return;
+            return null;
         }
         // int billId,ArrayList<String> purchased, ArrayList<Float> purchasedList, 
         // ArrayList<Integer> quantity, DateTime payedOn, String customerID
@@ -73,6 +73,7 @@ public class InMemoryBillStore extends BillStore {
             customerID
         );
         this.billData.add(bill);
+        return bill;
     }
     
     // remove a bill from the billData based on the billId
@@ -100,5 +101,9 @@ public class InMemoryBillStore extends BillStore {
                 bill.setCustomerID(customerID);
             }
         }
+    }
+    @Override
+    public ArrayList<Bill> getBills() {
+        return new ArrayList<>(billData);
     }
 }
