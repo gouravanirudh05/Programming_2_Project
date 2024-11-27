@@ -34,29 +34,28 @@ public class RestaurantCustomerController {
     @PostMapping("/add")
     public ResponseEntity<?> addCustomer(@RequestBody JsonNode json) {
         JsonNode dishesNode = json.get("dishes"); // ArrayNode
-        int tabelId = json.get("tabelId").asInt();
-        int serverId = json.get("serverId").asInt();
+        int tabelId = json.get("tableId").asInt();
+        int serverId = -1;
         ArrayList<Integer> dishes = new ArrayList<>();
         for (JsonNode dish : dishesNode) {
             dishes.add(dish.asInt());
         }
         DateTime reservedTo = DateTime.fromISOString("2024-11-30T19:10:00.000Z");
         DateTime reservedFrom = DateTime.fromISOString("2024-11-30T19:10:00.000Z");
-        JsonNode billsNode = json.get("bills"); // ArrayNode
+
         ArrayList<Integer> bills = new ArrayList<>();
-        for (JsonNode bill : billsNode) {
-            bills.add(bill.asInt());
-        }
-        double bill_amt = json.get("billAmt").asDouble();
-        double bill_left = json.get("billLeft").asDouble();
-        double bill_payed = json.get("billPayed").asDouble();
-        String address = json.get("address").asText();
+        double bill_amt = 0;
+        double bill_left = 0;
+        double bill_payed = 0;
+        String address = "mail";
         String phone = json.get("phone").asText();
-        String email = json.get("email").asText();
+        String email = "mail@customer.in";
         String name = json.get("name").asText();
         RestaurantCustomer customer = new RestaurantCustomer(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo, dishes, tabelId, serverId);
-        // return ResponseEntity.ok().body("Done"); //it will return the id of the customer added
-        return ResponseEntity.ok().body(restaurantCustomerStore.addCustomer(customer)); //it will return the id of the customer added
+
+        restaurantCustomerStore.addCustomer(customer);
+        return ResponseEntity.ok().body("Done"); //it will return the id of the customer added
+        // return ResponseEntity.ok().body(restaurantCustomerStore.addCustomer(customer)); //it will return the id of the customer added
     }
     @PostMapping("/remove/{customerId}")
     public ResponseEntity<?> removeBill(@PathVariable int customerId) {
@@ -74,8 +73,8 @@ public class RestaurantCustomerController {
         }
         JsonNode reservedToNode = json.get("reservedTo");
         JsonNode reservedFromNode = json.get("reservedFrom");
-        DateTime reservedFrom = new DateTime(reservedFromNode.get("year").asInt(),reservedFromNode.get("month").asInt(), reservedFromNode.get("day").asInt(), reservedFromNode.get("hour").asInt(), reservedFromNode.get("minute").asInt(), reservedFromNode.get("second").asInt());
-        DateTime reservedTo = new DateTime(reservedToNode.get("year").asInt(),reservedToNode.get("month").asInt(), reservedToNode.get("day").asInt(), reservedToNode.get("hour").asInt(), reservedToNode.get("minute").asInt(), reservedToNode.get("second").asInt());
+        DateTime reservedFrom = DateTime.fromISOString(reservedFromNode.get("dateString").asText()+" "+reservedFromNode.get("timeString").asText());
+        DateTime reservedTo = DateTime.fromISOString(reservedToNode.get("dateString").asText()+" "+reservedToNode.get("timeString").asText());
         JsonNode billsNode = json.get("bills"); // ArrayNode
         ArrayList<Integer> bills = new ArrayList<>();
         for (JsonNode bill : billsNode) {
@@ -95,6 +94,6 @@ public class RestaurantCustomerController {
     @GetMapping("/list")
     public ResponseEntity<?> getAllCustomers(){
         ArrayList<RestaurantCustomer> customers = restaurantCustomerStore.getCustomers();
-        return ResponseEntity.ok(customers);
+        return ResponseEntity.ok().body(customers);
     }
 }
