@@ -63,6 +63,8 @@ export default function OrderManagement() {
   const [isNewCustomerDialogOpen, setIsNewCustomerDialogOpen] = useState(false)
   const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false)
   const [isBillDialogOpen, setIsBillDialogOpen] = useState(false)
+  const [isEditOrderDialogOpen, setIsEditOrderDialogOpen] = useState(false)
+  const [editingCustomer, setEditingCustomer] = useState<RestaurantCustomer | null>(null)
 
   useEffect(() => {
     fetchCustomers()
@@ -73,6 +75,11 @@ export default function OrderManagement() {
   const fetchCustomers = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/resturantcustomer/list')
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].id = response.data[i].customerId
+        response.data[i].reservedFrom = new Date(response.data[i].reservedFrom.dateString + " " + response.data[i].reservedFrom.timeString).toISOString()
+        response.data[i].reservedTo = new Date(response.data[i].reservedTo.dateString + " " + response.data[i].reservedTo.timeString).toISOString()
+      }
       setCustomers(response.data.filter((customer: RestaurantCustomer) => customer.tableId !== -1))
     } catch (error) {
       console.error('Error fetching customers:', error)
@@ -82,6 +89,9 @@ export default function OrderManagement() {
   const fetchDishes = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/dish/all')
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].id = response.data[i].dishID
+      }
       setDishes(response.data)
     } catch (error) {
       console.error('Error fetching dishes:', error)
@@ -110,7 +120,7 @@ export default function OrderManagement() {
         dishes: []
       }
       await axios.post('http://localhost:8080/api/resturantcustomer/add', customerData)
-      await axios.post(`http://localhost:8080/api/tables/update/${availableTable.tableNumber}`, { isOccupied: true })
+      await axios.post(`http://localhost:8080/api/table/occupy/${availableTable.tableNumber}`)
       fetchCustomers()
       fetchTables()
       setIsNewCustomerDialogOpen(false)
@@ -120,15 +130,11 @@ export default function OrderManagement() {
     }
   }
 
-  const handleAddDish = async (dishId: string) => {
+  const updateOrder = async () => {
     if (!selectedCustomer) return
     try {
-      const updatedCustomer = {
-        ...selectedCustomer,
-        dishes: [...selectedCustomer.dishes, dishId]
-      }
-      await axios.post(`http://localhost:8080/api/resturantcustomer/update/${selectedCustomer.id}`, updatedCustomer)
-      setSelectedCustomer(updatedCustomer)
+      await axios.post(`http://localhost:8080/api/resturantcustomer/update/${selectedCustomer.id}`, editingCustomer)
+      // setSelectedCustomer(editingCustomer)
       fetchCustomers()
     } catch (error) {
       console.error('Error adding dish:', error)
@@ -231,7 +237,8 @@ export default function OrderManagement() {
                   <TableCell>
                     <Button variant="outline" className="mr-2" onClick={() => {
                       setSelectedCustomer(customer)
-                      setIsOrderDialogOpen(true)
+                      setEditingCustomer(customer)
+                      setIsEditOrderDialogOpen(true)
                     }}>
                       Manage Order
                     </Button>
@@ -251,45 +258,65 @@ export default function OrderManagement() {
           </Table>
         </CardContent>
       </Card>
-
-      <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
-        <DialogContent>
+      <Dialog open={isEditOrderDialogOpen} onOpenChange={setIsEditOrderDialogOpen}>
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Manage Order</DialogTitle>
-            <DialogDescription>Add or remove dishes from the order.</DialogDescription>
+            <DialogTitle>Edit Order</DialogTitle>
+            <DialogDescription>Update the order details.</DialogDescription>
           </DialogHeader>
-          {selectedCustomer && (
+          {editingCustomer && (
             <div className="grid gap-4 py-4">
-              <h3>Current Order:</h3>
-              <ul>
-                {selectedCustomer.dishes.map((dishId) => {
-                  const dish = dishes.find(d => d.id === dishId)
-                  return dish ? (
-                    <li key={dish.id} className="flex justify-between items-center">
-                      <span>{dish.name} - ${dish.price}</span>
-                      <Button variant="destructive" size="sm" onClick={() => handleRemoveDish(dish.id)}>Remove</Button>
+              <div>
+                <strong>Customer:</strong> {editingCustomer.name}
+              </div>
+              <div>
+                <strong>Table:</strong> {editingCustomer.tableId}
+              </div>
+              <div>
+                <strong>Current Order:</strong>
+                <ul className="list-disc pl-5 mt-2">
+                  {editingCustomer.dishes.map((dish, index) => (
+                    <li key={index} className="flex items-center justify-between">
+                      <span>{dishes.find(d => d.id === dish)!.name}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setEditingCustomer({
+                          ...editingCustomer,
+                          dishes: editingCustomer.dishes.filter((_, i) => i !== index)
+                        })}
+                      >
+                        Remove
+                      </Button>
                     </li>
-                  ) : null
-                })}
-              </ul>
-              <h3>Add Dish:</h3>
-              <Select onValueChange={(value) => handleAddDish(value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a dish" />
-                </SelectTrigger>
-                <SelectContent>
-                  {dishes.map((dish) => (
-                    <SelectItem key={dish.id} value={dish.id}>
-                      {dish.name} - ${dish.price}
-                    </SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
+                </ul>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="add-dish" className="text-right">Add Dish</Label>
+                <Select onValueChange={(value) => setEditingCustomer({
+                  ...editingCustomer,
+                  dishes: [...editingCustomer.dishes, dishes.find(d => d.id === value).id]
+                })}>
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Add dish" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dishes.map((dish) => (
+                      <SelectItem key={dish.id} value={dish.id}>
+                        {dish.name} (${dish.price.toFixed(2)})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           )}
+          <DialogFooter>
+            <Button onClick={()=>{updateOrder()}}>Update Order</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
-
       <Dialog open={isBillDialogOpen} onOpenChange={setIsBillDialogOpen}>
         <DialogContent>
           <DialogHeader>
