@@ -733,7 +733,7 @@ public class ConsoleApplication implements CommandLineRunner {
                         return;
                     }
 
-                case 5:
+                case 4:
                     return;
 
                 default:
