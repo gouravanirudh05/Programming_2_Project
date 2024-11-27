@@ -1,5 +1,6 @@
 package com.operatoroverloaded.hotel.stores.hotelcustomerstore;
 import java.util.ArrayList;
+
 // import java.util.List;
 
 import com.operatoroverloaded.hotel.models.HotelCustomer;
@@ -16,7 +17,6 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 // -----------------------------------------------------------------Attributes-------------------------------------------------------------------------------------------------------------
 
     private ArrayList<HotelCustomer> customers;
-    private static int id = 0;
     private static boolean objectExists = false; // i want only one database for each class, so this keeps a track of
                                                  // whether a databse already exists or no
 
@@ -27,29 +27,25 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
             throw new Error("Hotel customer database already exists");
         }
         customers = new ArrayList<>();
-        id = 0;
         objectExists = true;
         // loadFromFile();
     }
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
 
-    public int addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
-        for (HotelCustomer x : customers)
-        if (customer.getPhone() == x.getPhone())
-        return x.getCustomerId(); // assuming that every customer has a unique phone number
-        customer.setCustomerId(id);
-        id++;
+    public void addCustomer(HotelCustomer customer) { // returns the id assigned to the customer by the database
         customers.add(customer);
-        return id - 1;
     }
 
 // -----------------------------------------------------------------Delete Operations-------------------------------------------------------------------------------------------------------------
 
     public void deleteCustomer(int id) {
-        for (int i = 0; i < customers.size(); i++)
-        if (customers.get(i).getCustomerId() == id)
-        customers.remove(i);
+        for (int i = 0; i < customers.size(); i++){
+            if (customers.get(i).getCustomerId() == id){
+                customers.remove(i);
+                return;
+            }
+        }
     }
 
 // -----------------------------------------------------------------Read Operations-------------------------------------------------------------------------------------------------------------
@@ -60,7 +56,7 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
     public int getCustomerId(HotelCustomer customer){
         for (int i =0; i<customers.size(); i++) if (customers.get(i).getPhone() == customer.getPhone()) return customers.get(i).getCustomerId();
-        return -1;
+        return 0;
     }
 
     public HotelCustomer getCustomer(int id){
@@ -72,9 +68,12 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
 
     public void updateCustomer(int id, HotelCustomer customer) {
         customer.setCustomerId(id);
-        for (int i = 0; i < customers.size(); i++)
-        if (customers.get(i).getCustomerId() == id)
-        customers.set(i, customer);
+        for (int i = 0; i < customers.size(); i++){
+        if (customers.get(i).getCustomerId() == id) {
+            customers.set(i, customer);
+            return;
+        }
+    }
     }
 
 // -----------------------------------------------------------------Incomplete methods-------------------------------------------------------------------------------------------------------------
