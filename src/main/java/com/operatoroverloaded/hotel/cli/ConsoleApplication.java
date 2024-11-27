@@ -258,7 +258,8 @@ public class ConsoleApplication implements CommandLineRunner {
                     } else
                         print("Room type deleted successfully");
                     break;
-
+                case 5:
+                    return;
                 default:
                     print("Invalid choice! Please choose from 1 to 4...");
                     break;
@@ -328,7 +329,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 4:
-                    break;
+                    return;
 
                 default:
                     print("Invalid choice! Please choose from 1 to 4...");
@@ -400,7 +401,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 4:
-                    break;
+                    return;
 
                 default:
                     print("Invalid choice! Please choose from 1 to 4...");
@@ -563,7 +564,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 11:
-                    break;
+                    return;
 
                 default:
                     print("Invalid choice! Please choose from 1 to 11...");
@@ -632,7 +633,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 5:
-                    break;
+                    return;
 
                 default:
                     print("Invalid choice! Please choose from 1 to 5...");
@@ -693,7 +694,7 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
 
                 case 4:
-                    break;
+                    return;
 
                 default:
                     print("Invalid choice! Please choose from 1 to 4...");
