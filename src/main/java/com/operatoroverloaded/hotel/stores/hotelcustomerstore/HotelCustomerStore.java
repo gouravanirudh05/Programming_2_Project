@@ -16,7 +16,7 @@ public abstract class HotelCustomerStore {
     }
     public abstract void loadFromFile();
     public abstract void storeToFile();
-    public abstract void addCustomer(HotelCustomer customer);
+    public abstract HotelCustomer addCustomer(HotelCustomer customer);
     public abstract void deleteCustomer(int id);
     public abstract ArrayList<HotelCustomer> getCustomers();
     public abstract HotelCustomer getCustomer(int id);

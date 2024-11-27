@@ -35,8 +35,6 @@ public class InMemoryHotelCustomerStore extends HotelCustomerStore {
         for (HotelCustomer x : customers)
         if (customer.getPhone() == x.getPhone())
         return x; // assuming that every customer has a unique phone number
-        customer.setCustomerId(id);
-        id++;
         customers.add(customer);
         return customer;
     }
