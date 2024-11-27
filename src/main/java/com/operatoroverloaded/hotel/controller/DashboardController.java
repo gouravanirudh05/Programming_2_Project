@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.operatoroverloaded.hotel.models.Bill;
 import com.operatoroverloaded.hotel.models.DateTime;
+import com.operatoroverloaded.hotel.models.Hotel;
 import com.operatoroverloaded.hotel.models.Reservation;
 import com.operatoroverloaded.hotel.models.Room;
-import com.operatoroverloaded.hotel.models.Hotel;
+import com.operatoroverloaded.hotel.stores.billstore.BillStore;
 import com.operatoroverloaded.hotel.stores.reservationstore.ReservationStore;
 import com.operatoroverloaded.hotel.stores.roomstore.RoomStore;
 import com.operatoroverloaded.hotel.stores.staffstore.StaffStore;
-// import com.operatoroverloaded.hotel.stores.restaurantstore.RestaurantOrderStore;
-
 @RestController
 @RequestMapping("/api/dashboard")
 public class DashboardController {
@@ -102,10 +102,12 @@ public class DashboardController {
     }
 
     private double calculateTodaysRevenue(ArrayList<Reservation> reservations, DateTime today) {
-        double revenue = 0.0;
-        for (Reservation reservation : reservations) {
-            if (isReservationActive(reservation, today)) {
-                revenue += reservation.getTotalAmount();
+        ArrayList<Bill> bills = BillStore.getInstance().getBills();
+        double revenue = 0.0, totalAmount = 0.0;
+        for (Bill bill : bills) {
+            System.out.println(bill.getPayedOnDT().dateDifference(today)+bill.getAmount());
+            if (Math.abs(bill.getPayedOnDT().dateDifference(today)) <= 1) {
+                totalAmount += bill.getAmount();
             }
         }
         return revenue;

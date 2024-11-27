@@ -1,6 +1,7 @@
 package com.operatoroverloaded.hotel.models;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
@@ -22,28 +23,43 @@ public class DateTime {
         this.second = second;
     }
 
-    public int getYear() {
-        return year;
-    }
+    // // Parses an ISO 8601 string into a DateTime object
+    // public static DateTime fromISOString(String isoString) {
+    //     // Parse the ISO string into a LocalDateTime object
+    //     LocalDateTime parsedDateTime = LocalDateTime.parse(
+    //             isoString.replace("Z", ""), // Remove 'Z' for UTC (if present)
+    //             DateTimeFormatter.ISO_DATE_TIME
+    //     );
 
-    // Parses an ISO 8601 string into a DateTime object
+    //     // Create and return a new DateTime object
+    //     return new DateTime(
+    //             parsedDateTime.getYear(),
+    //             parsedDateTime.getMonthValue(),
+    //             parsedDateTime.getDayOfMonth(),
+    //             parsedDateTime.getHour(),
+    //             parsedDateTime.getMinute(),
+    //             parsedDateTime.getSecond()
+    //     );
+    // }
+
     public static DateTime fromISOString(String isoString) {
-        // Parse the ISO string into a LocalDateTime object
-        LocalDateTime parsedDateTime = LocalDateTime.parse(
-                isoString.replace("Z", ""), // Remove 'Z' for UTC (if present)
-                DateTimeFormatter.ISO_DATE_TIME
-        );
+        // Parse the ISO string into an OffsetDateTime, handling the 'Z' (UTC)
+        OffsetDateTime parsedDateTime = OffsetDateTime.parse(isoString, DateTimeFormatter.ISO_DATE_TIME);
+
+        // Convert the OffsetDateTime to a LocalDateTime in the system's default zone
+        LocalDateTime localDateTime = parsedDateTime.toLocalDateTime();
 
         // Create and return a new DateTime object
         return new DateTime(
-                parsedDateTime.getYear(),
-                parsedDateTime.getMonthValue(),
-                parsedDateTime.getDayOfMonth(),
-                parsedDateTime.getHour(),
-                parsedDateTime.getMinute(),
-                parsedDateTime.getSecond()
+                localDateTime.getYear(),
+                localDateTime.getMonthValue(),
+                localDateTime.getDayOfMonth(),
+                localDateTime.getHour(),
+                localDateTime.getMinute(),
+                localDateTime.getSecond()
         );
     }
+
 
     // Gets the current time
     public static DateTime getCurrentTime() {

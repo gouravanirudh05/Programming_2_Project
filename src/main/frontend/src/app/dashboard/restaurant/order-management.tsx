@@ -72,7 +72,7 @@ export default function OrderManagement() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/restaurant-customers')
+      const response = await axios.get('http://localhost:8080/api/resturantcustomer/list')
       setCustomers(response.data.filter((customer: RestaurantCustomer) => customer.tableId !== -1))
     } catch (error) {
       console.error('Error fetching customers:', error)
@@ -81,7 +81,7 @@ export default function OrderManagement() {
 
   const fetchDishes = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/dishes')
+      const response = await axios.get('http://localhost:8080/api/dish/all')
       setDishes(response.data)
     } catch (error) {
       console.error('Error fetching dishes:', error)
@@ -90,7 +90,7 @@ export default function OrderManagement() {
 
   const fetchTables = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/tables')
+      const response = await axios.get('http://localhost:8080/api/table/all')
       setTables(response.data)
     } catch (error) {
       console.error('Error fetching tables:', error)
@@ -109,8 +109,8 @@ export default function OrderManagement() {
         tableId: availableTable.tableNumber,
         dishes: []
       }
-      await axios.post('http://localhost:8080/api/restaurant-customers', customerData)
-      await axios.put(`http://localhost:8080/api/tables/${availableTable.tableNumber}`, { isOccupied: true })
+      await axios.post('http://localhost:8080/api/resturantcustomer/add', customerData)
+      await axios.post(`http://localhost:8080/api/tables/update/${availableTable.tableNumber}`, { isOccupied: true })
       fetchCustomers()
       fetchTables()
       setIsNewCustomerDialogOpen(false)
@@ -127,7 +127,7 @@ export default function OrderManagement() {
         ...selectedCustomer,
         dishes: [...selectedCustomer.dishes, dishId]
       }
-      await axios.put(`http://localhost:8080/api/restaurant-customers/${selectedCustomer.id}`, updatedCustomer)
+      await axios.post(`http://localhost:8080/api/resturantcustomer/update/${selectedCustomer.id}`, updatedCustomer)
       setSelectedCustomer(updatedCustomer)
       fetchCustomers()
     } catch (error) {
@@ -142,7 +142,7 @@ export default function OrderManagement() {
         ...selectedCustomer,
         dishes: selectedCustomer.dishes.filter(id => id !== dishId)
       }
-      await axios.put(`http://localhost:8080/api/restaurant-customers/${selectedCustomer.id}`, updatedCustomer)
+      await axios.put(`http://localhost:8080/api/resturantcustomer/${selectedCustomer.id}`, updatedCustomer)
       setSelectedCustomer(updatedCustomer)
       fetchCustomers()
     } catch (error) {
@@ -152,7 +152,7 @@ export default function OrderManagement() {
 
   const handleClearTable = async (customerId: string, tableId: number) => {
     try {
-      await axios.put(`http://localhost:8080/api/restaurant-customers/${customerId}`, { tableId: -1 })
+      await axios.put(`http://localhost:8080/api/resturantcustomer/${customerId}`, { tableId: -1 })
       await axios.put(`http://localhost:8080/api/tables/${tableId}`, { isOccupied: false })
       fetchCustomers()
       fetchTables()

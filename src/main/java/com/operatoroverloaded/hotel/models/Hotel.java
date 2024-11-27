@@ -16,14 +16,14 @@ public class Hotel {
     }
 
     Hotel() {
-        this.name = "Hotel";
+        this.name = "Grand Hotel";
         this.description = "Hotel description";
-        this.location = "Hotel location";
-        this.city = "Hotel city";
-        this.state = "Hotel state";
-        this.country = "Hotel country";
+        this.location = "123 Main Street";
+        this.city = " New York";
+        this.state = "NY";
+        this.country = "USA";
         this.rating = 5;
-        this.phone = "Hotel phone";
+        this.phone = "+91 100 100 1000";
         restaurant = new Restaurant();
     }
 
