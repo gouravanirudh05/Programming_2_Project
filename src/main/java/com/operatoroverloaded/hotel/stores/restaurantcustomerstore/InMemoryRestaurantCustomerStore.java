@@ -12,7 +12,6 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 // -----------------------------------------------------------------Attributes-------------------------------------------------------------------------------------------------------------
 
     private ArrayList<RestaurantCustomer> restaurantCustomers;
-    private static int id = 0;
     private static boolean objectExists = false; // i want only one database for each class, so this keeps a track of
                                                  // whether a databse already exists or no
 
@@ -23,29 +22,24 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
             throw new IllegalStateException("Restaurant customer database already exists");
         }
         restaurantCustomers = new ArrayList<>();
-        id = 0;
         objectExists = true;
         // loadFromFile();
     }
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
 
-    public int addCustomer(RestaurantCustomer customer) { // returns the id assigned to the customer by the database
-        for (RestaurantCustomer x : restaurantCustomers)
-        if (customer.getPhone() == x.getPhone())
-        return x.getCustomerId(); // assuming that every customer has a unique phone number
-        customer.setCustomerId(id);
-        id++;
+    public void addCustomer(RestaurantCustomer customer) { // returns the id assigned to the customer by the database
         restaurantCustomers.add(customer);
-        return id - 1;
     }
 
 // -----------------------------------------------------------------Delete Operations-------------------------------------------------------------------------------------------------------------
 
     public void deleteCustomer(int id) {
         for (int i = 0; i < restaurantCustomers.size(); i++)
-        if (restaurantCustomers.get(i).getCustomerId() == id)
-        restaurantCustomers.remove(i);
+        if (restaurantCustomers.get(i).getCustomerId() == id){
+            restaurantCustomers.remove(i);
+            return;
+        }
     }
 
 // -----------------------------------------------------------------Read Operations-------------------------------------------------------------------------------------------------------------
@@ -56,7 +50,7 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 
     public int getCustomerId(RestaurantCustomer customer){
         for (int i =0; i<restaurantCustomers.size(); i++) if (restaurantCustomers.get(i).getPhone() == customer.getPhone()) return restaurantCustomers.get(i).getCustomerId();
-        return -1;
+        return 0;
     }
 
     public RestaurantCustomer getCustomer(int id){
@@ -67,10 +61,20 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 // -----------------------------------------------------------------Update Operations-------------------------------------------------------------------------------------------------------------
 
     public void updateCustomer(int id, RestaurantCustomer customer) {
-        customer.setCustomerId(id);
         for (int i = 0; i < restaurantCustomers.size(); i++)
-        if (restaurantCustomers.get(i).getCustomerId() == id)
-        restaurantCustomers.set(i, customer);
+            if (restaurantCustomers.get(i).getCustomerId() == id){
+            restaurantCustomers.set(i, customer);
+            break;
+        }
+    }
+
+    public String viewOrders(){
+        String str = "";
+        for (RestaurantCustomer rc : restaurantCustomers){
+            str = str + "Customer id: " + rc.getCustomerId() + '\n';
+            str = str + rc.viewOrder();
+        }
+        return str;
     }
 
 // -----------------------------------------------------------------Incomplete methods-------------------------------------------------------------------------------------------------------------

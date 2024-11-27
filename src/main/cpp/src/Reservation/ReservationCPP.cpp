@@ -13,7 +13,7 @@ std::string reservationToString(const Reservation& reservation) {
     std::ostringstream oss;
     oss << reservation.reservationId << " "
         << reservation.roomDetails << " "
-        << reservation.guestName << " "
+        << reservation.customerID << " "
         << reservation.startDateTime << " "
         << reservation.endDateTime << " "
         << reservation.totalAmount;
@@ -31,7 +31,7 @@ Reservation stringToReservation(const std::string& line) {
     reservation.reservationId = std::stoi(token);
 
     std::getline(iss, reservation.roomDetails, ' ');
-    std::getline(iss, reservation.guestName, ' ');
+    std::getline(iss, reservation.customerID, ' ');
     std::getline(iss, reservation.startDateTime, ' ');
     std::getline(iss, reservation.endDateTime, ' ');
 

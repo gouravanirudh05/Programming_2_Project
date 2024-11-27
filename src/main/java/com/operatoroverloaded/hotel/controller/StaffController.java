@@ -38,6 +38,7 @@ public class StaffController {
     @PostMapping("/add")
     public ResponseEntity<?> addStaff(@RequestBody JsonNode json) {
         int staffID = json.get("staffID").asInt();
+        staffID = staffStore.getAllStaff().size() + 1;
         String name = json.get("name").asText();
         float salary = (float) json.get("salary").asDouble();
         int phone = json.get("phone").asInt();

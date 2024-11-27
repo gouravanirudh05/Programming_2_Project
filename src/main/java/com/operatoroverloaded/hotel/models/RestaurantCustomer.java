@@ -1,6 +1,9 @@
 package com.operatoroverloaded.hotel.models;
 import java.util.ArrayList;
 
+import com.operatoroverloaded.hotel.stores.billstore.BillStore;
+import com.operatoroverloaded.hotel.stores.dishstore.DishStore;
+
 public class RestaurantCustomer extends Customer{
     private ArrayList<Integer> dishes;
     private int tableId;
@@ -13,8 +16,8 @@ public class RestaurantCustomer extends Customer{
     public RestaurantCustomer(){
         super();
         this.dishes = new ArrayList<Integer>();
-        this.tableId = -1;
-        this.serverId = -1;
+        this.tableId = 0;
+        this.serverId = 0;
     }
 
     public RestaurantCustomer(int id, String name, String email, String phone, String address, int tableid, int serverid, DateTime reservedfrom, DateTime reservedto){
@@ -45,7 +48,7 @@ public class RestaurantCustomer extends Customer{
     public void setTableId(int id){
         this.tableId = id;
     }
-    public void setserverId(int id){
+    public void setServerId(int id){
         this.serverId = id;
     }
 
@@ -89,6 +92,49 @@ public class RestaurantCustomer extends Customer{
         this.dishes = dishes;
         this.tableId = tableId;
         this.serverId = serverId;
+    }
+
+    @Override
+     public String toString(){
+        String str = "";
+        str = str + "Name: " + this.getName() + "\nEmail: " + this.getEmail() + "\nPhone number: " + this.getPhone() + "\nAddress: " + this.getAddress() + "\nTotal Bill amount: " + this.getBillAmount() + "\nBill payed: " + this.getBillPayed() + "\nBill left: " + this.getBillLeft();
+        ArrayList<Integer> bills = this.getBills();
+        BillStore store = BillStore.getInstance();
+        store.load();
+        if (bills.size() > 0) {
+            str = str + "\nBills:\n";
+            for (Integer i: bills){
+                Bill b = store.getBill(i);
+                str = str + b.toString();
+            }
+        }
+        str = str + "\nReserved from: " + reservedFrom.toString();
+        if (reservedTo.timeDifference(new DateTime(0,0,0,0,0,0)) != 0) str = str + "\nReserved to: " + reservedTo.toString();
+        DishStore store2 = DishStore.getInstance();
+        store2.loadFromFile();
+        if (dishes.size() > 0) {
+            str = str + "\nDishes:\n";
+            for (Integer i: dishes){
+                Dish r = store2.findDish(i);
+                str = str + r.toString();
+            }
+        }
+        str = str + "\nTable id: " + tableId;
+        str = str + "\nServer id: " + serverId;
+        return str + '\n';
+    }
+
+    public String viewOrder(){
+        String str = "";
+        DishStore store2 = DishStore.getInstance();
+        str = str + "\nDishes:\n";
+        for (Integer i: dishes){
+            Dish r = store2.findDish(i);
+            str = str + r.toString();
+        }
+        str = str + "\nTable id: " + tableId;
+        str = str + "\nServer id: " + serverId;
+        return str + '\n';
     }
 
 }

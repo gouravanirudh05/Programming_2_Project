@@ -13,7 +13,7 @@ public abstract class BillStore {
     public static void setInstance(BillStore billStore){
         BillStore.billStore = billStore;
     }
-    public abstract void addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID);
+    public abstract Bill addBill(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID);
     public abstract void removeBill(int billId);
     public abstract void updateBill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn,boolean payed, String customerID);
     public abstract void save();

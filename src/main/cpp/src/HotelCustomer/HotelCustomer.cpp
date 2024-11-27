@@ -23,7 +23,7 @@ string jStringToStdString(JNIEnv* env, jstring javaString) {
     }
 
     std::string cppString(utfString);
-    env->ReleaseStringUTFChars(javaString, utfString);
+    // env->ReleaseStringUTFChars(javaString, utfString);
     return cppString;
 }
 
@@ -51,6 +51,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
     infile.open("HotelCustomerStore.txt", ios::in);
     string customerData = "";
     while (getline(infile, customerData)) {
+        replace(customerData.begin(), customerData.end(), '-', ' ');
         jobject customer = env->NewObject(hotelCustomerClass, constructor);
 
         istringstream ss(customerData);
@@ -59,7 +60,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         double bill_amt, bill_payed, bill_left;
         
         ss >> customerId >> name >> email >> phone >> address >> bill_amt >> bill_payed >> bill_left;
-        
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setCustomerId", "(I)V"), customerId);
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setName", "(Ljava/lang/String;)V"), stdStringToJString(env, name));
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setEmail", "(Ljava/lang/String;)V"), stdStringToJString(env, email));
@@ -118,57 +118,65 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
     jmethodID arrayListGet = env->GetMethodID(arrayListClass, "get", "(I)Ljava/lang/Object;");
 
     jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
+ 
+    jclass IntegerClass = env->FindClass("java/lang/Integer");
 
     jint customerSize = env->CallIntMethod(hotelCustomerArray, arrayListSize);
-    ofstream outfile;
-    outfile.open("HotelCustomerStore.txt");
-    cout << customerSize << endl;
+    ofstream outfile("HotelCustomerStore.txt");
+    // outfile.open("HotelCustomerStore.txt");
     for (int i=0; i<customerSize; i++){
         jobject customer = env->CallObjectMethod(hotelCustomerArray, arrayListGet, i);
         jint id = env->CallIntMethod(customer, env->GetMethodID(hotelCustomerClass, "getCustomerId", "()I"));
+        outfile << id;
+        outfile << "-";
         string name = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getName", "()Ljava/lang/String;")));
+        outfile << name;
+        outfile << "-";
         string email = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getEmail", "()Ljava/lang/String;")));
+        outfile << email << "-";
         string phone = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getPhone", "()Ljava/lang/String;")));
+        outfile << phone << "-";
         string address = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getAddress", "()Ljava/lang/String;")));
-        jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillAmt", "()D"));
+        outfile << address << "-";
+        jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillAmount", "()D"));
+        outfile << billAmt << "-";
         jdouble billPayed = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillPayed", "()D"));
+        outfile << billPayed << "-";
         jdouble billLeft = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillLeft", "()D"));
+        outfile << billLeft << "-";
 
-        outfile << id << " "<< name << " "<< email << " "<< phone << " "<< address<< " " << billAmt << " "<< billPayed << " "<< billLeft << " ";
-        cout << "came here" << endl;
         jobject bills = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getBills", "()Ljava/util/ArrayList;"));
-
         jint billSize = env->CallIntMethod(bills, arrayListSize);
-        outfile << billSize << " ";
+        outfile << billSize << "-";
         for (int i = 0; i<billSize; i++) {
-            jint bill = env->CallIntMethod(bills, arrayListGet, i);
-            outfile <<  bill << " ";
+            jobject bill_integer = env->CallObjectMethod(bills, arrayListGet, i);
+            jint bill = env->CallIntMethod(bill_integer, env->GetMethodID(IntegerClass, "intValue", "()I"));
+            outfile <<  bill << "-";
         }
-        jobject from = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
-        jobject to = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime"));
+        jobject from = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
+        jobject to = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
 
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
-        outfile << env->CallIntMethod(from, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
-
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getYear", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMonth", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getDay", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getHour", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getMinute", "()I"))<< " ";
-        outfile << env->CallIntMethod(to, env->GetMethodID(dateTimeClass, "getSecond", "()I"))<< " ";
+        string fromDate = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;")));
+        outfile << fromDate<<"-";
+        string fromTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
+        replace(fromTime.begin(), fromTime.end(), ':', '-');
+        outfile << fromTime<<"-";
+        string toDate = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;")));
+        outfile << toDate<<"-";
+        string toTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
+        replace(toTime.begin(), toTime.end(), ':', '-');
+        outfile << toTime<<"-";
 
         jobject reservationArray = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservations", "()Ljava/util/ArrayList;"));
         jint reservationSize = env->CallIntMethod(reservationArray, arrayListSize);
-        outfile << reservationSize << " ";
+        outfile << reservationSize << "-";
         for (int i = 0; i< reservationSize; i++) {
-            jint reservation = env->CallIntMethod(reservationArray, arrayListGet, i);
-            outfile << reservation << " ";
+            jobject reservation_integer = env->CallObjectMethod(reservationArray, arrayListGet, i);
+            jint reservation = env->CallIntMethod(reservation_integer, env->GetMethodID(IntegerClass, "intValue", "()I"));
+            outfile << reservation << "-";
         }
         outfile << endl;
     }
+    
     outfile.close();
 }
