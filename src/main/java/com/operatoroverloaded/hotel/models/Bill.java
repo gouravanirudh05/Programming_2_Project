@@ -1,4 +1,5 @@
 package com.operatoroverloaded.hotel.models;
+
 import java.util.*;
 
 public class Bill {
@@ -10,9 +11,10 @@ public class Bill {
     private DateTime generatedOn, payedOn;
     private boolean payed;
     private String customerID;
+
     // private String reservationID;
     // default constructor which initializes the values to garbage values
-    public Bill(){
+    public Bill() {
         billId = -1;
         amount = -1;
         this.amount = -1;
@@ -27,10 +29,11 @@ public class Bill {
     }
 
     // parameterized constructor which should be used to create a new bill
-    public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity, DateTime payedOn){
+    public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity,
+            DateTime payedOn) {
         this.billId = billId;
         this.amount = 0;
-        for (int i = 0; i < purchasedList.size(); i++){
+        for (int i = 0; i < purchasedList.size(); i++) {
             this.amount += purchasedList.get(i) * quantity.get(i);
         }
         this.quantity = quantity;
@@ -39,11 +42,12 @@ public class Bill {
         this.generatedOn = DateTime.getCurrentTime();
         this.payedOn = payedOn;
     }
-    public Bill(int billId,ArrayList<String> purchased, ArrayList<Float> purchasedList, 
-                ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID){
+
+    public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList,
+            ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
         this.billId = billId;
         this.amount = 0;
-        for (int i = 0; i < purchasedList.size(); i++){
+        for (int i = 0; i < purchasedList.size(); i++) {
             this.amount += purchasedList.get(i) * quantity.get(i);
         }
         this.purchased = purchased;
@@ -55,9 +59,10 @@ public class Bill {
         this.customerID = customerID;
     }
 
-    // parameterized constructor which is used to store the bill data in the database file (not to be used to create a new bill)
-    public Bill(int billId, float amount, ArrayList<String> purchased, ArrayList<Float> purchasedList, 
-                ArrayList<Integer> quantity, String genDate, String genTime, String payedDate, String payedTime){
+    // parameterized constructor which is used to store the bill data in the
+    // database file (not to be used to create a new bill)
+    public Bill(int billId, float amount, ArrayList<String> purchased, ArrayList<Float> purchasedList,
+            ArrayList<Integer> quantity, String genDate, String genTime, String payedDate, String payedTime) {
         this.billId = billId;
         this.amount = amount;
         this.purchased = purchased;
@@ -67,66 +72,72 @@ public class Bill {
         this.payedOn = DateTime.fromString(payedDate.replace('/', '-'), payedTime);
     }
 
-    public int getBillId(){
+    public int getBillId() {
         return billId;
     }
 
-    public float getAmount(){
+    public float getAmount() {
         return amount;
     }
 
-    public ArrayList<String> getPurchased(){
+    public ArrayList<String> getPurchased() {
         return purchased;
     }
 
-    public ArrayList<Float> getPurchasedList(){
+    public ArrayList<Float> getPurchasedList() {
         return purchasedList;
     }
 
-    public ArrayList<Integer> getQuantity(){
+    public ArrayList<Integer> getQuantity() {
         return quantity;
     }
 
-    public String getGeneratedOn(){
+    public String getGeneratedOn() {
         return generatedOn.getDateString() + " " + generatedOn.getTimeString();
     }
 
-    public String getPayedOn(){
+    public String getPayedOn() {
         return payedOn.getDateString() + " " + payedOn.getTimeString();
     }
 
-    public void setAmount(){
+    public String getCustomerID() {
+        return customerID;
+    }
+
+    public void setAmount() {
         float amt = 0;
-        for(int i =  0; i < purchased.size(); i++){
+        for (int i = 0; i < purchased.size(); i++) {
             amt += purchasedList.get(i) * quantity.get(i);
-        }   
+        }
         this.amount = amt;
     }
 
-    public void setAmount(float amount){
+    public void setAmount(float amount) {
         this.amount = amount;
     }
-    public void setPayed(boolean payed){
+
+    public void setPayed(boolean payed) {
         this.payed = payed;
     }
-    public void setCustomerID(String customerID){
+
+    public void setCustomerID(String customerID) {
         this.customerID = customerID;
     }
 
-    public void setPurchased(ArrayList<String> purchased){
+    public void setPurchased(ArrayList<String> purchased) {
         this.purchased = purchased;
     }
 
-    public void setPurchasedList(ArrayList<Float> purchasedList){
+    public void setPurchasedList(ArrayList<Float> purchasedList) {
         this.purchasedList = purchasedList;
     }
 
-    public void setQuantity(ArrayList<Integer> quantity){
+    public void setQuantity(ArrayList<Integer> quantity) {
         this.quantity = quantity;
     }
-    
-    public void setItems(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity){
-        if(purchased.size() != purchasedList.size() || purchased.size() != quantity.size()){
+
+    public void setItems(ArrayList<String> purchased, ArrayList<Float> purchasedList, ArrayList<Integer> quantity) {
+        if (purchased.size() != purchasedList.size() || purchased.size() != quantity.size()) {
             return;
         }
         setPurchased(purchased);
@@ -135,14 +146,14 @@ public class Bill {
         setAmount();
     }
 
-    public void setPayedOn(DateTime payedOn){
+    public void setPayedOn(DateTime payedOn) {
         this.payedOn = payedOn;
     }
 
     @Override
     public String toString() {
         String str = "Bill ID: " + billId + "\nAmount: " + amount + "\nItems:\n";
-        for(int i = 0; i < purchased.size(); i++){
+        for (int i = 0; i < purchased.size(); i++) {
             str += purchased.get(i) + " " + purchasedList.get(i) + " " + quantity.get(i) + "\n";
         }
         str += "Generated on: " + generatedOn.getDateString() + " " + generatedOn.getTimeString() + "\n";

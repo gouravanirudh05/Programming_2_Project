@@ -58,7 +58,8 @@ public class RestaurantCustomerController {
         String email = json.get("email").asText();
         String name = json.get("name").asText();
         RestaurantCustomer customer = new RestaurantCustomer(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo, dishes, tabelId, serverId);
-        return ResponseEntity.ok().body(restaurantCustomerStore.addCustomer(customer)); //it will return the id of the customer added
+        return ResponseEntity.ok().body("Done"); //it will return the id of the customer added
+        // return ResponseEntity.ok().body(restaurantCustomerStore.addCustomer(customer)); //it will return the id of the customer added
     }
     @PostMapping("/remove/{customerId}")
     public ResponseEntity<?> removeBill(@PathVariable int customerId) {

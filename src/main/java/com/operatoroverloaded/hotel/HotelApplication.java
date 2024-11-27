@@ -85,10 +85,15 @@ public class HotelApplication {
         System.err.println("3");
         LogonStore.getInstance().load();
         System.err.println("4");
-        // StaffStore.getInstance().loadFromFile();
         DishStore.getInstance().loadFromFile();
         System.err.println("5");
         TableStore.getInstance().loadFromFile();
+        System.err.println("6");
+        StaffStore.getInstance().loadFromFile();
+        System.err.println("7");
+        // HotelCustomerStore.getInstance().loadFromFile();
+        System.err.println("8");
+        
 
         app.run(args);
         new Timer().scheduleAtFixedRate(new TimerTask(){
@@ -96,6 +101,11 @@ public class HotelApplication {
             public void run(){
                 System.out.println("Saving data...");
                 String totalError = "";
+                try {
+                    DishStore.getInstance().saveToFile();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
                 try {
                     BillStore.getInstance().save();
                 } catch (Exception e) {
@@ -123,6 +133,16 @@ public class HotelApplication {
                 }
                 try {
                     TableStore.getInstance().saveToFile();
+                } catch (Exception e) {
+                    totalError += e.getMessage() + "\n";
+                }
+                // try {
+                //     HotelCustomerStore.getInstance().saveToFile();
+                // } catch (Exception e) {
+                //     totalError += e.getMessage() + "\n";
+                // }
+                try {
+                    RestaurantCustomerStore.getInstance().storeToFile();;
                 } catch (Exception e) {
                     totalError += e.getMessage() + "\n";
                 }
