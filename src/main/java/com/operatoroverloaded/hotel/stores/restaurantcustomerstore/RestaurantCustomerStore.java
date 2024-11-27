@@ -20,7 +20,7 @@ public abstract class RestaurantCustomerStore {
     }
     public abstract void loadFromFile();
     public abstract void storeToFile();
-    public abstract void addCustomer(RestaurantCustomer customer);
+    public abstract RestaurantCustomer addCustomer(RestaurantCustomer customer);
     public abstract void deleteCustomer(int id);
     public abstract ArrayList<RestaurantCustomer> getCustomers();
     public abstract RestaurantCustomer getCustomer(int id);

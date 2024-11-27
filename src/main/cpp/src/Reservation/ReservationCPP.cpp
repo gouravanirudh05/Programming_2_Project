@@ -109,14 +109,14 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
     std::string file;
     file.assign((std::istreambuf_iterator<char>(inFile)), (std::istreambuf_iterator<char>()));
     inFile.close();
-    cout << 0 << endl;
+
     // Get the class and field ids
     jclass reservationClass = env->FindClass("com/operatoroverloaded/hotel/models/Reservation");
     jclass InMemoryReservationStoreClass = env->GetObjectClass(obj);
     jfieldID reservationArrayField = env->GetFieldID(InMemoryReservationStoreClass, "reservationData", "Ljava/util/ArrayList;");
     jobject reservationArray = env->GetObjectField(obj, reservationArrayField);
     jmethodID reservationInit = env->GetMethodID(reservationClass, "<init>", "(ILjava/lang/String;Ljava/lang/String;Lcom/operatoroverloaded/hotel/models/DateTime;Lcom/operatoroverloaded/hotel/models/DateTime;ID)V");
-    cout << 1 << endl;
+
 
     // Find the DateTime class
     jclass dateTimeClass = env->FindClass("com/operatoroverloaded/hotel/models/DateTime");
@@ -136,7 +136,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
     jclass arrayListClass = env->FindClass("java/util/ArrayList");
     jmethodID arrayListAdd = env->GetMethodID(arrayListClass, "add", "(Ljava/lang/Object;)Z");
     jmethodID arrayListInit = env->GetMethodID(arrayListClass, "<init>", "()V");
-    cout << 2 << endl;
+
     long long i = 0;
     while (i < file.size()) {
         // Get the reservation id
@@ -194,9 +194,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
         i = j + 1;
 
         std::string formattedStartDate = env->GetStringUTFChars(startDate, nullptr);
-        // replace(formattedStartDate.begin(), formattedStartDate.end(), '/', '-');
         std::string formattedEndDate = env->GetStringUTFChars(endDate, nullptr);
-        // replace(formattedEndDate.begin(), formattedEndDate.end(), '/', '-');
 
         // Create DateTime objects for start and end times using the parse method
         std::string startDateTimeStr = formattedStartDate + "-" + std::string(env->GetStringUTFChars(startTime, nullptr));
@@ -210,7 +208,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
         env->DeleteLocalRef(startDateTimeJStr);
         env->DeleteLocalRef(endDateTimeJStr);
 
-        cout << 3 << endl;
+
 
         // Create the reservation object and add it to the list
         jobject reservationObject = env->NewObject(reservationClass, reservationInit, reservationId, roomID, customerID, startDateTime, endDateTime, billId, totalAmount);
@@ -231,28 +229,5 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
 
     // Update the reservation store
     env->SetObjectField(obj, reservationArrayField, reservationArray);
-    cout << 4 << endl;
-    // env->DeleteLocalRef(reservationArray);
-    // cout << 5 << endl;
-    // env->DeleteLocalRef(reservationClass);
-    // cout << 6 << endl;
-    // env->DeleteLocalRef(arrayListClass);
-    // cout << 7 << endl;
-    // env->DeleteLocalRef(dateTimeClass);
-    // cout << 8 << endl;
-    // env->DeleteLocalRef(InMemoryReservationStoreClass);
-    // cout << 9 << endl;
-    // env->DeleteLocalRef(obj);
-    // cout << 10 << endl;
-    // env->DeleteLocalRef(reservationArrayField);
-    // cout << 11 << endl;
-    // env->DeleteLocalRef(reservationInit);
-    // cout << 12 << endl;
-    // env->DeleteLocalRef(arrayListAdd);
-    // cout << 13 << endl;
-    // env->DeleteLocalRef(arrayListInit);
-    // cout << 14 << endl;
-    // env->DeleteLocalRef(dateTimeInit);
-    // cout << 15 << endl;
 }
 }

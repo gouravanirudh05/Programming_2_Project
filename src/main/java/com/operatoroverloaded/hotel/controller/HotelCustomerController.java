@@ -14,14 +14,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.operatoroverloaded.hotel.models.DateTime;
 import com.operatoroverloaded.hotel.models.HotelCustomer;
 import com.operatoroverloaded.hotel.stores.hotelcustomerstore.HotelCustomerStore;
-import com.operatoroverloaded.hotel.stores.hotelcustomerstore.InMemoryHotelCustomerStore;
 
 @RestController
 @RequestMapping("/api/hotelcustomer")
 public class HotelCustomerController {
-    private HotelCustomerStore hotelCustomerStore;
+    private final HotelCustomerStore hotelCustomerStore;
     public HotelCustomerController(){
-        this.hotelCustomerStore = new InMemoryHotelCustomerStore();
+        this.hotelCustomerStore = HotelCustomerStore.getInstance();
     }
     @GetMapping("/{customerId}")
     public ResponseEntity<?> getBill(@PathVariable int customerId) {
@@ -59,7 +58,6 @@ public class HotelCustomerController {
         String email = json.get("email").asText();
         String name = json.get("name").asText();
         HotelCustomer customer = new HotelCustomer(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo, reservations);
-        // this.hotelCustomerStore.addCustomer(customer);
         return ResponseEntity.ok().body(hotelCustomerStore.addCustomer(customer)); //it will return the id of the customer added
     }
     @PostMapping("/remove/{customerId}")

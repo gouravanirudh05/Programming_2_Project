@@ -124,7 +124,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
     jint customerSize = env->CallIntMethod(hotelCustomerArray, arrayListSize);
     ofstream outfile("HotelCustomerStore.txt");
     // outfile.open("HotelCustomerStore.txt");
-    for (int i=0; i<customerSize; i++){
+    for (jint i=0; i<customerSize; i++){
         jobject customer = env->CallObjectMethod(hotelCustomerArray, arrayListGet, i);
         jint id = env->CallIntMethod(customer, env->GetMethodID(hotelCustomerClass, "getCustomerId", "()I"));
         outfile << id;
@@ -155,7 +155,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         }
         jobject from = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedFrom", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
         jobject to = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservedTo", "()Lcom/operatoroverloaded/hotel/models/DateTime;"));
-
         string fromDate = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getDateString", "()Ljava/lang/String;")));
         outfile << fromDate<<"-";
         string fromTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
@@ -166,7 +165,6 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         string toTime = jStringToStdString(env,(jstring) env->CallObjectMethod(to, env->GetMethodID(dateTimeClass, "getTimeString", "()Ljava/lang/String;")));
         replace(toTime.begin(), toTime.end(), ':', '-');
         outfile << toTime<<"-";
-
         jobject reservationArray = env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getReservations", "()Ljava/util/ArrayList;"));
         jint reservationSize = env->CallIntMethod(reservationArray, arrayListSize);
         outfile << reservationSize << "-";

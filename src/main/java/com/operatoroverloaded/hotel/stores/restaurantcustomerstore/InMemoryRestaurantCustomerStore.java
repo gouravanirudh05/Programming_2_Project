@@ -28,8 +28,9 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 
 // -----------------------------------------------------------------Add Operations-------------------------------------------------------------------------------------------------------------
 
-    public void addCustomer(RestaurantCustomer customer) { // returns the id assigned to the customer by the database
+    public RestaurantCustomer addCustomer(RestaurantCustomer customer) { // returns the id assigned to the customer by the database
         restaurantCustomers.add(customer);
+        return customer;
     }
 
 // -----------------------------------------------------------------Delete Operations-------------------------------------------------------------------------------------------------------------
