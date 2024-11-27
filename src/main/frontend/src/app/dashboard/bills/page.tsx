@@ -29,6 +29,7 @@ type Item = {
 };
 
 type Bill = {
+  billId: number;
   payed: boolean;
   customerID: string;
   items: Item[];
@@ -41,14 +42,15 @@ export default function BillManagement() {
   const [printableBill, setPrintableBill] = useState<Bill | null>(null);
 
   // Fetch bills from the backend
-  useEffect(() => {
     const fetchBills = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/bill/list'); // Replace with your backend endpoint
         for (let i = 0; i < response.data.length; i++) {
-          response[i].items = [];
+          response.data[i].items = [];
+          response.data[i].customerID = response.data[i].customerID || response.data[i].customerId
           for (let j = 0; j < response.data[i].quantity.length; j++) {
-            response[i].items.push({
+            console.log(response.data[i].purchased[j])
+            response.data[i].items.push({
               name: response.data[i].purchased[j],
               price: response.data[i].purchasedList[j],
               quantity: response.data[i].quantity[j],
@@ -60,6 +62,7 @@ export default function BillManagement() {
         console.error('Error fetching bills:', error);
       }
     };
+  useEffect(() => {
     fetchBills();
   }, []);
 
@@ -67,12 +70,8 @@ export default function BillManagement() {
   const updateBill = async () => {
     if (editingBill) {
       try {
-        await axios.put(`http://localhost:8080/api/bill/update/${editingBill.customerID}`, editingBill); // Replace with your backend endpoint
-        setBills(
-          bills.map((bill) =>
-            bill.customerID === editingBill.customerID ? editingBill : bill
-          )
-        );
+        await axios.put(`http://localhost:8080/api/bill/update/${editingBill.billId}`, editingBill); // Replace with your backend endpoint
+        fetchBills()
         setEditingBill(null);
       } catch (error) {
         console.error('Error updating bill:', error);
@@ -170,7 +169,7 @@ export default function BillManagement() {
                     };
                     setEditingBill(updatedBill);
                     try {
-                      await axios.put(`http://localhost:8080/api/bills/${editingBill.customerID}`, updatedBill);
+                      await axios.get(`http://localhost:8080/api/bill/payed/${editingBill.billId}`, editingBill.payed);
                     } catch (error) {
                       console.error('Error updating payment status:', error);
                     }

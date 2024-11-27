@@ -82,6 +82,14 @@ export default function ReservationManagement() {
   const fetchReservations = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/reservation/all')
+      
+      for (let i = 0; i < response.data.length; i++) {
+        response.data[i].customerID = response.data[i].customerID || response.data[i].customerId
+        response.data[i].reservationID = response.data[i].reservationID || response.data[i].reservationId
+        response.data[i].roomId = response.data[i].roomID || response.data[i].roomId
+        response.data[i].startDateTime = new Date(response.data[i].startDateTime.dateString + " " + response.data[i].startDateTime.timeString).toISOString()
+        response.data[i].endDateTime = new Date(response.data[i].endDateTime.dateString + " " + response.data[i].endDateTime.timeString).toISOString()
+      }
       setReservations(response.data)
     } catch (error) {
       console.error('Error fetching reservations:', error)

@@ -50,7 +50,7 @@ public class ReservationController {
         ArrayList<Float> purchasedList = new ArrayList<>();
         purchasedList.add(RoomTypeStore.getInstance().findRoomType(RoomStore.getInstance().findRoom(roomId).getRoomTypeId()).getTariff());
         ArrayList<Integer> quantity = new ArrayList<>();
-        purchasedList.add(1f);
+        quantity.add(1);
 
         for (Reservation reservation : reservationStore.getAllReservations()) {
             if (reservation.getRoomID().equals(roomId) && 
@@ -61,7 +61,9 @@ public class ReservationController {
         }
 
         Bill bill = BillStore.getInstance().addBill(purchased, purchasedList, quantity, endDateTime, false, roomId);
-        
+        if (bill == null) {
+            return ResponseEntity.status(409).body("Time conflict detected. Reservation could not be created.");
+        }
 
         // Attempt to create a reservation only if no overlap exists
         Reservation newReservation = reservationStore.createReservationIfNoOverlap(
