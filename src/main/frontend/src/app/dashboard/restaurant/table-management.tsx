@@ -1,4 +1,7 @@
-import { useState } from 'react'
+'use client'
+
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,56 +22,58 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Table as TableType } from './page'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-type TableManagementProps = {
-  tables: TableType[]
-  setTables: React.Dispatch<React.SetStateAction<TableType[]>>
+type Table = {
+  tableNumber: number
+  isOccupied: boolean
+  seatingCapacity: number
 }
 
 export default function TableManagement() {
-  const [newTable, setNewTable] = useState<TableType>({ 
-    tableID: '', 
-    capacity: 0, 
-    occupied: false, 
-    occupiedBy: null, 
-    orderStatus: 'Vacant' 
-  })
-  const [isAddTableOpen, setIsAddTableOpen] = useState(false)
-  const [editingTable, setEditingTable] = useState<TableType | null>(null)
-  const [tables, setTables] = useState<TableType[]>([])
-  // const [customers, setCustomers] = useState<RestaurantCustomer[]>([])
+  const [tables, setTables] = useState<Table[]>([])
+  const [newTable, setNewTable] = useState<Partial<Table>>({})
+  const [isNewTableDialogOpen, setIsNewTableDialogOpen] = useState(false)
 
-  const addTable = () => {
-    setTables([...tables, { ...newTable, tableID: `T${tables.length + 1}` }])
-    setNewTable({ tableID: '', capacity: 0, occupied: false, occupiedBy: null, orderStatus: 'Vacant' })
-    setIsAddTableOpen(false)
-  }
+  useEffect(() => {
+    fetchTables()
+  }, [])
 
-  const updateTable = () => {
-    if (editingTable) {
-      setTables(tables.map(table => table.tableID === editingTable.tableID ? editingTable : table))
-      setEditingTable(null)
+  const fetchTables = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/table/all')
+      setTables(response.data)
+    } catch (error) {
+      console.error('Error fetching tables:', error)
     }
   }
 
-  const deleteTable = (tableID: string) => {
-    setTables(tables.filter(table => table.tableID !== tableID))
+  const handleNewTable = async () => {
+    try {
+      await axios.post('http://localhost:8080/api/table/add', newTable)
+      fetchTables()
+      setIsNewTableDialogOpen(false)
+      setNewTable({})
+    } catch (error) {
+      console.error('Error creating new table:', error)
+    }
+  }
+  const handleDeleteTable = async (id) => {
+    try {
+      await axios.post('http://localhost:8080/api/table/remove/' + id)
+      fetchTables()
+    } catch (error) {
+      console.error('Error deleting table:', error)
+    }
   }
 
   return (
-    <div>
-      <div className="mb-4">
-        <Dialog open={isAddTableOpen} onOpenChange={setIsAddTableOpen}>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold tracking-tight">Table Management</h2>
+        <Dialog open={isNewTableDialogOpen} onOpenChange={setIsNewTableDialogOpen}>
           <DialogTrigger asChild>
-            <Button>Add Table</Button>
+            <Button onClick={() => setIsNewTableDialogOpen(true)}>New Table</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -77,92 +82,70 @@ export default function TableManagement() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="capacity" className="text-right">Capacity</Label>
+                <Label htmlFor="tableNumber" className="text-right">
+                  Table Number
+                </Label>
                 <Input
-                  id="capacity"
+                  id="tableNumber"
                   type="number"
-                  value={newTable.capacity}
-                  onChange={(e) => setNewTable({ ...newTable, capacity: parseInt(e.target.value) })}
                   className="col-span-3"
+                  value={newTable.tableNumber || ''}
+                  onChange={(e) => setNewTable({ ...newTable, tableNumber: parseInt(e.target.value) })}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="seatingCapacity" className="text-right">
+                  Seating Capacity
+                </Label>
+                <Input
+                  id="seatingCapacity"
+                  type="number"
+                  className="col-span-3"
+                  value={newTable.seatingCapacity || ''}
+                  onChange={(e) => setNewTable({ ...newTable, seatingCapacity: parseInt(e.target.value) })}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={addTable}>Add Table</Button>
+              <Button onClick={handleNewTable}>Add Table</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Capacity</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tables.map((table) => (
-            <TableRow key={table.tableID}>
-              <TableCell>{table.tableID}</TableCell>
-              <TableCell>{table.capacity}</TableCell>
-              <TableCell>{table.orderStatus}</TableCell>
-              <TableCell>
-                <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingTable(table)}>
-                  Edit
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => deleteTable(table.tableID)}>
-                  Delete
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-      {editingTable && (
-        <Dialog open={!!editingTable} onOpenChange={() => setEditingTable(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Table</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-capacity" className="text-right">Capacity</Label>
-                <Input
-                  id="edit-capacity"
-                  type="number"
-                  value={editingTable.capacity}
-                  onChange={(e) => setEditingTable({ ...editingTable, capacity: parseInt(e.target.value) })}
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="edit-status" className="text-right">Status</Label>
-                <Select 
-                  value={editingTable.orderStatus} 
-                  onValueChange={(value: 'Vacant' | 'Occupied' | 'Preparing') => 
-                    setEditingTable({ ...editingTable, orderStatus: value, occupied: value !== 'Vacant' })
-                  }
-                >
-                  <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Vacant">Vacant</SelectItem>
-                    <SelectItem value="Occupied">Occupied</SelectItem>
-                    <SelectItem value="Preparing">Preparing</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={updateTable}>Update Table</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+      <Card>
+        <CardHeader>
+          <CardTitle>All Tables</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Table Number</TableHead>
+                <TableHead>Seating Capacity</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {tables.map((table) => (
+                <TableRow key={table.tableNumber}>
+                  <TableCell>{table.tableNumber}</TableCell>
+                  <TableCell>{table.seatingCapacity}</TableCell>
+                  <TableCell>{table.isOccupied ? 'Occupied' : 'Available'}</TableCell>
+                  <TableCell>
+                    {/* <Button variant="outline" size="sm" className="mr-2" onClick={() => setEditingTable(table)}>
+                      Edit
+                    </Button> */}
+                    <Button variant="outline" size="sm" className="mr-2" onClick={() => handleDeleteTable(table.tableNumber)}>
+                      Delete
+                    </Button>
+                    </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   )
 }
