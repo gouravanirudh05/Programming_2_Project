@@ -23,24 +23,6 @@ public class DateTime {
     }
 
     // Parses an ISO 8601 string into a DateTime object
-    // public static DateTime fromISOString(String isoString) {
-    //     // Parse the ISO string into a LocalDateTime object
-    //     LocalDateTime parsedDateTime = LocalDateTime.parse(
-    //             isoString.replace("Z", ""), // Remove 'Z' for UTC (if present)
-    //             DateTimeFormatter.ISO_DATE_TIME
-    //     );
-
-    //     // Create and return a new DateTime object
-    //     return new DateTime(
-    //             parsedDateTime.getYear(),
-    //             parsedDateTime.getMonthValue(),
-    //             parsedDateTime.getDayOfMonth(),
-    //             parsedDateTime.getHour(),
-    //             parsedDateTime.getMinute(),
-    //             parsedDateTime.getSecond()
-    //     );
-    // }
-    // Parses an ISO 8601 string into a DateTime object
     public static DateTime fromISOString(String isoString) {
         // Parse the ISO string into a LocalDateTime object
         LocalDateTime parsedDateTime = LocalDateTime.parse(

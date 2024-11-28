@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.operatoroverloaded.hotel.models.Staff;
 
+// Abstract class for StaffStore
 public abstract class StaffStore {
     public static StaffStore staffStore = null;
     public static StaffStore getInstance(){
