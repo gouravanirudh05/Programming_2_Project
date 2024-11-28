@@ -8,7 +8,6 @@ import com.operatoroverloaded.hotel.models.Logon;
 public class InMemoryLogonStore extends LogonStore {
     // Load the native library
     static {
-        // TODO: change the path to the library
         System.loadLibrary("LogonCPP");
     }
     private static final InMemoryLogonStore instance = new InMemoryLogonStore();

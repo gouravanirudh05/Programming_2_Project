@@ -40,7 +40,7 @@ public class InMemoryBillStore extends BillStore {
         return null;
     }
 
-    // // Native method declaration
+    // Native method declaration
     private native void loadBill();
     private native void saveBill();
 
@@ -103,6 +103,7 @@ public class InMemoryBillStore extends BillStore {
         }
     }
 
+    // get copy of the billData
     @Override
     public ArrayList<Bill> getBills() {
         return new ArrayList<>(billData);

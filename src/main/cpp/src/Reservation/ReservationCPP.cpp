@@ -33,7 +33,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
     jfieldID billIdField = env->GetFieldID(reservationClass, "billId", "I");
     jfieldID totalAmountField = env->GetFieldID(reservationClass, "totalAmount", "D");
 
-    // TODO: change the path to the file as necessary
+    // Open the file for writing
     std::ofstream outFile("reservations.txt");
     if (!outFile) {
         std::cerr << "Error opening reservations.txt for writing" << std::endl;
@@ -100,6 +100,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
 
 // JNI method to load reservations from a space-separated file
 JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore_InMemoryReservationStore_loadReservationsNative(JNIEnv *env, jobject obj) {
+    // Open the file for reading
     std::ifstream inFile("reservations.txt");
     if (!inFile) {
         std::cerr << "Error opening reservations.txt for reading" << std::endl;
@@ -125,7 +126,7 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
         return;
     }
 
-    // Get the parse method ID
+    // Get the methodID of DateTime parse method
     jmethodID parseMethod = env->GetStaticMethodID(dateTimeClass, "parse", "(Ljava/lang/String;)Lcom/operatoroverloaded/hotel/models/DateTime;");
     if (parseMethod == nullptr) {
         std::cerr << "Error finding parse method" << std::endl;
@@ -196,11 +197,10 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
         std::string formattedStartDate = env->GetStringUTFChars(startDate, nullptr);
         std::string formattedEndDate = env->GetStringUTFChars(endDate, nullptr);
 
-        // Create DateTime objects for start and end times using the parse method
         std::string startDateTimeStr = formattedStartDate + "-" + std::string(env->GetStringUTFChars(startTime, nullptr));
         std::string endDateTimeStr = formattedEndDate + "-" + std::string(env->GetStringUTFChars(endTime, nullptr));
 
-
+        // Parse the start and end date time strings into DateTime objects
         jstring startDateTimeJStr = env->NewStringUTF(startDateTimeStr.c_str());
         jstring endDateTimeJStr = env->NewStringUTF(endDateTimeStr.c_str());
         jobject startDateTime = env->CallStaticObjectMethod(dateTimeClass, parseMethod, startDateTimeJStr);
@@ -208,12 +208,9 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_reservationstore
         env->DeleteLocalRef(startDateTimeJStr);
         env->DeleteLocalRef(endDateTimeJStr);
 
-
-
         // Create the reservation object and add it to the list
         jobject reservationObject = env->NewObject(reservationClass, reservationInit, reservationId, roomID, customerID, startDateTime, endDateTime, billId, totalAmount);
         env->CallBooleanMethod(reservationArray, arrayListAdd, reservationObject);
-
 
         // Release the local references
         env->DeleteLocalRef(roomID);

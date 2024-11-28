@@ -30,6 +30,7 @@ string hashPassword(const string &password, const string &salt) {
 void format(vector<map<string, string>>& mp, string file){
     int i = 0;
     vector<string> strings;
+    // iterate over the file and store the data in a vector of maps
     while(i < file.size()){
         map<string, string> m;
         while(file[i] == '\\')i++;
@@ -56,18 +57,21 @@ void format(vector<map<string, string>>& mp, string file){
         if(file[i] == '\\') i++;
         if(file[i] == '\n') i++;
     }
-
-
 }
 
 // Generate a random string of specified length
 string generateRandomString(size_t length) {
+    // Characters to choose from
     const string CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    // Random number generator
     random_device rd;
+    // Seed the generator
     mt19937 generator(rd());
+    // Distribution
     uniform_int_distribution<> distribution(0, CHARACTERS.size() - 1);
 
     string randomString;
+    // Generate the random string
     for (size_t i = 0; i < length; ++i) {
         randomString += CHARACTERS[distribution(generator)];
     }
@@ -87,18 +91,17 @@ extern "C" {
         string hashedPassword = hashPassword(string(nativePwd), string(nativeSalt));
         string result = hashedPassword;
         env->ReleaseStringUTFChars(password, nativePwd);
+        env->ReleaseStringUTFChars(salt, nativeSalt);
         return env->NewStringUTF(result.c_str());
     }
 
     // to load the login data from the file
     JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_loadLogon(JNIEnv *env, jobject obj) {
         // Read the contents of login.txt
-        // TODO: change the path to the absolute path of the login.txt file as needed
         ifstream file("login.txt");
         if (!file.is_open()) {
             return;
         }
-
         string fileContent((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
         file.close();
 
@@ -131,7 +134,6 @@ extern "C" {
         }
 
         // Get the Logon class 
-        // TODO: change the path to the Logon class as needed
         jclass logonClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon");
         if (logonClass == nullptr) {
             return;
@@ -177,14 +179,12 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_logonstore_InMemoryLogonStore_saveLogon(JNIEnv *env, jobject obj) {
-        // TODO: change the path to the login.txt file as needed
         ofstream file("login.txt");
         if(!file.is_open()){
             return;
         }
 
         // Get the Logon class and the ArrayList field
-        // TODO: change the path to the Logon class as needed
         jclass logonClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon");
         jclass InMemoryLogonStoreClass = env->GetObjectClass(obj);
         jfieldID logonArrayField = env->GetFieldID(InMemoryLogonStoreClass, "logonData", "Ljava/util/ArrayList;");
@@ -204,7 +204,6 @@ extern "C" {
         jfieldID saltField = env->GetFieldID(logonClass, "salt", "Ljava/lang/String;");
 
         // Get the AccessLevel enum and the toString method
-        // TODO: change the path to the AccessLevel enum as needed
         jclass accessLevelClass = env->FindClass("com/operatoroverloaded/hotel/models/Logon$AccessLevel");
         jmethodID toStringMethod = env->GetMethodID(accessLevelClass, "toString", "()Ljava/lang/String;");
         

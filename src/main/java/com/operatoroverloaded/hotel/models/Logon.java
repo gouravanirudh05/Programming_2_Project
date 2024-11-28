@@ -52,6 +52,7 @@ public class Logon implements Serializable {
         this.salt = salt;
     }
 
+    // Getter Methods
     public int getRoleId() {
         return this.roleId;
     }
@@ -72,6 +73,7 @@ public class Logon implements Serializable {
         return this.salt;
     }
 
+    // Setter Methods
     public void setAccess(String access) {
         this.access = access.equalsIgnoreCase("Admin") ? AccessLevel.Admin
                 : access.equalsIgnoreCase("Room") ? AccessLevel.Room

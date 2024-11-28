@@ -43,6 +43,7 @@ public class Bill {
         this.payedOn = payedOn;
     }
 
+
     public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList,
             ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
         this.billId = billId;
@@ -71,12 +72,16 @@ public class Bill {
         this.generatedOn = DateTime.fromString(genDate.replace('/', '-'), genTime);
         this.payedOn = DateTime.fromString(payedDate.replace('/', '-'), payedTime);
     }
+
+    // Getter Methods
     public DateTime getGeneratedOnDT() {
         return generatedOn;
     }
+
     public DateTime getPayedOnDT() {
         return payedOn;
     }
+
     public int getBillId() {
         return billId;
     }
@@ -109,6 +114,7 @@ public class Bill {
         return customerID;
     }
 
+    // Setter Methods
     public void setAmount() {
         float amt = 0;
         for (int i = 0; i < purchased.size(); i++) {
