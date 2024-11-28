@@ -13,6 +13,7 @@ public class Reservation {
     private String customerID;       
     private int billId;             
 
+    // Default Constructor for Reservation
     public Reservation() {
         this.reservationId = -1;
         this.roomID = "";
@@ -22,7 +23,7 @@ public class Reservation {
         this.customerID = "";
         this.billId = -1;
     }
-
+    // Parametrised constructor
     public Reservation(int reservationId, String roomID, String customerID, DateTime startDateTime, DateTime endDateTime, int billId) {
         this.reservationId = reservationId;
         this.roomID = roomID;
@@ -32,7 +33,7 @@ public class Reservation {
         this.billId = billId;
         this.totalAmount = 0.0; 
     }
-
+    // Parametrised constructor 
     public Reservation(int reservationId, String roomID, String customerID, DateTime startDateTime, DateTime endDateTime, int billId, double totalAmount) {
         this.reservationId = reservationId;
         this.roomID = roomID;
@@ -43,6 +44,7 @@ public class Reservation {
         this.totalAmount = totalAmount; 
     }
 
+    //Getter and setter methods
     public int getReservationId() {
         return reservationId;
     }
@@ -99,6 +101,7 @@ public class Reservation {
         this.billId = billId;
     }
 
+    // Override toString method to provide a more readable output
     @Override
     public String toString() {
         return "Reservation{" +
