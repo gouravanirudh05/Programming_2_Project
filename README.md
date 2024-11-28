@@ -49,14 +49,60 @@ The **Hotel Management System** streamlines core hotel operations such as room m
 
 ### Class Diagrams
 <p align="center">
-  <img src="readme-assets/1.png" alt="Class Diagram 1" width="600">
+  <img src="readme-assets/1.png" alt="Class Diagram 1" width="600">  
+  <p>
+    This UML diagram represents the Customer class hierarchy, where RestaurantCustomer and HotelCustomer inherit from the abstract Customer class. The Customer class includes common attributes like customerId, name, and billing details, along with methods to manage bills and reservations. RestaurantCustomer adds functionality for handling dishes, tables, and servers, while HotelCustomer focuses on managing reservations.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/2.png" alt="Class Diagram 2" width="600">
+  <p>
+    This UML diagram represents a Bill management system. The Bill class stores information like billId, amount, purchased items, and timestamps for generation and payment. The BillStore class provides abstract methods for adding, removing, updating, and retrieving bills, as well as loading and saving them. The InMemoryBillStore class inherits from BillStore, implementing these methods with an in-memory list of Bill objects for managing bill data.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/3.png" alt="Class Diagram 3" width="600">
+  <p>
+    This UML diagram represents a hotel reservation system. The Hotel class manages details like name, location, rooms, staff, and reservations. The Reservation class handles booking information, including room details, reservation period, tariff, and associated bills, with methods to calculate bills and display reservation details. The Bill class records financial details such as purchased items, amounts, and timestamps, with methods to manage bill data.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/4.png" alt="Class Diagram 4" width="600">
+  <p>
+    The UML diagram illustrates the Staff class, defining its attributes like ID, name, salary, and role, and methods for operations such as assigning tasks, calculating service years, and managing retirement. This class serves as a blueprint for representing staff members within the system.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/5.png" alt="Class Diagram 5" width="600">
+  <p>
+    The UML diagram showcases the DateTime class, which encapsulates the attributes year, month, day, hour, minute, and second to represent a specific date and time. It offers methods to retrieve the current time, determine leap years, validate time and date, check if a date is past the current time, calculate date and time differences, increment days, and format dates and times into strings.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/6.png" alt="Class Diagram 6" width="600">
+  <p>
+    The UML diagram depicts the Room and RoomType classes. The Room class represents a physical room with its attributes and methods, while the RoomType class defines different room types with their associated properties. A one-to-many relationship exists between the two, where a Room can belong to a specific RoomType, but a RoomType can be associated with multiple Rooms.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/7.png" alt="Class Diagram 7" width="600">
+  <p>
+    The UML diagram showcases the LogonStore class and its interface, responsible for user management tasks like adding, deleting, and updating users. The InMemoryLogonStore class likely handles data storage and retrieval in memory. The Role class, nested within LogonStore, defines user roles with attributes like access level and email.
+  </p>
+  <br />
+</p>
+<p align="center">
   <img src="readme-assets/8.png" alt="Class Diagram 8" width="600">
+  <p>
+    The UML diagram depicts a Restaurant Management System with three main classes: Table, Restaurant, and Dish. The Table class represents individual tables, the Restaurant class encapsulates the overall restaurant with its tables and dishes, and the Dish class defines the menu items. The relationships between these classes are one-to-many, with a Restaurant having multiple Tables and Dishes.
+  </p>
+  <br />
 </p>
 
 
