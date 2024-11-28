@@ -61,7 +61,7 @@ public class ReservationController {
             }
         }
 
-        Bill bill = BillStore.getInstance().addBill(purchased, purchasedList, quantity, startDateTime, false, roomId);
+        Bill bill = BillStore.getInstance().addBill(purchased, purchasedList, quantity, endDateTime, false, roomId);
         if (bill == null) {
             return ResponseEntity.status(409).body("Time conflict detected. Reservation could not be created.");
         }
