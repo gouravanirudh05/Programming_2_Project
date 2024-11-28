@@ -18,19 +18,19 @@
 </div>
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
+
 - [About The Project](#about-the-project)
   - [Features](#features)
-  - [Class Diagram](#class-diagram)
+  - [Class Diagram](#class-diagrams)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+
 - [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
+
 - [License](#license)
-- [Contact](#contact)
-- [Acknowledgments](#acknowledgments)
+
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
