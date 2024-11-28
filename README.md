@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/mrtechtroid/Programming_2_Project/blob/main/readme-assets/1.png">
-    <img src="readme-assets/1.png" alt="Logo" width="100" height="200">
+    <img src="readme-assets/image.png" alt="Logo" width="800">
   </a>
 
   <h3 align="center">Hotel Management System</h3>
