@@ -59,7 +59,7 @@ The **Hotel Management System** streamlines core hotel operations such as room m
 <p align="center">
   <img src="readme-assets/2.png" alt="Class Diagram 2" width="600">
   <p>
-    This UML diagram represents a Bill management system. The Bill class stores information like billId, amount, purchased items, and timestamps for generation and payment.
+    This UML diagram illustrates the Bill class, which represents a bill with details about a purchase. It includes attributes like a unique bill ID, the total amount, a list of purchased items, their corresponding prices and quantities, and timestamps for generation and payment. The class also provides getter methods to access these attributes and setter methods to modify them, allowing for comprehensive management of bill information.
   </p>
   <br />
 </p>
