@@ -139,12 +139,13 @@ This project utilizes the following technologies:
 - For the first time usage of the project, navigate to the root directory and run `mvn clean install` (This step will take a long time initially, and consists of downloading all required packages, building the frontend, building the cpp libraries, and compiling the java files. 
 - To run the GUI:
   ```sh
-  mvn spring-boot:run -Dspring-boot.run.arguments="in-memory gui" -Dskip.npm` 
+  mvn spring-boot:run -Dspring-boot.run.arguments="in-memory gui" -Dskip.npm
   ```
   (You can also use without the `-Dskip.npm` argument)
+  
 - To run the CLI: `
   ```sh
-  mvn spring-boot:run -Dspring-boot.run.arguments="in-memory cli" -Dskip.npm`
+  mvn spring-boot:run -Dspring-boot.run.arguments="in-memory cli" -Dskip.npm
   ```
   
 **The Hotel Management System offers**:
