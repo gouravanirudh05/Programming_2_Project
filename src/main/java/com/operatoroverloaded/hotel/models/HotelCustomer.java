@@ -69,14 +69,17 @@ public class HotelCustomer extends Customer{
         super(name, email, phone, address, bill_amt, bill_payed, bill_left, bills, reservedFrom, reservedTo);
         this.reservations = reservations;
     }
+
+//--------------------------------------------------------------------To String---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
     @Override
     public String toString(){
         String str = "";
         str = str + "Name: " + this.getName() + "\nEmail: " + this.getEmail() + "\nPhone number: " + this.getPhone() + "\nAddress: " + this.getAddress() + "\nTotal Bill amount: " + this.getBillAmount() + "\nBill payed: " + this.getBillPayed() + "\nBill left: " + this.getBillLeft();
         ArrayList<Integer> bills = this.getBills();
-        BillStore store = BillStore.getInstance();
-        store.load();
         if (bills.size() > 0) {
+            BillStore store = BillStore.getInstance();
+            store.load();
             str = str + "\nBills:\n";
             for (Integer i: bills){
                 Bill b = store.getBill(i);
@@ -85,9 +88,9 @@ public class HotelCustomer extends Customer{
         }
         str = str + "\nReserved from: " + reservedFrom.toString();
         if (reservedTo.timeDifference(new DateTime(0,0,0,0,0,0)) != 0) str = str + "\nReserved to: " + reservedTo.toString();
-        ReservationStore store2 = ReservationStore.getInstance();
-        store2.load();
         if (reservations.size() > 0) {
+            ReservationStore store2 = ReservationStore.getInstance();
+            store2.load();
             str = str + "\nReservations:\n";
             for (Integer i: reservations){
                 Reservation r = store2.getReservation(i);
@@ -96,5 +99,4 @@ public class HotelCustomer extends Customer{
         }
         return str + '\n';
     }
-
 }
