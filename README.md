@@ -144,10 +144,21 @@ This project utilizes the following technologies:
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+**The Hotel Management System offers**:
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+- **Authentication**: Secure access via login/logout (JWT-based).
+- **Room & Staff Management**: Admins manage room inventory, bookings, and staff assignments.
+- **Billing Systems**: Handle room charges, restaurant orders, and table reservations.
+- **Customer Relationship Management**: Maintain guest records for personalized services.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+**Admin Features**:
+- Manage rooms, bookings, staff, dishes, and tables.
+- Generate bills and reserve rooms.
+
+**Usability**:
+- **Intuitive User Interface**: The system should provide a clean, user-friendly interface for hotel admins, allowing them to perform operations without specialized training.
+- **Mobile Responsiveness**: The customer-facing website (React app) should be fully responsive and usable on mobile devices.
+- **Error Handling**: Provide user-friendly error messages in case of invalid inputs, system errors, or failures.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
