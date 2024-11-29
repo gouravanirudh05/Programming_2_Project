@@ -60,6 +60,9 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         double bill_amt, bill_payed, bill_left;
         
         ss >> customerId >> name >> email >> phone >> address >> bill_amt >> bill_payed >> bill_left;
+        replace(name.begin(), name.end(), '_', ' ');
+        replace(email.begin(), email.end(), '_', ' ');
+        replace(address.begin(), address.end(), '_', ' ');
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setCustomerId", "(I)V"), customerId);
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setName", "(Ljava/lang/String;)V"), stdStringToJString(env, name));
         env->CallVoidMethod(customer, env->GetMethodID(hotelCustomerClass, "setEmail", "(Ljava/lang/String;)V"), stdStringToJString(env, email));
@@ -130,13 +133,16 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_hotelcustomersto
         outfile << id;
         outfile << "-";
         string name = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getName", "()Ljava/lang/String;")));
+        replace(name.begin(), name.end(), ' ', '_');
         outfile << name;
         outfile << "-";
         string email = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getEmail", "()Ljava/lang/String;")));
+        replace(email.begin(), email.end(), ' ', '_');
         outfile << email << "-";
         string phone = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getPhone", "()Ljava/lang/String;")));
         outfile << phone << "-";
         string address = jStringToStdString(env, (jstring) env->CallObjectMethod(customer, env->GetMethodID(hotelCustomerClass, "getAddress", "()Ljava/lang/String;")));
+        replace(address.begin(), address.end(), ' ', '_');
         outfile << address << "-";
         jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(hotelCustomerClass, "getBillAmount", "()D"));
         outfile << billAmt << "-";

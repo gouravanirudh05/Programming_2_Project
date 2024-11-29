@@ -60,7 +60,9 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_restaurantcustom
         double bill_amt, bill_payed, bill_left;
         
         ss >> customerId >> name >> email >> phone >> address >> bill_amt >> bill_payed >> bill_left;
-        
+        replace(name.begin(), name.end(), '_', ' ');
+        replace(email.begin(), email.end(), '_', ' ');
+        replace(address.begin(), address.end(), '_', ' ');
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setCustomerId", "(I)V"), customerId);
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setName", "(Ljava/lang/String;)V"), stdStringToJString(env, name));
         env->CallVoidMethod(customer, env->GetMethodID(restaurantCustomerClass, "setEmail", "(Ljava/lang/String;)V"), stdStringToJString(env, email));
@@ -136,6 +138,10 @@ JNIEXPORT void JNICALL Java_com_operatoroverloaded_hotel_stores_restaurantcustom
         jdouble billAmt = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillAmount", "()D"));
         jdouble billPayed = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillPayed", "()D"));
         jdouble billLeft = env->CallDoubleMethod(customer, env->GetMethodID(restaurantCustomerClass, "getBillLeft", "()D"));
+
+        replace(name.begin(), name.end(), ' ', '_');
+        replace(email.begin(), email.end(), ' ', '_');
+        replace(address.begin(), address.end(), ' ', '_');
 
         outfile << id << "-"<< name << "-"<< email << "-"<< phone << "-"<< address<< "-" << billAmt << "-"<< billPayed << "-"<< billLeft << "-";
 
