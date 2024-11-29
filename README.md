@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/mrtechtroid/Programming_2_Project/blob/main/readme-assets/1.png">
-    <img src="readme-assets/image.png" alt="Logo" width="800">
+     <img src="readme-assets/logo.png" alt="Logo" width="100" height="100">
   </a>
 
   <h3 align="center">Hotel Management System</h3>
@@ -17,6 +17,7 @@
   </p>
 </div>
 <!-- TABLE OF CONTENTS -->
+
 ## Table of Contents
 
 - [About The Project](#about-the-project)
@@ -35,7 +36,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="readme-assets/image.png" alt="ProductScreenshot" width="800">
 
 The **Hotel Management System** streamlines core hotel operations such as room management, guest billing,reservations and restaurent management. 
 ### Features
@@ -115,10 +116,12 @@ This project utilizes the following technologies:
 
 **MiddleWare**
 - ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+- ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 
 **Backend**
-- ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
 - ![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)
+
+**Tools**
 - ![JNI](https://img.shields.io/badge/JNI-2C4F7C?style=for-the-badge&logo=java&logoColor=white)
 - ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -144,6 +147,7 @@ This project utilizes the following technologies:
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
 **The Hotel Management System offers**:
 
 - **Authentication**: Secure access via login/logout (JWT-based).
@@ -159,7 +163,6 @@ This project utilizes the following technologies:
 - **Intuitive User Interface**: The system should provide a clean, user-friendly interface for hotel admins, allowing them to perform operations without specialized training.
 - **Mobile Responsiveness**: The customer-facing website (React app) should be fully responsive and usable on mobile devices.
 - **Error Handling**: Provide user-friendly error messages in case of invalid inputs, system errors, or failures.
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -188,7 +191,6 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
