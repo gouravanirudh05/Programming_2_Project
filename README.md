@@ -126,27 +126,17 @@ This project utilizes the following technologies:
 - ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- GETTING STARTED -->
 ## Getting Started
-
-
-
 ### Prerequisites
+- Ensure to use a Linux based Operating system.
+- Install Java 21 OpenJDK and Maven.
+- Clone the project with `git clone https://github.com/mrtechtroid/Programming_2_Project.git`
 
-
-
-
-### Installation
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
+### Installation and Usage
+- For the first time usage of the project, navigate to the root directory and run `mvn clean install` (This step will take a long time initially, and consists of downloading all required packages, building the frontend, building the cpp libraries, and compiling the java files. 
+- To run the GUI: `mvn spring-boot:run -Dspring-boot.run.arguments="in-memory gui" -Dskip.npm` (You can also use without the `-Dskip.npm` argument)
+- To run the CLI: `mvn spring-boot:run -Dspring-boot.run.arguments="in-memory cli" -Dskip.npm`
 
 **The Hotel Management System offers**:
 
@@ -163,15 +153,10 @@ This project utilizes the following technologies:
 - **Intuitive User Interface**: The system should provide a clean, user-friendly interface for hotel admins, allowing them to perform operations without specialized training.
 - **Mobile Responsiveness**: The customer-facing website (React app) should be fully responsive and usable on mobile devices.
 - **Error Handling**: Provide user-friendly error messages in case of invalid inputs, system errors, or failures.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 <!-- LICENSE -->
 ## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Distributed under MIT License. See `LICENSE.txt` for more information.
 
 
 
