@@ -52,12 +52,12 @@ export default function DashboardLayout({
                 Restaurant
               </Link>
             </TabsTrigger>
-            <TabsTrigger value="customers" asChild>
+            {/* <TabsTrigger value="customers" asChild>
               <Link href="/dashboard/customers" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 Customers
               </Link>
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="bills" asChild>
               <Link href="/dashboard/bills" className="flex items-center gap-2">
                 <Receipt className="h-4 w-4" />
