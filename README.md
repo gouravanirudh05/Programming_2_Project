@@ -59,14 +59,14 @@ The **Hotel Management System** streamlines core hotel operations such as room m
 <p align="center">
   <img src="readme-assets/2.png" alt="Class Diagram 2" width="600">
   <p>
-    This UML diagram represents a Bill management system. The Bill class stores information like billId, amount, purchased items, and timestamps for generation and payment. The BillStore class provides abstract methods for adding, removing, updating, and retrieving bills, as well as loading and saving them. The InMemoryBillStore class inherits from BillStore, implementing these methods with an in-memory list of Bill objects for managing bill data.
+    This UML diagram represents a Bill management system. The Bill class stores information like billId, amount, purchased items, and timestamps for generation and payment.
   </p>
   <br />
 </p>
 <p align="center">
   <img src="readme-assets/3.png" alt="Class Diagram 3" width="600">
   <p>
-    This UML diagram represents a hotel reservation system. The Hotel class manages details like name, location, rooms, staff, and reservations. The Reservation class handles booking information, including room details, reservation period, tariff, and associated bills, with methods to calculate bills and display reservation details. The Bill class records financial details such as purchased items, amounts, and timestamps, with methods to manage bill data.
+    This UML diagram represents a hotel reservation system. The Hotel class manages details like name, location, rooms, staff, and reservations. The Reservation class handles booking information, including room details, reservation period, tariff, and associated bills, with methods to calculate bills and display reservation details.
   </p>
   <br />
 </p>
@@ -94,7 +94,7 @@ The **Hotel Management System** streamlines core hotel operations such as room m
 <p align="center">
   <img src="readme-assets/7.png" alt="Class Diagram 7" width="600">
   <p>
-    The UML diagram showcases the LogonStore class and its interface, responsible for user management tasks like adding, deleting, and updating users. The InMemoryLogonStore class likely handles data storage and retrieval in memory. The Role class, nested within LogonStore, defines user roles with attributes like access level and email.
+    The UML diagram illustrates the Logon class, which encapsulates user login information. It includes attributes like role ID, access level, email, password, and salt, along with corresponding getter and setter methods for data retrieval and modification. This class likely represents user accounts in a system requiring authentication and authorization.
   </p>
   <br />
 </p>
