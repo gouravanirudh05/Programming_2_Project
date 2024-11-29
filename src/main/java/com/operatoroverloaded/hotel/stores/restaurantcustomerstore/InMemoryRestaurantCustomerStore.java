@@ -30,6 +30,7 @@ public class InMemoryRestaurantCustomerStore extends RestaurantCustomerStore {
 
     public RestaurantCustomer addCustomer(RestaurantCustomer customer) { // returns the id assigned to the customer by the database
         restaurantCustomers.add(customer);
+        customer.setCustomerId(restaurantCustomers.size() - 1);
         return customer;
     }
 

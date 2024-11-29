@@ -144,13 +144,11 @@ export default function OrderManagement() {
   const handleRemoveDish = async (dishId: string) => {
     if (!selectedCustomer) return
     try {
-      const updatedCustomer = {
-        ...selectedCustomer,
-        dishes: selectedCustomer.dishes.filter(id => id !== dishId)
-      }
-      await axios.put(`http://localhost:8080/api/resturantcustomer/${selectedCustomer.id}`, updatedCustomer)
-      setSelectedCustomer(updatedCustomer)
-      fetchCustomers()
+      setEditingCustomer({
+        ...editingCustomer,
+        dishes: editingCustomer.dishes.filter(id => id !== dishId)
+      })
+      updateOrder()
     } catch (error) {
       console.error('Error removing dish:', error)
     }
@@ -158,12 +156,24 @@ export default function OrderManagement() {
 
   const handleClearTable = async (customerId: string, tableId: number) => {
     try {
-      await axios.put(`http://localhost:8080/api/resturantcustomer/${customerId}`, { tableId: -1 })
+      await axios.post(`http://localhost:8080/api/resturantcustomer/cleartable/${customerId}`, { tableId: -1 })
       await axios.put(`http://localhost:8080/api/tables/${tableId}`, { isOccupied: false })
       fetchCustomers()
       fetchTables()
     } catch (error) {
       console.error('Error clearing table:', error)
+    }
+  }
+  const generateBill = async (customer: RestaurantCustomer) => {
+    try {
+      let bill = {payedOn: new Date().toISOString(), payed: true, customerID: customer.id, items: []}
+      for (let i = 0; i < customer.dishes.length; i++) {
+        bill.items.push({name: dishes.find(d => d.id === customer.dishes[i]).name, price: dishes.find(d => d.id === customer.dishes[i]).price, quantity: 1})
+      }
+      const response = await axios.post(`http://localhost:8080/api/bill/add`, bill)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error generating bill:', error)
     }
   }
 
@@ -327,10 +337,10 @@ export default function OrderManagement() {
             <div className="grid gap-4 py-4">
               <h3>Bill for {selectedCustomer.name}</h3>
               <ul>
-                {selectedCustomer.dishes.map((dishId) => {
+                {selectedCustomer.dishes.map((dishId,index) => {
                   const dish = dishes.find(d => d.id === dishId)
                   return dish ? (
-                    <li key={dish.id} className="flex justify-between items-center">
+                    <li key={index} className="flex justify-between items-center">
                       <span>{dish.name}</span>
                       <span>${dish.price}</span>
                     </li>
@@ -345,8 +355,9 @@ export default function OrderManagement() {
                 // Here you would typically integrate with a printing service
                 console.log('Printing bill for', selectedCustomer.name)
                 setIsBillDialogOpen(false)
+                generateBill(selectedCustomer)
               }}>
-                Print Bill
+                Generate BILL
               </Button>
             </div>
           )}

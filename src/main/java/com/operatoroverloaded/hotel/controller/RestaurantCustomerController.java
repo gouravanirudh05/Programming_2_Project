@@ -71,10 +71,10 @@ public class RestaurantCustomerController {
         for (JsonNode dish : dishesNode) {
             dishes.add(dish.asInt());
         }
-        JsonNode reservedToNode = json.get("reservedTo");
-        JsonNode reservedFromNode = json.get("reservedFrom");
-        DateTime reservedFrom = DateTime.fromISOString(reservedFromNode.get("dateString").asText()+" "+reservedFromNode.get("timeString").asText());
-        DateTime reservedTo = DateTime.fromISOString(reservedToNode.get("dateString").asText()+" "+reservedToNode.get("timeString").asText());
+        String reservedToNode = json.get("reservedTo").asText();
+        String reservedFromNode = json.get("reservedFrom").asText();
+        DateTime reservedFrom = DateTime.fromISOString(reservedFromNode);
+        DateTime reservedTo = DateTime.fromISOString(reservedToNode);
         JsonNode billsNode = json.get("bills"); // ArrayNode
         ArrayList<Integer> bills = new ArrayList<>();
         for (JsonNode bill : billsNode) {
@@ -95,5 +95,10 @@ public class RestaurantCustomerController {
     public ResponseEntity<?> getAllCustomers(){
         ArrayList<RestaurantCustomer> customers = restaurantCustomerStore.getCustomers();
         return ResponseEntity.ok().body(customers);
+    }
+    @PostMapping("/cleartable/{customerId}")
+    public ResponseEntity<?> clearTable(@PathVariable int customerId) {
+        restaurantCustomerStore.getCustomer(customerId).setTableId(-1);
+        return ResponseEntity.ok().body("Table cleared successfully");
     }
 }
