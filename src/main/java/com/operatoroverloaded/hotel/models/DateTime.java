@@ -140,7 +140,9 @@ public class DateTime {
 
     // Returns a DateTime object from a string
     public static DateTime fromString(String date, String time) {
-        System.err.println(date + " " + time);
+        if(date.equals("") || time.equals("")) {
+            return null;
+        }
         String[] dateParts = date.split("-");
         String[] timeParts = time.split(":");
         return new DateTime(Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]),

@@ -25,7 +25,6 @@ public class Bill {
         this.payedOn = new DateTime(0, 0, 0, 0, 0, 0);
         this.payed = false;
         this.customerID = "";
-        // this.reservationID = "";
     }
 
     // parameterized constructor which should be used to create a new bill
@@ -41,9 +40,10 @@ public class Bill {
         this.purchasedList = purchasedList;
         this.generatedOn = DateTime.getCurrentTime();
         this.payedOn = payedOn;
+        this.payed = true;
     }
 
-
+    // parameterized constructor which should be used to create a new bill
     public Bill(int billId, ArrayList<String> purchased, ArrayList<Float> purchasedList,
             ArrayList<Integer> quantity, DateTime payedOn, boolean payed, String customerID) {
         this.billId = billId;
@@ -71,6 +71,7 @@ public class Bill {
         this.purchasedList = purchasedList;
         this.generatedOn = DateTime.fromString(genDate.replace('/', '-'), genTime);
         this.payedOn = DateTime.fromString(payedDate.replace('/', '-'), payedTime);
+        this.payed = (payedDate.equals("") && payedTime.equals("")) ? false : true;
     }
 
     // Getter Methods
