@@ -5,8 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-// id-amt - yy/mm/dd - hh:mm:ss - yy/mm/dd - hh:mm:ss - dish1:dish2:...:dishn-p1:p2:p3:...:pn-q1:q2:...:qn\
-
+// id-amt - yy/mm/dd - hh:mm:ss - yy/mm/dd - hh:mm:ss - dish1:dish2:...:dishn-p1:p2:p3:...:pn-q1:q2:...:qn-customerID\
 
 extern "C"{
     // function to load the bill data from the file and store it in a list
@@ -24,7 +23,7 @@ extern "C"{
         jclass InMemoryBillStoreClass = env->GetObjectClass(obj);
         jfieldID billArrayField = env->GetFieldID(InMemoryBillStoreClass, "billData", "Ljava/util/ArrayList;");
         jobject billArray = env->GetObjectField(obj, billArrayField);
-        jmethodID billInit = env->GetMethodID(billClass, "<init>", "(IFLjava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+        jmethodID billInit = env->GetMethodID(billClass, "<init>", "(IFLjava/util/ArrayList;Ljava/util/ArrayList;Ljava/util/ArrayList;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 
         // Get the class and method ids for ArrayList
         jclass arrayListClass = env->FindClass("java/util/ArrayList");
@@ -99,7 +98,7 @@ extern "C"{
 
             // Get the quantity of the items
             j = i;
-            while(file[j] != '\\') j++;
+            while(file[j] != '-') j++;
             while(i < j){
                 long long l = i;
                 while(file[l] != ':' && l < j) l++;
@@ -110,8 +109,14 @@ extern "C"{
             }
             i = j + 1;
 
+            // Get the customer ID
+            j = i;
+            while(file[j] != '\\') j++;
+            jstring customerID = env->NewStringUTF(file.substr(i, j - i).c_str());
+            i = j + 1;
+
             // Create the bill object and add it to the list
-            jobject billObject = env->NewObject(billClass, billInit, billId, amount, purchased, purchasedList, quantity, genDate, genTime, payedDate, payedTime);
+            jobject billObject = env->NewObject(billClass, billInit, billId, amount, purchased, purchasedList, quantity, genDate, genTime, payedDate, payedTime, customerID);
             env->CallBooleanMethod(billArray, arrayListAdd, billObject);
 
             while(file[i] == '\n' || file[i] == '\\') i++;
@@ -124,6 +129,7 @@ extern "C"{
             env->DeleteLocalRef(genTime);
             env->DeleteLocalRef(payedDate);
             env->DeleteLocalRef(payedTime);
+            env->DeleteLocalRef(customerID);
             env->DeleteLocalRef(billObject);
         }
     }
@@ -150,6 +156,7 @@ extern "C"{
         jfieldID quantityField = env->GetFieldID(billClass, "quantity", "Ljava/util/ArrayList;");
         jfieldID generatedOnField = env->GetFieldID(billClass, "generatedOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
         jfieldID payedOnField = env->GetFieldID(billClass, "payedOn", "Lcom/operatoroverloaded/hotel/models/DateTime;");
+        jfieldID customerIDField = env->GetFieldID(billClass, "customerID", "Ljava/lang/String;");
 
         ofstream file("bill.txt");
         if (!file.is_open()) {
@@ -173,6 +180,7 @@ extern "C"{
             jobject quantity = env->GetObjectField(billObject, quantityField);
             jobject generatedOn = env->GetObjectField(billObject, generatedOnField);
             jobject payedOn = env->GetObjectField(billObject, payedOnField);
+            jstring customerID = (jstring) env->GetObjectField(billObject, customerIDField);
 
             // Get the date and time strings using the DateTime class method getDateString() and getTimeString()
             jstring genDate = (jstring) env->CallObjectMethod(generatedOn, getDateString);
@@ -185,6 +193,7 @@ extern "C"{
             const char *nativeGenTime = env->GetStringUTFChars(genTime, nullptr);
             const char *nativePayedDate = env->GetStringUTFChars(payedDate, nullptr);
             const char *nativePayedTime = env->GetStringUTFChars(payedTime, nullptr);
+            const char *nativeCustomerID = env->GetStringUTFChars(customerID, nullptr);
 
             // Replace the '-' with '/' in the date strings to prevent issues while reading the file
             string formattedGenDate = nativeGenDate;
@@ -234,6 +243,9 @@ extern "C"{
                 env->DeleteLocalRef(quantityObject);
             }
 
+            // Write the customer ID
+            file << "-" << nativeCustomerID;
+
             // To signify end of a bill entry
             file << "\\" << endl;
 
@@ -242,6 +254,7 @@ extern "C"{
             env->ReleaseStringUTFChars(genTime, nativeGenTime);
             env->ReleaseStringUTFChars(payedDate, nativePayedDate);
             env->ReleaseStringUTFChars(payedTime, nativePayedTime);
+            env->ReleaseStringUTFChars(customerID, nativeCustomerID);
 
             // Delete the local references
             env->DeleteLocalRef(billObject);
@@ -254,6 +267,7 @@ extern "C"{
             env->DeleteLocalRef(genTime);
             env->DeleteLocalRef(payedDate);
             env->DeleteLocalRef(payedTime);
+            env->DeleteLocalRef(customerID);
         }
         file.close();
     }
